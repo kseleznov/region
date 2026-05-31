@@ -1,9 +1,10 @@
 import { Header } from "@/widgets/header";
-import { OverviewSlider } from "@/widgets/overview-slider";
+import { CardsSlider } from "@/widgets/cards-slider";
 import { CityFacts } from "@/widgets/city-facts";
 import { Banner } from "@/shared/ui";
-import { CityOverview } from "@/widgets/city-overview";
+
 import { getPlaces } from "@/entities/place";
+import { CityInfo } from "@/widgets/city-info";
 
 export default async function Overview() {
   const whereToGo = await getPlaces();
@@ -14,8 +15,8 @@ export default async function Overview() {
         <Header />
         <Banner />
       </div>
-      <CityOverview />
-      <OverviewSlider title="Where to go" cards={whereToGo} />
+      <CityInfo />
+      <CardsSlider title="Where to go" cards={whereToGo} />
       <CityFacts />
     </>
   );

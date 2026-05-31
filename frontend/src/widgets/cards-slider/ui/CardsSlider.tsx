@@ -12,7 +12,7 @@ interface CardSliderProps {
   cards: ICard[];
 }
 
-export function OverviewSlider({ title, cards }: CardSliderProps) {
+export function CardsSlider({ title, cards }: CardSliderProps) {
   const {
     selected,
     isSelectedSaved,
