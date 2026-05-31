@@ -6,7 +6,7 @@ import { CityOverview } from "@/widgets/city-overview";
 import { getPlaces } from "@/entities/place";
 
 export default async function Overview() {
-  const placesToGo = await getPlaces();
+  const whereToGo = await getPlaces();
 
   return (
     <>
@@ -15,7 +15,7 @@ export default async function Overview() {
         <Banner />
       </div>
       <CityOverview />
-      <OverviewSlider title="Where to go" cards={placesToGo} />
+      <OverviewSlider title="Where to go" cards={whereToGo} />
       <CityFacts />
     </>
   );
