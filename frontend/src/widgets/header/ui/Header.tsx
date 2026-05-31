@@ -1,11 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useSelectCityStore } from "@/features/select-city";
 import { ROUTES } from "@/shared/config/routes";
 import { Button } from "@/shared/ui";
 import { RankBadge } from "@/entities/rank";
 import { MapPin } from "lucide-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -13,12 +13,12 @@ export function Header() {
   const { selectedCity } = useSelectCityStore();
   const router = useRouter();
 
-  function onClick() {
+  function redirect() {
     router.push(ROUTES.region);
   }
 
   const [userProgress] = useState({
-    placesVisited: 41,
+    placesVisited: 0,
     rank: "Insider",
     rankProgress: 24,
     rankMax: 40,
@@ -39,7 +39,7 @@ export function Header() {
       />
       <div className="flex items-center gap-4">
         <RankBadge userProgress={userProgress} />
-        <Button variant="selectedCity" onClick={onClick}>
+        <Button variant="selectedCity" onClick={redirect}>
           <MapPin size={16} />
           {selectedCity}
         </Button>
