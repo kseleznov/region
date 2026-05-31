@@ -1,32 +1,12 @@
 "use client";
 
-import useEmblaCarousel from "embla-carousel-react";
-import { useCallback, useEffect, useState } from "react";
 import { Sparkles } from "lucide-react";
-import { lisbonFacts } from "../model/facts";
 import { FactCard } from "./FactCard";
+import { useCityFacts } from "../model/useCityFacts";
 
 export function CityFacts() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: "start",
-    containScroll: "trimSnaps",
-  });
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    setScrollSnaps(emblaApi.scrollSnapList());
-    emblaApi.on("select", onSelect);
-    return () => {
-      emblaApi.off("select", onSelect);
-    };
-  }, [emblaApi, onSelect]);
+  const { emblaRef, selectedIndex, scrollSnaps, scrollTo, facts } =
+    useCityFacts();
 
   return (
     <div className="mb-[70px]">
@@ -44,7 +24,7 @@ export function CityFacts() {
 
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-2 pl-4 pr-4">
-          {lisbonFacts.map((fact, i) => (
+          {facts.map((fact, i) => (
             <div key={i} className="flex-[0_0_80%] min-w-0">
               <FactCard fact={fact} />
             </div>
@@ -60,7 +40,7 @@ export function CityFacts() {
             className={`w-1.5 h-1.5 rounded-full transition-colors ${
               i === selectedIndex ? "bg-dark" : "bg-dark/20"
             }`}
-            onClick={() => emblaApi?.scrollTo(i)}
+            onClick={() => scrollTo(i)}
           />
         ))}
       </div>
