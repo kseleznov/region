@@ -166,7 +166,7 @@ export function PlaceSlider({
 
   async function handleCardSelect(card: ICard, rect: DOMRect) {
     if (card.id) {
-      const res = await fetch(`http://localhost:3001/places/${card.id}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/places/${card.id}`);
       if (res.ok) {
         const full: ICard = await res.json();
         setSelected({ card: full, rect });
