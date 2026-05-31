@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Place {
+  id           Int     @id @default(autoincrement())
+  name         String
+  category     String
+  description  String
+  image        String
+  photos       Json    @default("[]")
+  stars        Float
+  price        Int
+  address      String
+  isOpen       Boolean
+  isSaved      Boolean
+  workingHours Json
+}
