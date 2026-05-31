@@ -1,11 +1,18 @@
 "use client";
 
-import { CityCard } from "@/entities/city";
+import { City, CityCard } from "@/entities/city";
 import { cities } from "@/entities/city";
 import { useSelectCityStore } from "@/features/select-city";
+import { toLowerCase } from "@/shared/lib/toLowerCase";
 
 export function PopularDestinations() {
   const { selectedCity, selectCity } = useSelectCityStore();
+
+  function handleCitySelect(name: City["name"]) {
+    const formattedCityName = toLowerCase(name);
+
+    selectCity(formattedCityName);
+  }
 
   return (
     <div>
@@ -18,8 +25,8 @@ export function PopularDestinations() {
           <CityCard
             key={city.name}
             {...city}
-            isSelected={selectedCity === city.name}
-            onSelect={() => selectCity(city.name)}
+            isSelected={selectedCity === toLowerCase(city.name)}
+            onSelect={() => handleCitySelect(city.name)}
           />
         ))}
       </ul>
