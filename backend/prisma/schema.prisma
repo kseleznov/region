@@ -20,3 +20,13 @@ model Place {
   isSaved      Boolean
   workingHours Json
 }
+
+model City {
+  id          Int    @id @default(autoincrement())
+  slug        String @unique
+  name        String
+  description String
+  images      Json   @default("[]")
+  location    Json
+  weather     Json
+}

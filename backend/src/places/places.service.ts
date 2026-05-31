@@ -45,18 +45,27 @@ export class PlacesService {
       distinct: ['category'],
     });
 
-    const grouped = new Map<string, { id: string; value: string; subcategories: string[] }>();
+    const grouped = new Map<
+      string,
+      { id: string; value: string; subcategories: string[] }
+    >();
 
     for (const { category } of rows) {
       const parent = SUBCATEGORY_TO_PARENT[category];
       if (!parent) continue;
       if (!grouped.has(parent.id)) {
-        grouped.set(parent.id, { id: parent.id, value: parent.value, subcategories: [] });
+        grouped.set(parent.id, {
+          id: parent.id,
+          value: parent.value,
+          subcategories: [],
+        });
       }
       grouped.get(parent.id)!.subcategories.push(category);
     }
 
-    const sorted = PARENT_ORDER.filter((id) => grouped.has(id)).map((id) => grouped.get(id)!);
+    const sorted = PARENT_ORDER.filter((id) => grouped.has(id)).map(
+      (id) => grouped.get(id)!,
+    );
 
     return [{ id: 'all', value: 'All', subcategories: [] }, ...sorted];
   }
