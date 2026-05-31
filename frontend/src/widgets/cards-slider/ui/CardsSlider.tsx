@@ -1,11 +1,11 @@
 "use client";
 
 import { AnimatePresence } from "framer-motion";
-import { useOverviewSlider } from "../model/useOverviewSlider";
 import { Card, CardDetail } from "@/entities/card";
 import { Button } from "@/shared/ui";
 import { ViewAllArrowIcon } from "@/shared/ui/icons";
 import type { ICard } from "@/shared/types/card";
+import { useCardsSlider } from "../model/useCardsSlider";
 
 interface CardSliderProps {
   title: string;
@@ -21,7 +21,7 @@ export function CardsSlider({ title, cards }: CardSliderProps) {
     handleCardClick,
     closeSelected,
     toggleSaveSelected,
-  } = useOverviewSlider();
+  } = useCardsSlider();
 
   return (
     <div className="mb-[70px]">

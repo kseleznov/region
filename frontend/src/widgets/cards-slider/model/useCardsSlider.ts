@@ -5,7 +5,7 @@ import { getPlaceById } from "@/entities/place";
 import { ROUTES } from "@/shared/config/routes";
 import type { ICard, SelectedCard } from "@/shared/types/card";
 
-export function useOverviewSlider() {
+export function useCardsSlider() {
   const [selected, setSelected] = useState<SelectedCard | null>(null);
   const { toggleSaveCard, savedCards } = useSaveCardStore();
   const router = useRouter();
