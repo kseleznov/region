@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
+import type { SliderImage } from "../ui/images-slider/types";
 
-export function useImageSlider(images: Record<string, string>[]) {
+export function useImageSlider(images: SliderImage[]) {
   const [current, setCurrent] = useState(0);
   const touchStartX = useRef<number | null>(null);
   const prev = () => setCurrent((c) => (c - 1 + images.length) % images.length);

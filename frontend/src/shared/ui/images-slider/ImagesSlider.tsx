@@ -3,11 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useImageSlider } from "@/shared/lib/useImageSlider";
-
-interface SliderImage {
-  url: string;
-  name?: string;
-}
+import type { SliderImage } from "./types";
 
 interface ImagesSliderProps {
   images: SliderImage[];

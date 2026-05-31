@@ -10,7 +10,7 @@ export function CityDescription({ description }: { description: string }) {
   return (
     <div
       className="mx-4 mb-[40px] bg-search-bg rounded-2xl p-4"
-      onClick={() => setIsOpen((v) => !v)}
+      onClick={() => setIsOpen((value) => !value)}
     >
       <button className="w-full flex items-center justify-between mb-3">
         <span className="text-lg font-extrabold">Обзор</span>

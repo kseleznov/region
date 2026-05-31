@@ -1,1 +1,1 @@
-export { ImagesSlider } from "./ui/ImagesSlider";
+export { ImagesSlider } from "./ImagesSlider";

@@ -3,8 +3,7 @@
 import { getCityInfo } from "@/entities/city";
 import { useSelectCityStore } from "@/features/select-city";
 import { useEffect, useState } from "react";
-
-type CityInfo = Awaited<ReturnType<typeof getCityInfo>>;
+import type { CityInfo } from "./types";
 
 export function useCityInfo() {
   const { selectedCity } = useSelectCityStore();
