@@ -9,3 +9,13 @@ export async function getPlaces(): Promise<ICard[]> {
 
   return response.json();
 }
+
+export async function getPlaceById(id: number): Promise<ICard | null> {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/places/${id}`,
+  );
+
+  if (!response.ok) return null;
+
+  return response.json();
+}

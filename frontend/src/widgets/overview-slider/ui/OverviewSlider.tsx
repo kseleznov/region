@@ -1,15 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import { Card } from "@/entities/card";
-import { CardDetail } from "@/entities/card";
+import { useOverviewSlider } from "../model/useOverviewSlider";
+import { Card, CardDetail } from "@/entities/card";
 import { Button } from "@/shared/ui";
 import { ViewAllArrowIcon } from "@/shared/ui/icons";
-import type { ICard, SelectedCard } from "@/shared/types/card";
-import { useSaveCardStore } from "@/features/save-card";
-import { useRouter } from "next/navigation";
-import { ROUTES } from "@/shared/config/routes";
+import type { ICard } from "@/shared/types/card";
 
 interface CardSliderProps {
   title: string;
@@ -17,29 +13,15 @@ interface CardSliderProps {
 }
 
 export function OverviewSlider({ title, cards }: CardSliderProps) {
-  const [selected, setSelected] = useState<SelectedCard | null>(null);
-  const { toggleSaveCard, savedCards } = useSaveCardStore();
-  const router = useRouter();
-
-  const isSelectedSaved = selected
-    ? savedCards.some((c) => c.name === selected.card.name)
-    : false;
-
-  function viewMore() {
-    router.push(ROUTES.exploring);
-  }
-
-  async function handleCardClick(card: ICard, rect: DOMRect) {
-    if (card.id) {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/places/${card.id}`);
-      if (res.ok) {
-        const full: ICard = await res.json();
-        setSelected({ card: full, rect });
-        return;
-      }
-    }
-    setSelected({ card, rect });
-  }
+  const {
+    selected,
+    isSelectedSaved,
+    isCardSaved,
+    viewMore,
+    handleCardClick,
+    closeSelected,
+    toggleSaveSelected,
+  } = useOverviewSlider();
 
   return (
     <div className="mb-[70px]">
@@ -63,7 +45,7 @@ export function OverviewSlider({ title, cards }: CardSliderProps) {
           <Card
             {...card}
             key={card.name}
-            isSaved={savedCards.some((c) => c.name === card.name)}
+            isSaved={isCardSaved(card)}
             onClick={(e) => {
               const rect = (
                 e.currentTarget as HTMLElement
@@ -80,8 +62,8 @@ export function OverviewSlider({ title, cards }: CardSliderProps) {
             card={selected.card}
             sourceRect={selected.rect}
             isSaved={isSelectedSaved}
-            onClose={() => setSelected(null)}
-            onToggleSave={() => toggleSaveCard(selected.card)}
+            onClose={closeSelected}
+            onToggleSave={toggleSaveSelected}
           />
         )}
       </AnimatePresence>

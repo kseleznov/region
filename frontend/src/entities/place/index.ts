@@ -1,1 +1,1 @@
-export { getPlaces } from "./api";
+export { getPlaces, getPlaceById } from "./api";
