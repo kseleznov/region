@@ -15,7 +15,9 @@ export async function getPlaceById(id: number): Promise<ICard | null> {
     `${process.env.NEXT_PUBLIC_API_URL}/places/${id}`,
   );
 
-  if (!response.ok) return null;
+  if (!response.ok) {
+    return null;
+  }
 
   return response.json();
 }
