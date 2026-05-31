@@ -8,6 +8,31 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   await prisma.place.deleteMany();
 
+  await prisma.city.deleteMany();
+
+  await prisma.city.create({
+    data: {
+      slug: 'lisbon',
+      name: 'Лиссабон',
+      description:
+        'Лиссабон – столица Португалии, расположенная на нескольких холмах и омываемая водами Атлантического океана. Из величественного замка Святого Георгия открывается вид на весь город и реку Тежу. Исторические кварталы Байша, Алфама и Белен хранят архитектурное наследие португальского Возрождения — стиля мануэлино. Город известен жёлтыми трамваями, изразцами азулежу, музыкой фаду и свежайшими морепродуктами.',
+      images: [
+        { url: 'https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcRuRdhouhXqLDrSMEhcjig4Y73R1QQ85jcaIebZcCbdIyLfcbfFbwYlXphrjlP8Ui7hSUC4ni-OUDLLfwZ1IxcAHlk&s=19' },
+        { url: 'https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcSrslLas-EnDdtymBjx267iy1TRDlgRylJz8v62vVHJjCGjtstXm5RPO0KOdgR-XtDwEp7S1pXewU4mM5iStMt8l2Xi&s=19' },
+        { url: 'https://lh3.googleusercontent.com/gps-cs-s/APNQkAGLAbaIeXI9zvmuPpP1sJ6R8ML3fN-HjO0lmM5EgFMgpBrOKATYdM7OGxEqUkz6oyPp_myMVIRfmQW-wIKSrsV2EC4HU3VA1uqV0KsNzfWYLiyZPXzpCj8KqOAbJB04LCBE2Xtk=w1080-h624-n-k-no', name: 'Торри-ди-Белен' },
+        { url: 'https://lh3.googleusercontent.com/gps-cs-s/APNQkAEXy4TyO2OV1sPh3Np7NwFyvA1pKevJebp5MiWdnaJE6unQifVLQ3VJSyokKAsiMjgO8wDfB9DGcfLS3i6j45mAeGoHh3E_e6ouxrR_V5ymHJFc7_oXA2g1kA5YoURLd8KC1A5n=w1080-h624-n-k-no', name: 'Замок Св. Георгия' },
+        { url: 'https://lh3.googleusercontent.com/gps-cs-s/APNQkAG0j1Eq-soKiFx9710RGbNxCQaSGjEoZ-vkkg-mqelLsiTVJN87dzcm3fstXfDIB5jjOcSTA1tc940Dp3Vi2V-_QtFxKdflf6cdkalo2GabGJmlS1xttPkuYWXX9Zo0ky4njg2TIp8iI6RA=w1080-h624-n-k-no', name: 'Монастырь Жеронимуш' },
+        { url: 'https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcStAmDALNzcNZlapbeJlVv7AUbFLO-lD3P_aKV01ad08pc0DgUhW-xgtgf9p0nsecw-9tppbwcbyHGZCbv9Ke9d-UE&s=19' },
+        { url: 'https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcS18vy8fULHk7qR_vKCgyWyxEa8IYjq6zBreU42kTGXk3UipKUQbwa1t6nBp7Ue6QvZiLZX6fbUFd9VPN46FtoLOpE&s=19' },
+        { url: 'https://lh3.googleusercontent.com/gps-cs-s/APNQkAHQ1P5h_msuiGxrwm2e6Ux0dF-agcbnismIqZ0oGXO6yxetZqce4I04NKsbTFTPJ7PIt_IjH-a6RqH1cgt1ZG48tZoJ783ZUS59S9ehj9fkfmMOIcxNGAxjISMa7x2b_aZsfTi8=w1080-h624-n-k-no', name: 'Площадь Коммерции' },
+        { url: 'https://lh3.googleusercontent.com/gps-cs-s/APNQkAFxayF5-_bBKuYLvwFOOLF2cGYyd9OUKx8JtpqLhvVpe33yyXPH8t1duFdTPlOXMQuPsunAGNnDuT_orVF0uSUnl0PpjVprxfdXHkHI2xIoAxmu6beQzNlPqlquS1Dz5nHC9f_VMw=w1080-h624-n-k-no', name: 'Лифт Санта-Хуста' },
+        { url: 'https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcTeMgqiMd84aWPo1W4_cWCeF-UHB1RTKT9pb8J5cqEA7XVoUDPhPg2pQ35ZpkH_9avwm2e_TkdtSPWNeujDqVe02rM&s=19' },
+      ],
+      location: { latitude: 38.7163, longitude: -9.1399 },
+      weather: { temperature: '18', condition: 'Ясно' },
+    },
+  });
+
   await prisma.place.createMany({
     data: [
       {
