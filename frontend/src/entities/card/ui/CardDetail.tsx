@@ -13,7 +13,7 @@ import {
 import type { ICard } from "@/shared/types/card";
 import { DAYS } from "../model/constants";
 import { useCard } from "../model/useCard";
-import { PhotoSlider } from "@/shared/ui/photo-slider";
+import { ImagesSlider } from "@/shared/ui/images-slider";
 import { MiniMap } from "@/shared/ui/mini-map";
 
 interface CardDetailProps {
@@ -78,7 +78,7 @@ export function CardDetail({
         transition={{ type: "spring", damping: 30, stiffness: 280 }}
       >
         <div className="relative w-full h-[250px] flex-shrink-0 bg-dark">
-          <PhotoSlider photos={photos} alt={card.name} />
+          <ImagesSlider images={photos.map((url) => ({ url }))} />
 
           <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-30">
             <button

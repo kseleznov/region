@@ -16,7 +16,7 @@ export interface CityInfo {
   slug: string;
   name: string;
   description: string;
-  images: Record<string, string>[];
+  images: { url: string; name?: string }[];
   weather: {
     temperature: string;
     condition: string;
