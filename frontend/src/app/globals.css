@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+:root {
+  --light: #ffffff;
+  --dark: #000000;
+  --gray: #a6aab0;
+  --purple: #ac8cff;
+  --yellow: #cfff47;
+  --pink: #ff8cc6;
+  --green: #7cff94;
+  --search-bg: #f3f4f6;
+}
+
+@theme {
+  --color-brand-purple: var(--purple);
+  --color-brand-yellow: var(--yellow);
+  --color-brand-pink: var(--pink);
+  --color-brand-green: var(--green);
+  --color-brand-gray: var(--gray);
+  --color-dark: var(--dark);
+  --color-light: var(--light);
+  --color-search-bg: var(--search-bg);
+  --font-sans: var(--font-sans), "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+/* ── Rank Badge animations ──────────────────────────────── */
+
+@keyframes rb-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.rb-slide-up {
+  animation: rb-slide-up 0.32s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+@keyframes rb-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.rb-fade-in {
+  animation: rb-fade-in 0.25s ease-out;
+}
+@keyframes rb-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.rb-spin-slow {
+  animation: rb-spin 9s linear infinite;
+}
+.rb-spin-medium {
+  animation: rb-spin 5s linear infinite;
+}
+.rb-spin-medium-rev {
+  animation: rb-spin 7s linear infinite reverse;
+}
+.rb-spin-fast {
+  animation: rb-spin 2.6s linear infinite;
+}
+@keyframes rb-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+.rb-pulse-a {
+  animation: rb-pulse 2.2s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.rb-pulse-b {
+  animation: rb-pulse 2.2s ease-in-out 0.4s infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.rb-pulse-c {
+  animation: rb-pulse 2.2s ease-in-out 0.8s infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+@keyframes rb-comet-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.35);
+  }
+}
+.rb-comet-pulse {
+  animation: rb-comet-pulse 1.4s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+@keyframes rb-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1.5px);
+  }
+}
+.rb-float {
+  animation: rb-float 3.4s ease-in-out infinite;
+}
