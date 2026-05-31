@@ -1,0 +1,18 @@
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build output
+/dist
+*.tsbuildinfo
+
+# Generated
+/generated/prisma
+
+# Dependencies
+/node_modules
+
+# Logs
+*.log
+npm-debug.log*
