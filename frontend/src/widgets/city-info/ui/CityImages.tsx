@@ -1,12 +1,10 @@
-"use client";
-
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { useCityOverview } from "../model/useCityOverview";
+import { useImageSlider } from "@/shared/lib/useImageSlider";
 
 export function CityImages({ images }: { images: Record<string, string>[] }) {
   const { onTouchStartHandler, onTouchEndHandler, current, prev, next } =
-    useCityOverview(images);
+    useImageSlider(images);
 
   return (
     <div

@@ -2,12 +2,12 @@
 
 import { CityWeather } from "./CityWeather";
 import { CityLocation } from "./CityLocation";
-import { useSelectedCityInfo } from "../model/useSelectedCityInfo";
+import { useCityInfo } from "../model/useCityInfo";
 import { CityImages } from "./CityImages";
 import { CityDescription } from "./CityDescription";
 
 export function CityInfo() {
-  const data = useSelectedCityInfo();
+  const data = useCityInfo();
 
   if (!data) return null;
 

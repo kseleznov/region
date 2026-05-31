@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-export function useCityOverview(images: Record<string, string>[]) {
+export function useImageSlider(images: Record<string, string>[]) {
   const [current, setCurrent] = useState(0);
   const touchStartX = useRef<number | null>(null);
   const prev = () => setCurrent((c) => (c - 1 + images.length) % images.length);

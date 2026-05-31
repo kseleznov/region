@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 type CityInfo = Awaited<ReturnType<typeof getCityInfo>>;
 
-export function useSelectedCityInfo() {
+export function useCityInfo() {
   const { selectedCity } = useSelectCityStore();
   const [data, setData] = useState<CityInfo | null>(null);
 
