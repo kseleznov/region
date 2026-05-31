@@ -5,8 +5,11 @@ import dynamic from "next/dynamic";
 import { X, MapIcon, EyeIcon, MoonIcon, UtensilsIcon } from "lucide-react";
 
 const Letter3D = dynamic(
-  () => import("@/shared/ui/banner/Letter3D").then((m) => ({ default: m.Letter3D })),
-  { ssr: false }
+  () =>
+    import("@/shared/ui/banner/Letter3D").then((m) => ({
+      default: m.Letter3D,
+    })),
+  { ssr: false },
 );
 interface UserProgress {
   placesVisited: number;

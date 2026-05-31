@@ -3,7 +3,7 @@
 import { useSelectCityStore } from "@/features/select-city";
 import { ROUTES } from "@/shared/config/routes";
 import { Button } from "@/shared/ui";
-import { RankBadge } from "@/widgets/rank-badge";
+import { RankBadge } from "@/entities/rank";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
