@@ -4,12 +4,7 @@ import Image from "next/image";
 import { Heart, MapPin } from "lucide-react";
 import { StarRating } from "@/shared/ui";
 import { cn } from "@/shared/lib/cn";
-import type { ICard } from "@/shared/types/card";
-
-interface CardProps extends ICard {
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
-  className?: string;
-}
+import type { CardProps } from "../model/types";
 
 export function Card({
   address,

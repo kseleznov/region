@@ -10,19 +10,11 @@ import {
   ChevronRight,
   BookOpen,
 } from "lucide-react";
-import type { ICard } from "@/shared/types/card";
 import { DAYS } from "../model/constants";
 import { useCard } from "../model/useCard";
 import { ImagesSlider } from "@/shared/ui/images-slider";
 import { MiniMap } from "@/shared/ui/mini-map";
-
-interface CardDetailProps {
-  card: ICard;
-  sourceRect: DOMRect;
-  isSaved: boolean;
-  onClose: () => void;
-  onToggleSave: () => void;
-}
+import type { CardDetailProps } from "../model/types";
 
 export function CardDetail({
   card,
