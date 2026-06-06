@@ -1,18 +1,11 @@
 "use client";
 
-import { City, CityCard } from "@/entities/city";
-import { cities } from "@/entities/city";
-import { useSelectCityStore } from "@/features/select-city";
+import { CityCard, cities } from "@/entities/city";
 import { toLowerCase } from "@/shared/lib/toLowerCase";
+import { usePopularDestinations } from "../model/usePopularDestinations";
 
 export function PopularDestinations() {
-  const { selectedCity, selectCity } = useSelectCityStore();
-
-  function handleCitySelect(name: City["name"]) {
-    const formattedCityName = toLowerCase(name);
-
-    selectCity(formattedCityName);
-  }
+  const { selectedCity, handleCitySelect } = usePopularDestinations();
 
   return (
     <div>
