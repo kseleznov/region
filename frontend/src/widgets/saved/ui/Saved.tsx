@@ -2,10 +2,10 @@
 
 import { Heart } from "lucide-react";
 import { Card } from "@/entities/card";
-import { useSaveCardStore } from "@/features/save-card";
+import { useSaved } from "../model/useSaved";
 
 export function Saved() {
-  const { savedCards } = useSaveCardStore();
+  const { savedCards } = useSaved();
 
   if (!savedCards.length) {
     return (
@@ -40,7 +40,7 @@ export function Saved() {
       </div>
       <ul className="flex flex-col gap-3 mt-4">
         {savedCards.map((card) => (
-          <Card key={card.name} {...card} isSaved={true} />
+          <Card key={card.id ?? card.name} {...card} />
         ))}
       </ul>
     </div>
