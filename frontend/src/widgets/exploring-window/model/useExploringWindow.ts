@@ -6,8 +6,7 @@ import { useSelectCityStore } from "@/features/select-city";
 import { usePlaces } from "@/entities/place";
 import { ROUTES } from "@/shared/config/routes";
 import type { ICard } from "@/shared/types/card";
-import type { Category } from "./categories";
-import type { HintPhase } from "./types";
+import type { Category, HintPhase } from "./types";
 
 export function useExploringWindow(
   categories: Category[],

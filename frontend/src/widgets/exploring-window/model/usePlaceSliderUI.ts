@@ -60,7 +60,8 @@ export function usePlaceSliderUI({
         if (dy < 0) {
           onCategoryChange((categoryIndex + 1) % totalCategories, "down");
         } else {
-          const prev = categoryIndex === 0 ? totalCategories - 1 : categoryIndex - 1;
+          const prev =
+            categoryIndex === 0 ? totalCategories - 1 : categoryIndex - 1;
           onCategoryChange(prev, "up");
         }
       }

@@ -1,6 +1,6 @@
 "use client";
 
-import { explanationCards } from "@/widgets/explanation-slider/model/explanationCards";
+import { explanationCards } from "../model/explanationCards";
 import { useInfiniteScroll } from "../model/useInfiniteScroll";
 import { ExplanationCard } from "./ExplanationCard";
 
