@@ -1,92 +1,43 @@
 "use client";
 
-import { useSelectCityStore } from "@/features/select-city";
-import { ROUTES } from "@/shared/config/routes";
-import { Chips, Search } from "@/shared/ui";
-import type { ICard } from "@/shared/types/card";
 import { MapPin, RefreshCw } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { Category } from "../model/categories";
+import { Chips, Search } from "@/shared/ui";
 import { Filters } from "./Filters";
 import { PlaceSlider } from "./PlaceSlider";
 import { SubcategoryModal } from "./SubcategoryModal";
 import { ViewControl } from "./ViewControl";
+import { useExploringWindow } from "../model/useExploringWindow";
+import type { Category } from "../model/types";
+import type { ICard } from "@/shared/types/card";
 
-interface ExploringWindowProps {
+export interface ExploringWindowProps {
   categories: Category[];
-  places: ICard[];
+  initialPlaces: ICard[];
 }
 
-export function ExploringWindow({ categories, places }: ExploringWindowProps) {
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, []);
-
-  const { selectedCity } = useSelectCityStore();
-  const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
-  const [activeSubcategory, setActiveSubcategory] = useState<string | null>(
-    null,
-  );
-  const [subcategoryModalOpen, setSubcategoryModalOpen] = useState(false);
-  const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  const [transitionDirection, setTransitionDirection] = useState<
-    "up" | "down" | null
-  >(null);
-  const [hintPhase, setHintPhase] = useState<"category" | "card" | "done">(
-    "card",
-  );
-  const router = useRouter();
-  const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  );
-
-  const activeCategory = categories[activeCategoryIndex];
-
-  const filteredPlaces = useMemo(() => {
-    if (activeSubcategory) {
-      return places.filter((p) => p.category === activeSubcategory);
-    }
-    if (activeCategory.subcategories.length === 0) return places;
-    return places.filter((p) =>
-      activeCategory.subcategories.includes(p.category),
-    );
-  }, [places, activeCategory, activeSubcategory]);
-
-  const totalCount = filteredPlaces.length;
-
-  function changeCity() {
-    router.push(ROUTES.region);
-  }
-
-  const handleCategoryChange = (newIndex: number, dir: "up" | "down") => {
-    setActiveCategoryIndex(newIndex);
-    setCurrentCardIndex(0);
-    setTransitionDirection(dir);
-    if (transitionTimeoutRef.current)
-      clearTimeout(transitionTimeoutRef.current);
-    transitionTimeoutRef.current = setTimeout(
-      () => setTransitionDirection(null),
-      700,
-    );
-  };
-
-  const handleChipChange = (id: string) => {
-    const newIndex = categories.findIndex((c) => c.id === id);
-    if (newIndex === activeCategoryIndex) {
-      if (activeCategory.subcategories.length > 0) {
-        setSubcategoryModalOpen(true);
-      }
-      return;
-    }
-    setHintPhase("done");
-    setActiveSubcategory(null);
-    const dir = newIndex > activeCategoryIndex ? "down" : "up";
-    handleCategoryChange(newIndex, dir);
-  };
+export function ExploringWindow({
+  categories,
+  initialPlaces,
+}: ExploringWindowProps) {
+  const {
+    selectedCity,
+    activeCategoryIndex,
+    activeSubcategory,
+    subcategoryModalOpen,
+    currentCardIndex,
+    transitionDirection,
+    hintPhase,
+    activeCategory,
+    filteredPlaces,
+    totalCount,
+    changeCity,
+    handleCategoryChange,
+    handleChipChange,
+    setActiveSubcategory,
+    setSubcategoryModalOpen,
+    setCurrentCardIndex,
+    setHintPhase,
+  } = useExploringWindow(categories, initialPlaces);
 
   return (
     <div className="h-dvh overflow-hidden flex flex-col pt-6 pb-28">
@@ -140,11 +91,13 @@ export function ExploringWindow({ categories, places }: ExploringWindowProps) {
           onCategoryChange={handleCategoryChange}
           onCardIndexChange={(index) => {
             setCurrentCardIndex(index);
-            if (index > 0) setHintPhase((p) => (p === "card" ? "category" : p));
+            if (index > 0) {
+              setHintPhase((phase) => (phase === "card" ? "category" : phase));
+            }
           }}
           hintPhase={hintPhase}
           onHideHint={() =>
-            setHintPhase((p) => (p === "category" ? "done" : p))
+            setHintPhase((phase) => (phase === "category" ? "done" : phase))
           }
           transitionDirection={transitionDirection}
         />
@@ -156,7 +109,7 @@ export function ExploringWindow({ categories, places }: ExploringWindowProps) {
         categoryName={activeCategory.value}
         subcategories={activeCategory.subcategories}
         activeSubcategory={activeSubcategory}
-        onApply={(sub) => setActiveSubcategory(sub)}
+        onApply={(subcategory) => setActiveSubcategory(subcategory)}
       />
     </div>
   );
