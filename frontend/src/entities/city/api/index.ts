@@ -1,13 +1,12 @@
+import { apiClient } from "@/shared/api/axios";
 import { CityInfo } from "../model/types";
 
 export async function getCityInfo(city: string): Promise<CityInfo | null> {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/cities/${city}`,
-  );
+  try {
+    const { data } = await apiClient.get<CityInfo>(`/cities/${city}`);
 
-  if (!response.ok) {
+    return data;
+  } catch {
     return null;
   }
-
-  return response.json();
 }
