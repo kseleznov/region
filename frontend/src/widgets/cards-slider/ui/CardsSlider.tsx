@@ -2,21 +2,17 @@
 
 import { AnimatePresence } from "framer-motion";
 import { Card, CardDetail } from "@/entities/card";
+import { usePlaces } from "@/entities/place";
 import { Button } from "@/shared/ui";
 import { ViewAllArrowIcon } from "@/shared/ui/icons";
-import type { ICard } from "@/shared/types/card";
 import { useCardsSlider } from "../model/useCardsSlider";
+import type { CardSliderProps } from "../model/types";
 
-interface CardSliderProps {
-  title: string;
-  cards: ICard[];
-}
-
-export function CardsSlider({ title, cards }: CardSliderProps) {
+export function CardsSlider({ title, initialCards }: CardSliderProps) {
+  const { data: cards = [] } = usePlaces(initialCards);
   const {
     selected,
     isSelectedSaved,
-    isCardSaved,
     viewMore,
     handleCardClick,
     closeSelected,
@@ -44,8 +40,7 @@ export function CardsSlider({ title, cards }: CardSliderProps) {
         {cards.map((card) => (
           <Card
             {...card}
-            key={card.name}
-            isSaved={isCardSaved(card)}
+            key={card.id ?? card.name}
             onClick={(e) => {
               const rect = (
                 e.currentTarget as HTMLElement
