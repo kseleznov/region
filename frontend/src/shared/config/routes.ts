@@ -6,4 +6,6 @@ export const ROUTES = {
   saved: "/saved",
   profile: "/profile",
   overview: "/overview",
+  signIn: "/auth/sign-in",
+  signUp: "/auth/sign-up",
 } as const;
