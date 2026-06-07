@@ -1,28 +1,21 @@
 import { Header } from "@/widgets/header";
-import { OverviewSlider } from "@/widgets/overview-slider";
+import { CardsSlider } from "@/widgets/cards-slider";
 import { CityFacts } from "@/widgets/city-facts";
 import { Banner } from "@/shared/ui";
-import { CityOverview } from "@/widgets/city-overview";
-import type { ICard } from "@/shared/types/card";
-
-async function getPlaces(): Promise<ICard[]> {
-  const res = await fetch("http://localhost:3001/places", {
-    cache: "no-store",
-  });
-  if (!res.ok) throw new Error("Failed to fetch places");
-  return res.json();
-}
+import { getPlaces } from "@/entities/place";
+import { CityInfo } from "@/widgets/city-info";
 
 export default async function Overview() {
-  const placesToGo = await getPlaces();
+  const whereToGo = await getPlaces();
+
   return (
     <>
       <div className="bg-brand-purple">
         <Header />
         <Banner />
       </div>
-      <CityOverview />
-      <OverviewSlider title="Where to go" cards={placesToGo} />
+      <CityInfo />
+      <CardsSlider title="Where to go" initialCards={whereToGo} />
       <CityFacts />
     </>
   );

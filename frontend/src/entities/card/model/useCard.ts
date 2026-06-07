@@ -1,12 +1,8 @@
-import { ICard } from "@/shared/types/card";
 import { TODAY_KEY } from "./constants";
 import { useEffect, useState } from "react";
+import type { UseCardProps } from "./types";
 
-interface CardDetailProps {
-  card: ICard;
-}
-
-export function useCard({ card }: CardDetailProps) {
+export function useCard({ card }: UseCardProps) {
   const [hoursOpen, setHoursOpen] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
 

@@ -2,15 +2,10 @@
 
 import Image from "next/image";
 import { Button } from "@/shared/ui";
-import { useRouter } from "next/navigation";
-import { ROUTES } from "@/shared/config/routes";
+import { useGreetingWindow } from "../model/useGreetingWindow";
 
 export function GreetingWindow() {
-  const router = useRouter();
-
-  function onClick() {
-    router.push(ROUTES.region);
-  }
+  const { onClick } = useGreetingWindow();
 
   return (
     <div className="flex flex-col items-center h-full justify-center">

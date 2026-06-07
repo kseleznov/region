@@ -2,17 +2,10 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/shared/ui";
-import { useSelectCityStore } from "../model/useSelectCityStore";
-import { useRouter } from "next/navigation";
-import { ROUTES } from "@/shared/config/routes";
+import { useConfirmCityButton } from "../model/useConfirmCityButton";
 
 export function ConfirmCityButton() {
-  const { selectedCity } = useSelectCityStore();
-  const router = useRouter();
-
-  function onClick() {
-    router.push(ROUTES.overview);
-  }
+  const { selectedCity, onClick } = useConfirmCityButton();
 
   return (
     <AnimatePresence>

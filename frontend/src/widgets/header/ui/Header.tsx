@@ -1,32 +1,13 @@
 "use client";
 
-import { useSelectCityStore } from "@/features/select-city";
-import { ROUTES } from "@/shared/config/routes";
-import { Button } from "@/shared/ui";
-import { RankBadge } from "@/widgets/rank-badge";
-import { MapPin } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { MapPin } from "lucide-react";
+import { Button } from "@/shared/ui";
+import { RankBadge } from "@/entities/rank";
+import { useHeader } from "../model/useHeader";
 
 export function Header() {
-  const { selectedCity } = useSelectCityStore();
-  const router = useRouter();
-
-  function onClick() {
-    router.push(ROUTES.region);
-  }
-
-  const [userProgress] = useState({
-    placesVisited: 41,
-    rank: "Insider",
-    rankProgress: 24,
-    rankMax: 40,
-    districts: 3,
-    hiddenSpots: 7,
-    isNightExplorer: true,
-    isFoodHunter: true,
-  });
+  const { selectedCity, userProgress, redirect } = useHeader();
 
   return (
     <header className="flex justify-between px-[16px] py-[24px]">
@@ -39,7 +20,7 @@ export function Header() {
       />
       <div className="flex items-center gap-4">
         <RankBadge userProgress={userProgress} />
-        <Button variant="selectedCity" onClick={onClick}>
+        <Button variant="selectedCity" onClick={redirect}>
           <MapPin size={16} />
           {selectedCity}
         </Button>
