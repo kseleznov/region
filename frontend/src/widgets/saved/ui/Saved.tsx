@@ -1,11 +1,27 @@
 "use client";
 
 import { Heart } from "lucide-react";
-import { Card } from "@/entities/card";
+import { Chips } from "@/shared/ui";
+import { PlaceSlider } from "@/widgets/exploring-window/ui/PlaceSlider";
+import { ViewControl } from "@/widgets/exploring-window/ui/ViewControl";
 import { useSaved } from "../model/useSaved";
 
 export function Saved() {
-  const { savedCards } = useSaved();
+  const {
+    savedCards,
+    categories,
+    activeCategoryIndex,
+    activeCategory,
+    filteredPlaces,
+    totalCount,
+    currentCardIndex,
+    transitionDirection,
+    hintPhase,
+    handleCategoryChange,
+    handleChipChange,
+    setCurrentCardIndex,
+    setHintPhase,
+  } = useSaved();
 
   if (!savedCards.length) {
     return (
@@ -33,16 +49,49 @@ export function Saved() {
   }
 
   return (
-    <div className="flex flex-col px-4 pt-6">
-      <div>
-        <p className="text-sm text-brand-gray">Your collection</p>
-        <h1 className="text-3xl font-bold text-dark">Saved</h1>
+    <div className="h-dvh overflow-hidden flex flex-col pt-6 pb-28">
+      <div className="flex justify-between items-start mb-4 px-4">
+        <div>
+          <p className="text-sm text-brand-gray">Your collection</p>
+          <h1 className="text-3xl font-bold text-dark">Saved</h1>
+        </div>
+        <div className="flex-shrink-0 pt-2">
+          <ViewControl
+            currentCount={currentCardIndex + 1}
+            totalCount={totalCount}
+          />
+        </div>
       </div>
-      <ul className="flex flex-col gap-3 mt-4">
-        {savedCards.map((card) => (
-          <Card key={card.id ?? card.name} {...card} />
-        ))}
-      </ul>
+
+      <div className="px-4 mb-6">
+        <Chips
+          chips={categories}
+          activeId={activeCategory.id}
+          onChange={handleChipChange}
+        />
+      </div>
+
+      <div className="flex-1 min-h-0 pb-6">
+        <PlaceSlider
+          categoryId={activeCategory.id}
+          places={filteredPlaces}
+          categoryIndex={activeCategoryIndex}
+          totalCategories={categories.length}
+          categoryName={activeCategory.value}
+          onCategoryChange={handleCategoryChange}
+          onCardIndexChange={(index) => {
+            setCurrentCardIndex(index);
+            if (index > 0) {
+              setHintPhase((phase) => (phase === "card" ? "category" : phase));
+            }
+          }}
+          hintPhase={hintPhase}
+          onHideHint={() =>
+            setHintPhase((phase) => (phase === "category" ? "done" : phase))
+          }
+          transitionDirection={transitionDirection}
+        />
+      </div>
     </div>
   );
 }
