@@ -2,11 +2,13 @@ import { Header } from "@/widgets/header";
 import { CardsSlider } from "@/widgets/cards-slider";
 import { CityFacts } from "@/widgets/city-facts";
 import { Banner } from "@/shared/ui";
-import { getPlaces } from "@/entities/place";
+import { cookies } from "next/headers";
+import { placeApi } from "@/entities/place";
 import { CityInfo } from "@/widgets/city-info";
 
 export default async function Overview() {
-  const whereToGo = await getPlaces();
+  const cookieStore = await cookies();
+  const whereToGo = await placeApi.getAll(cookieStore.toString());
 
   return (
     <>

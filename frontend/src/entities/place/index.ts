@@ -1,2 +1,2 @@
-export { getPlaces, getPlaceById, toggleSavePlace, getCategories } from "./api";
+export { placeApi } from "./api/placeApi";
 export { usePlaces, placesKey } from "./model/usePlaces";
