@@ -26,11 +26,11 @@ export interface PlaceSliderProps {
   categoryIndex: number;
   totalCategories: number;
   categoryName: string;
-  onCategoryChange: (newIndex: number, dir: "up" | "down") => void;
+  onCategoryChange: (newIndex: number, dir: "left" | "right") => void;
   onCardIndexChange: (index: number) => void;
   hintPhase: HintPhase;
   onHideHint: () => void;
-  transitionDirection: "up" | "down" | null;
+  transitionDirection: "left" | "right" | null;
 }
 
 export interface SliderContentProps {

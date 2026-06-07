@@ -23,9 +23,9 @@ function SliderContent({
 
   return (
     <div ref={emblaRef} className="overflow-hidden h-full">
-      <div className="flex h-full">
+      <div className="flex flex-col h-full">
         {cards.map((card) => (
-          <div key={card.id ?? card.name} className="flex-shrink-0 w-full px-4 h-full">
+          <div key={card.id ?? card.name} className="flex-[0_0_100%] min-h-0 w-full px-4">
             <Card
               {...card}
               className="w-full max-w-none snap-none aspect-auto h-full"
@@ -96,13 +96,13 @@ export function PlaceSlider({
             key={categoryId}
             custom={animDir.current}
             variants={{
-              enter: (dir: "up" | "down" | null) => ({
-                y: dir === "down" ? 300 : dir === "up" ? -300 : 0,
+              enter: (dir: "left" | "right" | null) => ({
+                x: dir === "right" ? 300 : dir === "left" ? -300 : 0,
                 opacity: 0,
               }),
-              center: { y: 0, opacity: 1 },
-              exit: (dir: "up" | "down" | null) => ({
-                y: dir === "down" ? -300 : dir === "up" ? 300 : 0,
+              center: { x: 0, opacity: 1 },
+              exit: (dir: "left" | "right" | null) => ({
+                x: dir === "right" ? -300 : dir === "left" ? 300 : 0,
                 opacity: 0,
               }),
             }}

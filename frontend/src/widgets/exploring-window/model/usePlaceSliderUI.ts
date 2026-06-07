@@ -9,8 +9,8 @@ import type { ICard, SelectedCard } from "@/shared/types/card";
 interface UsePlaceSliderUIProps {
   categoryIndex: number;
   totalCategories: number;
-  transitionDirection: "up" | "down" | null;
-  onCategoryChange: (newIndex: number, dir: "up" | "down") => void;
+  transitionDirection: "left" | "right" | null;
+  onCategoryChange: (newIndex: number, dir: "left" | "right") => void;
   onHideHint: () => void;
 }
 
@@ -25,7 +25,7 @@ export function usePlaceSliderUI({
   const { mutate: toggleVisit } = useToggleVisit();
   const [selected, setSelected] = useState<SelectedCard | null>(null);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
-  const animDir = useRef<"up" | "down" | null>(null);
+  const animDir = useRef<"left" | "right" | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   if (transitionDirection !== null) {
@@ -44,7 +44,7 @@ export function usePlaceSliderUI({
     const onMove = (e: TouchEvent) => {
       const dx = e.touches[0].clientX - startX;
       const dy = e.touches[0].clientY - startY;
-      if (Math.abs(dy) > Math.abs(dx)) e.preventDefault();
+      if (Math.abs(dx) > Math.abs(dy)) e.preventDefault();
     };
     el.addEventListener("touchstart", onStart, { passive: true });
     el.addEventListener("touchmove", onMove, { passive: false });
@@ -54,19 +54,19 @@ export function usePlaceSliderUI({
     };
   }, []);
 
-  const triggerVerticalSwipe = useCallback(
+  const triggerHorizontalSwipe = useCallback(
     (dx: number, dy: number) => {
       const absX = Math.abs(dx);
       const absY = Math.abs(dy);
       const threshold = 60;
-      if (absY > absX && absY > threshold) {
+      if (absX > absY && absX > threshold) {
         onHideHint();
-        if (dy < 0) {
-          onCategoryChange((categoryIndex + 1) % totalCategories, "down");
+        if (dx < 0) {
+          onCategoryChange((categoryIndex + 1) % totalCategories, "right");
         } else {
           const prev =
             categoryIndex === 0 ? totalCategories - 1 : categoryIndex - 1;
-          onCategoryChange(prev, "up");
+          onCategoryChange(prev, "left");
         }
       }
     },
@@ -85,9 +85,9 @@ export function usePlaceSliderUI({
       const dx = t.clientX - touchStart.current.x;
       const dy = t.clientY - touchStart.current.y;
       touchStart.current = null;
-      triggerVerticalSwipe(dx, dy);
+      triggerHorizontalSwipe(dx, dy);
     },
-    [triggerVerticalSwipe],
+    [triggerHorizontalSwipe],
   );
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -100,9 +100,9 @@ export function usePlaceSliderUI({
       const dx = e.clientX - touchStart.current.x;
       const dy = e.clientY - touchStart.current.y;
       touchStart.current = null;
-      triggerVerticalSwipe(dx, dy);
+      triggerHorizontalSwipe(dx, dy);
     },
-    [triggerVerticalSwipe],
+    [triggerHorizontalSwipe],
   );
 
   async function handleCardSelect(card: ICard, rect: DOMRect) {

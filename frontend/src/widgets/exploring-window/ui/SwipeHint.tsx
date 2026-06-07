@@ -38,19 +38,6 @@ export function SwipeHint({ phase, isVisible }: SwipeHintProps) {
         >
           {phase === "category" ? (
             <>
-              <div className="relative w-[50px] h-[160px] flex flex-col items-center justify-start">
-                <motion.div
-                  animate={{ y: [130, 130, 0], opacity: [0, 1, 1, 0] }}
-                  transition={{ y: circleTransition, opacity: opacityTransition }}
-                  className="w-[30px] h-[30px] rounded-full border-2 border-white/60"
-                />
-              </div>
-              <span className="text-sm font-medium text-white/90 whitespace-nowrap bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                swipe for next category
-              </span>
-            </>
-          ) : (
-            <>
               <div className="relative w-[200px] h-[50px] flex items-center">
                 <motion.div
                   animate={{ x: [160, 160, 0], opacity: [0, 1, 1, 0] }}
@@ -59,7 +46,20 @@ export function SwipeHint({ phase, isVisible }: SwipeHintProps) {
                 />
               </div>
               <span className="text-sm font-medium text-white/90 whitespace-nowrap bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                swipe for next card
+                swipe left/right to change category
+              </span>
+            </>
+          ) : (
+            <>
+              <div className="relative w-[50px] h-[160px] flex flex-col items-center justify-start">
+                <motion.div
+                  animate={{ y: [130, 130, 0], opacity: [0, 1, 1, 0] }}
+                  transition={{ y: circleTransition, opacity: opacityTransition }}
+                  className="w-[30px] h-[30px] rounded-full border-2 border-white/60"
+                />
+              </div>
+              <span className="text-sm font-medium text-white/90 whitespace-nowrap bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                swipe up/down for next place
               </span>
             </>
           )}
