@@ -17,11 +17,7 @@ export interface Rank {
 
 export interface UserProgress {
   placesVisited: number;
-  rank: string;
-  rankProgress: number;
-  rankMax: number;
   districts: number;
-  hiddenSpots: number;
   isNightExplorer: boolean;
   isFoodHunter: boolean;
 }

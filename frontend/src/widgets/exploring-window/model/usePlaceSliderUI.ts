@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useToggleSave } from "@/features/save-card";
+import { useToggleVisit } from "@/features/visit-card";
 import { placeApi } from "@/entities/place";
 import type { ICard, SelectedCard } from "@/shared/types/card";
 
@@ -21,6 +22,7 @@ export function usePlaceSliderUI({
   onHideHint,
 }: UsePlaceSliderUIProps) {
   const { mutate: toggleSave } = useToggleSave();
+  const { mutate: toggleVisit } = useToggleVisit();
   const [selected, setSelected] = useState<SelectedCard | null>(null);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
   const animDir = useRef<"up" | "down" | null>(null);
@@ -126,10 +128,25 @@ export function usePlaceSliderUI({
     });
   }
 
+  function toggleVisitSelected() {
+    if (!selected?.card.id) return;
+    toggleVisit(selected.card.id, {
+      onSuccess: (updated) =>
+        setSelected(
+          (prev) =>
+            prev && {
+              ...prev,
+              card: { ...prev.card, isVisited: updated.isVisited },
+            },
+        ),
+    });
+  }
+
   return {
     selected,
     setSelected,
     isSelectedSaved: selected?.card.isSaved ?? false,
+    isSelectedVisited: selected?.card.isVisited ?? false,
     animDir,
     containerRef,
     handleTouchStart,
@@ -138,5 +155,6 @@ export function usePlaceSliderUI({
     handleMouseUp,
     handleCardSelect,
     toggleSaveSelected,
+    toggleVisitSelected,
   };
 }

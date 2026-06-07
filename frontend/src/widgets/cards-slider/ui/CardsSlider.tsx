@@ -13,10 +13,12 @@ export function CardsSlider({ title, initialCards }: CardSliderProps) {
   const {
     selected,
     isSelectedSaved,
+    isSelectedVisited,
     viewMore,
     handleCardClick,
     closeSelected,
     toggleSaveSelected,
+    toggleVisitSelected,
   } = useCardsSlider();
 
   return (
@@ -57,8 +59,10 @@ export function CardsSlider({ title, initialCards }: CardSliderProps) {
             card={selected.card}
             sourceRect={selected.rect}
             isSaved={isSelectedSaved}
+            isVisited={isSelectedVisited}
             onClose={closeSelected}
             onToggleSave={toggleSaveSelected}
+            onToggleVisit={toggleVisitSelected}
           />
         )}
       </AnimatePresence>

@@ -2,7 +2,7 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
-import { X, MapIcon, EyeIcon, MoonIcon, UtensilsIcon } from "lucide-react";
+import { X, MapIcon, MoonIcon, UtensilsIcon } from "lucide-react";
 import { RANK_TEXT } from "../model/constants";
 import { useRankBadge } from "../model/useRankBadge";
 import type { Rank, RankBadgeProps } from "../model/types";
@@ -177,12 +177,6 @@ export function RankBadge({ userProgress }: RankBadgeProps) {
                 bg="bg-lime-100"
                 label="Districts unlocked"
                 value={userProgress.districts}
-              />
-              <PassportStat
-                icon={<EyeIcon className="w-5 h-5 text-pink-600" />}
-                bg="bg-pink-100"
-                label="Hidden spots discovered"
-                value={userProgress.hiddenSpots}
               />
             </div>
 
