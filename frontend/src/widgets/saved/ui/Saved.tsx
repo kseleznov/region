@@ -55,7 +55,7 @@ export function Saved() {
           <p className="text-sm text-brand-gray">Your collection</p>
           <h1 className="text-3xl font-bold text-dark">Saved</h1>
         </div>
-        <div className="flex-shrink-0 pt-2">
+        <div className="flex-shrink-0 pt-2 self-end">
           <ViewControl
             currentCount={currentCardIndex + 1}
             totalCount={totalCount}

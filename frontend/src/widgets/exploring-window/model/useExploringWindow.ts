@@ -22,7 +22,7 @@ export function useExploringWindow(
   const [subcategoryModalOpen, setSubcategoryModalOpen] = useState(false);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [transitionDirection, setTransitionDirection] = useState<
-    "up" | "down" | null
+    "left" | "right" | null
   >(null);
   const [hintPhase, setHintPhase] = useState<HintPhase>("card");
   const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
@@ -51,7 +51,7 @@ export function useExploringWindow(
     router.push(ROUTES.region);
   }
 
-  function handleCategoryChange(newIndex: number, dir: "up" | "down") {
+  function handleCategoryChange(newIndex: number, dir: "left" | "right") {
     setActiveCategoryIndex(newIndex);
     setCurrentCardIndex(0);
     setTransitionDirection(dir);
@@ -73,7 +73,7 @@ export function useExploringWindow(
     }
     setHintPhase("done");
     setActiveSubcategory(null);
-    const dir = newIndex > activeCategoryIndex ? "down" : "up";
+    const dir = newIndex > activeCategoryIndex ? "right" : "left";
     handleCategoryChange(newIndex, dir);
   }
 

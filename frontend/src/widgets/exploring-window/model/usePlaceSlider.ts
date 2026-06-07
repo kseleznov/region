@@ -7,6 +7,7 @@ import type { ICard } from "@/shared/types/card";
 export function usePlaceSlider(categoryId: string, places: ICard[]) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
+    axis: "y",
     loop: false,
   });
   const [selectedIndex, setSelectedIndex] = useState(0);
