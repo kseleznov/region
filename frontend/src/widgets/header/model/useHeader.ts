@@ -1,21 +1,24 @@
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useSelectCityStore } from "@/features/select-city";
 import { ROUTES } from "@/shared/config/routes";
+import { authApi } from "@/features/auth";
+import type { UserProgress } from "@/entities/rank";
+
+const DEFAULT_PROGRESS: UserProgress = {
+  placesVisited: 0,
+  districts: 0,
+  isNightExplorer: false,
+  isFoodHunter: false,
+};
 
 export function useHeader() {
   const { selectedCity } = useSelectCityStore();
   const router = useRouter();
 
-  const [userProgress] = useState({
-    placesVisited: 0,
-    rank: "Insider",
-    rankProgress: 24,
-    rankMax: 40,
-    districts: 3,
-    hiddenSpots: 7,
-    isNightExplorer: true,
-    isFoodHunter: true,
+  const { data: userProgress = DEFAULT_PROGRESS } = useQuery({
+    queryKey: ["userProgress"],
+    queryFn: authApi.getUserProgress,
   });
 
   function redirect() {

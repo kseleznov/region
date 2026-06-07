@@ -59,6 +59,7 @@ export function PlaceSlider({
     selected,
     setSelected,
     isSelectedSaved,
+    isSelectedVisited,
     animDir,
     containerRef,
     handleTouchStart,
@@ -67,6 +68,7 @@ export function PlaceSlider({
     handleMouseUp,
     handleCardSelect,
     toggleSaveSelected,
+    toggleVisitSelected,
   } = usePlaceSliderUI({
     categoryIndex,
     totalCategories,
@@ -133,8 +135,10 @@ export function PlaceSlider({
             card={selected.card}
             sourceRect={selected.rect}
             isSaved={isSelectedSaved}
+            isVisited={isSelectedVisited}
             onClose={() => setSelected(null)}
             onToggleSave={toggleSaveSelected}
+            onToggleVisit={toggleVisitSelected}
           />
         )}
       </AnimatePresence>

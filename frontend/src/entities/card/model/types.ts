@@ -10,8 +10,10 @@ export interface CardDetailProps {
   card: ICard;
   sourceRect: DOMRect;
   isSaved: boolean;
+  isVisited: boolean;
   onClose: () => void;
   onToggleSave: () => void;
+  onToggleVisit: () => void;
 }
 
 export interface UseCardProps {

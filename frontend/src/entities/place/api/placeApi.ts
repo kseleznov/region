@@ -33,4 +33,11 @@ export const placeApi = {
 
     return data;
   },
+
+  toggleVisit: async (id: number): Promise<{ isVisited: boolean }> => {
+    const { data } = await apiClient.patch<{ isVisited: boolean }>(
+      `/places/${id}/visit`,
+    );
+    return data;
+  },
 };

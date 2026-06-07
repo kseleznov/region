@@ -19,6 +19,7 @@ export interface ICard {
   price: number;
   isOpen: boolean;
   isSaved: boolean;
+  isVisited?: boolean;
   description?: string;
   workingHours?: IWorkingHours;
 }

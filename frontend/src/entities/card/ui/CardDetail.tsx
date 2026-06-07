@@ -9,6 +9,7 @@ import {
   ChevronDown,
   ChevronRight,
   BookOpen,
+  MapPin,
 } from "lucide-react";
 import { DAYS } from "../model/constants";
 import { useCard } from "../model/useCard";
@@ -20,8 +21,10 @@ export function CardDetail({
   card,
   sourceRect,
   isSaved,
+  isVisited,
   onClose,
   onToggleSave,
+  onToggleVisit,
 }: CardDetailProps) {
   const {
     hoursOpen,
@@ -249,6 +252,21 @@ export function CardDetail({
             >
               <Heart
                 className={`w-5 h-5 ${isSaved ? "fill-white text-white" : "text-dark"}`}
+                strokeWidth={2.5}
+              />
+            </button>
+
+            <button
+              onClick={onToggleVisit}
+              aria-label={isVisited ? "Unmark as visited" : "Mark as visited"}
+              className={`flex-shrink-0 w-14 h-14 rounded-full border-2 flex items-center justify-center transition-all ${
+                isVisited
+                  ? "bg-brand-yellow border-brand-yellow"
+                  : "bg-white border-dark/10 hover:border-dark/30"
+              }`}
+            >
+              <MapPin
+                className={`w-5 h-5 ${isVisited ? "fill-dark text-dark" : "text-dark"}`}
                 strokeWidth={2.5}
               />
             </button>
