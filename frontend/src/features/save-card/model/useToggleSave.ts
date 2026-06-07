@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toggleSavePlace, placesKey } from "@/entities/place";
+import { placeApi, placesKey } from "@/entities/place";
 
 export function useToggleSave() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: toggleSavePlace,
+    mutationFn: placeApi.toggleSave,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: placesKey }),
   });
 }

@@ -1,10 +1,12 @@
+import { cookies } from "next/headers";
 import { ExploringWindow } from "@/widgets/exploring-window";
-import { getPlaces, getCategories } from "@/entities/place";
+import { placeApi } from "@/entities/place";
 
 export default async function Exploring() {
+  const cookieStore = await cookies();
   const [categories, places] = await Promise.all([
-    getCategories(),
-    getPlaces(),
+    placeApi.getCategories(),
+    placeApi.getAll(cookieStore.toString()),
   ]);
 
   return <ExploringWindow categories={categories} initialPlaces={places} />;

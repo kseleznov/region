@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { getPlaceById } from "@/entities/place";
+import { placeApi } from "@/entities/place";
 import { useToggleSave } from "@/features/save-card";
 import { ROUTES } from "@/shared/config/routes";
 import type { ICard, SelectedCard } from "@/shared/types/card";
@@ -16,7 +16,7 @@ export function useCardsSlider() {
 
   async function handleCardClick(card: ICard, rect: DOMRect) {
     try {
-      const full = await getPlaceById(card.id as number);
+      const full = await placeApi.getById(card.id as number);
       setSelected({ card: full ?? card, rect });
     } catch {
       setSelected({ card, rect });
@@ -33,7 +33,13 @@ export function useCardsSlider() {
       if (!selected?.card.id) return;
       toggleSave(selected.card.id, {
         onSuccess: (updated) =>
-          setSelected((prev) => prev && { ...prev, card: updated }),
+          setSelected(
+            (prev) =>
+              prev && {
+                ...prev,
+                card: { ...prev.card, isSaved: updated.isSaved },
+              },
+          ),
       });
     },
   };

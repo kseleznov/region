@@ -1,9 +1,15 @@
 "use client";
 
-import { ChevronRight, LogOut, Settings } from "lucide-react";
+import Link from "next/link";
+import { ChevronRight, LogIn, LogOut, Settings } from "lucide-react";
 import { MENU_ITEMS } from "../model/constanst";
+import { useAuthStore, useLogout } from "@/features/auth";
+import { ROUTES } from "@/shared/config/routes";
 
 export function Profile() {
+  const user = useAuthStore((state) => state.user);
+  const { logout, isPending } = useLogout();
+
   return (
     <div className="flex flex-col gap-6 px-4 pt-6 pb-8">
       <div>
@@ -14,11 +20,13 @@ export function Profile() {
       <div className="flex items-center justify-between bg-brand-purple rounded-2xl px-4 py-4">
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 rounded-xl bg-brand-yellow flex items-center justify-center">
-            <span className="text-2xl font-bold text-dark">A</span>
+            <span className="text-2xl font-bold text-dark">
+              {user?.name?.[0]?.toUpperCase() ?? "?"}
+            </span>
           </div>
           <div>
-            <p className="text-lg font-bold text-light">Alex Morgan</p>
-            <p className="text-sm text-light/80">alex@region.app</p>
+            <p className="text-lg font-bold text-light">{user?.name ?? "—"}</p>
+            <p className="text-sm text-light/80">{user?.email ?? "—"}</p>
           </div>
         </div>
         <button className="w-10 h-10 rounded-full bg-light/20 flex items-center justify-center">
@@ -47,10 +55,24 @@ export function Profile() {
       </div>
 
       <div className="bg-search-bg rounded-2xl">
-        <button className="flex items-center gap-3 w-full px-4 py-4">
-          <LogOut size={20} className="text-brand-pink" />
-          <span className="font-medium text-brand-pink">Log out</span>
-        </button>
+        {user ? (
+          <button
+            className="flex items-center gap-3 w-full px-4 py-4 disabled:opacity-50"
+            onClick={() => logout()}
+            disabled={isPending}
+          >
+            <LogOut size={20} className="text-brand-pink" />
+            <span className="font-medium text-brand-pink">Log out</span>
+          </button>
+        ) : (
+          <Link
+            href={ROUTES.signIn}
+            className="flex items-center gap-3 w-full px-4 py-4"
+          >
+            <LogIn size={20} className="text-brand-purple" />
+            <span className="font-medium text-brand-purple">Sign in</span>
+          </Link>
+        )}
       </div>
     </div>
   );

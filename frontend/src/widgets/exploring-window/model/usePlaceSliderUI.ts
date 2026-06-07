@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useToggleSave } from "@/features/save-card";
-import { getPlaceById } from "@/entities/place";
+import { placeApi } from "@/entities/place";
 import type { ICard, SelectedCard } from "@/shared/types/card";
 
 interface UsePlaceSliderUIProps {
@@ -26,7 +26,9 @@ export function usePlaceSliderUI({
   const animDir = useRef<"up" | "down" | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  if (transitionDirection !== null) animDir.current = transitionDirection;
+  if (transitionDirection !== null) {
+    animDir.current = transitionDirection;
+  }
 
   useEffect(() => {
     const el = containerRef.current;
@@ -103,7 +105,7 @@ export function usePlaceSliderUI({
 
   async function handleCardSelect(card: ICard, rect: DOMRect) {
     try {
-      const full = card.id ? await getPlaceById(card.id) : null;
+      const full = card.id ? await placeApi.getById(card.id) : null;
       setSelected({ card: full ?? card, rect });
     } catch {
       setSelected({ card, rect });
@@ -114,7 +116,13 @@ export function usePlaceSliderUI({
     if (!selected?.card.id) return;
     toggleSave(selected.card.id, {
       onSuccess: (updated) =>
-        setSelected((prev) => prev && { ...prev, card: updated }),
+        setSelected(
+          (prev) =>
+            prev && {
+              ...prev,
+              card: { ...prev.card, isSaved: updated.isSaved },
+            },
+        ),
     });
   }
 

@@ -1,13 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
-import { getPlaces } from '../api';
-import type { ICard } from '@/shared/types/card';
+import { useQuery } from "@tanstack/react-query";
+import { placeApi } from "../api/placeApi";
+import type { ICard } from "@/shared/types/card";
 
-export const placesKey = ['places'] as const;
+export const placesKey = ["places"] as const;
 
 export function usePlaces(initialData?: ICard[]) {
   return useQuery({
     queryKey: placesKey,
-    queryFn: getPlaces,
+    queryFn: () => placeApi.getAll(),
     initialData,
     staleTime: 30_000,
   });
