@@ -1,4 +1,6 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import type { Request } from 'express';
+import type { JwtUser } from '../auth/auth.types';
 import { UsersService } from './users.service';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 
@@ -8,8 +10,8 @@ export class UsersController {
 
   @UseGuards(JwtGuard)
   @Get('me/progress')
-  getProgress(@Req() req: any) {
-    const user = req.user as { id: number };
-    return this.usersService.getProgress(user.id);
+  getProgress(@Req() req: Request) {
+    const { id } = req.user as JwtUser;
+    return this.usersService.getProgress(id);
   }
 }

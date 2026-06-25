@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { PLACE_CATEGORIES, PROGRESS_THRESHOLDS } from './users.constants';
 
 @Injectable()
 export class UsersService {
@@ -22,9 +23,6 @@ export class UsersService {
   }
 
   async getProgress(userId: number) {
-    const NIGHT_EXPLORER_THRESHOLD = 5;
-    const FOOD_HUNTER_THRESHOLD = 5;
-
     const visited = await this.prisma.visitedPlace.findMany({
       where: { userId },
       include: { place: { select: { category: true } } },
@@ -32,18 +30,20 @@ export class UsersService {
 
     const placesVisited = visited.length;
     const districts = visited.filter(
-      (v) => v.place.category === 'Район',
+      (v) => v.place.category === PLACE_CATEGORIES.DISTRICT,
     ).length;
-    const clubs = visited.filter((v) => v.place.category === 'Клуб').length;
+    const clubs = visited.filter(
+      (v) => v.place.category === PLACE_CATEGORIES.CLUB,
+    ).length;
     const restaurants = visited.filter(
-      (v) => v.place.category === 'Ресторан',
+      (v) => v.place.category === PLACE_CATEGORIES.RESTAURANT,
     ).length;
 
     return {
       placesVisited,
       districts,
-      isNightExplorer: clubs >= NIGHT_EXPLORER_THRESHOLD,
-      isFoodHunter: restaurants >= FOOD_HUNTER_THRESHOLD,
+      isNightExplorer: clubs >= PROGRESS_THRESHOLDS.NIGHT_EXPLORER,
+      isFoodHunter: restaurants >= PROGRESS_THRESHOLDS.FOOD_HUNTER,
     };
   }
 }
