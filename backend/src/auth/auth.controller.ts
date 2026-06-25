@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { AuthService } from './auth.service';
+import type { AuthTokens, JwtRefreshUser, JwtUser } from './auth.types';
 import { RegisterDto } from './dto/register.dto';
 import { LocalGuard } from './guards/local.guard';
 import { JwtGuard } from './guards/jwt.guard';
@@ -24,7 +25,11 @@ export class AuthController {
     @Body() dto: RegisterDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const tokens = await this.authService.register(dto.email, dto.password, dto.name);
+    const tokens = await this.authService.register(
+      dto.email,
+      dto.password,
+      dto.name,
+    );
     this.setTokenCookies(res, tokens);
     return { message: 'Registered' };
   }
@@ -33,7 +38,7 @@ export class AuthController {
   @Post('login')
   @HttpCode(200)
   async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const { id, email, name } = req.user as { id: number; email: string; name: string };
+    const { id, email, name } = req.user as JwtUser;
     const tokens = await this.authService.login(id, email, name);
     this.setTokenCookies(res, tokens);
     return { message: 'Logged in' };
@@ -43,7 +48,7 @@ export class AuthController {
   @Post('logout')
   @HttpCode(200)
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const { id } = req.user as { id: number };
+    const { id } = req.user as JwtUser;
     await this.authService.logout(id);
     res.clearCookie('access_token');
     res.clearCookie('refresh_token');
@@ -53,12 +58,11 @@ export class AuthController {
   @UseGuards(JwtRefreshGuard)
   @Post('refresh')
   @HttpCode(200)
-  async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const { id, email, refreshToken } = req.user as {
-      id: number;
-      email: string;
-      refreshToken: string;
-    };
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { id, refreshToken } = req.user as JwtRefreshUser;
     const tokens = await this.authService.refreshTokens(id, refreshToken);
     this.setTokenCookies(res, tokens);
     return { message: 'Tokens refreshed' };
@@ -70,10 +74,7 @@ export class AuthController {
     return req.user;
   }
 
-  private setTokenCookies(
-    res: Response,
-    tokens: { accessToken: string; refreshToken: string },
-  ) {
+  private setTokenCookies(res: Response, tokens: AuthTokens) {
     const isProd = process.env.NODE_ENV === 'production';
     res.cookie('access_token', tokens.accessToken, {
       httpOnly: true,
