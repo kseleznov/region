@@ -7,7 +7,9 @@ export class CitiesService {
 
   async findBySlug(slug: string) {
     const city = await this.prisma.city.findUnique({ where: { slug } });
-    if (!city) throw new NotFoundException(`City "${slug}" not found`);
+    if (!city) {
+      throw new NotFoundException(`City "${slug}" not found`);
+    }
     return city;
   }
 }
