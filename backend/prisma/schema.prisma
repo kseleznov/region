@@ -6,19 +6,40 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  password      String
+  name          String
+  refreshToken  String?
+  savedPlaces   SavedPlace[]
+  visitedPlaces VisitedPlace[]
+}
+
+model SavedPlace {
+  id      Int   @id @default(autoincrement())
+  user    User  @relation(fields: [userId], references: [id])
+  userId  Int
+  place   Place @relation(fields: [placeId], references: [id])
+  placeId Int
+
+  @@unique([userId, placeId])
+}
+
 model Place {
-  id           Int     @id @default(autoincrement())
+  id           Int          @id @default(autoincrement())
   name         String
   category     String
   description  String
   image        String
-  photos       Json    @default("[]")
+  photos       Json         @default("[]")
   stars        Float
   price        Int
   address      String
   isOpen       Boolean
-  isSaved      Boolean
   workingHours Json
+  savedBy      SavedPlace[]
+  visitedBy    VisitedPlace[]
 }
 
 model City {
@@ -29,4 +50,14 @@ model City {
   images      Json   @default("[]")
   location    Json
   weather     Json
+}
+
+model VisitedPlace {
+  id      Int   @id @default(autoincrement())
+  user    User  @relation(fields: [userId], references: [id])
+  userId  Int
+  place   Place @relation(fields: [placeId], references: [id])
+  placeId Int
+
+  @@unique([userId, placeId])
 }
