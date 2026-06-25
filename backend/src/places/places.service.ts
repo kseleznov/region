@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
 const SUBCATEGORY_TO_PARENT: Record<string, { id: string; value: string }> = {
@@ -19,8 +19,8 @@ const PARENT_ORDER = ['culture', 'activities', 'nature'];
 export class PlacesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.place.findMany({
+  async findAll(userId?: number) {
+    const places = await this.prisma.place.findMany({
       select: {
         id: true,
         name: true,
@@ -30,13 +30,45 @@ export class PlacesService {
         price: true,
         isOpen: true,
         address: true,
-        isSaved: true,
+        savedBy: userId ? { where: { userId }, select: { id: true } } : false,
+        visitedBy: userId ? { where: { userId }, select: { id: true } } : false,
       },
     });
+
+    return places.map(({ savedBy, visitedBy, ...place }) => ({
+      ...place,
+      isSaved: userId ? (savedBy as any[]).length > 0 : false,
+      isVisited: userId ? (visitedBy as any[]).length > 0 : false,
+    }));
   }
 
-  findOne(id: number) {
-    return this.prisma.place.findUnique({ where: { id } });
+  async findOne(id: number, userId?: number) {
+    const place = await this.prisma.place.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        category: true,
+        image: true,
+        stars: true,
+        price: true,
+        isOpen: true,
+        address: true,
+        description: true,
+        workingHours: true,
+        savedBy: userId ? { where: { userId }, select: { id: true } } : false,
+        visitedBy: userId ? { where: { userId }, select: { id: true } } : false,
+      },
+    });
+
+    if (!place) return null;
+
+    const { savedBy, visitedBy, ...rest } = place as any;
+    return {
+      ...rest,
+      isSaved: userId ? (savedBy as any[]).length > 0 : false,
+      isVisited: userId ? (visitedBy as any[]).length > 0 : false,
+    };
   }
 
   async getCategories() {
@@ -68,5 +100,45 @@ export class PlacesService {
     );
 
     return [{ id: 'all', value: 'All', subcategories: [] }, ...sorted];
+  }
+
+  async toggleVisit(placeId: number, userId: number) {
+    const place = await this.prisma.place.findUnique({
+      where: { id: placeId },
+    });
+    if (!place)
+      throw new NotFoundException(`Place with id ${placeId} not found`);
+
+    const existing = await this.prisma.visitedPlace.findUnique({
+      where: { userId_placeId: { userId, placeId } },
+    });
+
+    if (existing) {
+      await this.prisma.visitedPlace.delete({ where: { id: existing.id } });
+      return { isVisited: false };
+    }
+
+    await this.prisma.visitedPlace.create({ data: { userId, placeId } });
+    return { isVisited: true };
+  }
+
+  async toggleSave(placeId: number, userId: number) {
+    const place = await this.prisma.place.findUnique({
+      where: { id: placeId },
+    });
+    if (!place)
+      throw new NotFoundException(`Place with id ${placeId} not found`);
+
+    const existing = await this.prisma.savedPlace.findUnique({
+      where: { userId_placeId: { userId, placeId } },
+    });
+
+    if (existing) {
+      await this.prisma.savedPlace.delete({ where: { id: existing.id } });
+      return { isSaved: false };
+    }
+
+    await this.prisma.savedPlace.create({ data: { userId, placeId } });
+    return { isSaved: true };
   }
 }
