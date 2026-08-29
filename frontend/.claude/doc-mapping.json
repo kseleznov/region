@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "description": "Maps frontend/src path patterns to FSD layer rules and docs. Paths are repo-root-relative.",
+  "mappings": [
+    { "pattern": "frontend/src/app/**", "doc": "frontend/.claude/docs/app.md", "rules": "frontend/.claude/rules/app.md", "layer": "app" },
+    { "pattern": "frontend/src/widgets/**", "doc": "frontend/.claude/docs/widgets.md", "rules": "frontend/.claude/rules/widgets.md", "layer": "widgets" },
+    { "pattern": "frontend/src/features/**", "doc": "frontend/.claude/docs/features.md", "rules": "frontend/.claude/rules/features.md", "layer": "features" },
+    { "pattern": "frontend/src/entities/**", "doc": "frontend/.claude/docs/entities.md", "rules": "frontend/.claude/rules/entities.md", "layer": "entities" },
+    { "pattern": "frontend/src/shared/**", "doc": "frontend/.claude/docs/shared.md", "rules": "frontend/.claude/rules/shared.md", "layer": "shared" },
+    { "pattern": "frontend/src/shared/api/**", "doc": "frontend/.claude/docs/shared.md", "rules": "frontend/.claude/rules/api.md", "layer": "shared/api" },
+    { "pattern": "frontend/src/**/*.tsx", "doc": null, "rules": "frontend/.claude/rules/components.md", "layer": "components" },
+    { "pattern": "frontend/src/**", "doc": null, "rules": "frontend/.claude/rules/naming.md", "layer": "global" },
+    { "pattern": "frontend/src/**", "doc": null, "rules": "frontend/.claude/rules/pitfalls.md", "layer": "global" },
+    { "pattern": "frontend/src/**", "doc": null, "rules": "frontend/.claude/rules/code-quality.md", "layer": "global" },
+    { "pattern": "frontend/src/**/*.test.ts", "doc": null, "rules": "frontend/.claude/rules/testing.md", "layer": "tests" },
+    { "pattern": "frontend/src/**/*.test.tsx", "doc": null, "rules": "frontend/.claude/rules/testing.md", "layer": "tests" }
+  ]
+}
