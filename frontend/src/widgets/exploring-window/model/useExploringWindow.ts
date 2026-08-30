@@ -16,7 +16,7 @@ import {
   hasSeenSwipeHint,
   markSwipeHintSeen,
   subscribeSwipeHintSeen,
-} from "./swipeHintSeen";
+} from "@/shared/lib/swipeHintSeen";
 import type { Category, HintPhase } from "./types";
 
 export function useExploringWindow(

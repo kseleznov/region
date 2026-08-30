@@ -1,7 +1,18 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { usePlaces } from "@/entities/place";
+import {
+  hasSeenSwipeHint,
+  markSwipeHintSeen,
+  subscribeSwipeHintSeen,
+} from "@/shared/lib/swipeHintSeen";
 
 type HintPhase = "category" | "card" | "done";
 
@@ -30,6 +41,17 @@ export function useSaved() {
   const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
+
+  // One-time onboarding hint — show it once, then never again (persisted).
+  const hintSeen = useSyncExternalStore(
+    subscribeSwipeHintSeen,
+    hasSeenSwipeHint,
+    () => true,
+  );
+
+  useEffect(() => {
+    if (!hintSeen) markSwipeHintSeen();
+  }, [hintSeen]);
 
   const safeIndex = Math.min(activeCategoryIndex, categories.length - 1);
   const activeCategory = categories[safeIndex];
@@ -68,7 +90,7 @@ export function useSaved() {
     totalCount: filteredPlaces.length,
     currentCardIndex,
     transitionDirection,
-    hintPhase,
+    hintPhase: hintSeen ? "done" : hintPhase,
     handleCategoryChange,
     handleChipChange,
     setCurrentCardIndex,
