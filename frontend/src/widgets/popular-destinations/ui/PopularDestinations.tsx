@@ -1,7 +1,6 @@
 "use client";
 
 import { CityCard, cities } from "@/entities/city";
-import { toLowerCase } from "@/shared/lib/toLowerCase";
 import { usePopularDestinations } from "../model/usePopularDestinations";
 
 export function PopularDestinations() {
@@ -18,7 +17,7 @@ export function PopularDestinations() {
           <CityCard
             key={city.name}
             {...city}
-            isSelected={selectedCity === toLowerCase(city.name)}
+            isSelected={selectedCity === city.name}
             onSelect={() => handleCitySelect(city.name)}
           />
         ))}
