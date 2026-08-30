@@ -10,6 +10,7 @@ import {
   ChevronRight,
   BookOpen,
   MapPin,
+  MapPinCheck,
 } from "lucide-react";
 import { DAYS } from "../model/constants";
 import { useCard } from "../model/useCard";
@@ -265,10 +266,11 @@ export function CardDetail({
                   : "bg-white border-dark/10 hover:border-dark/30"
               }`}
             >
-              <MapPin
-                className={`w-5 h-5 ${isVisited ? "fill-dark text-dark" : "text-dark"}`}
-                strokeWidth={2.5}
-              />
+              {isVisited ? (
+                <MapPinCheck className="w-5 h-5 text-dark" strokeWidth={2.5} />
+              ) : (
+                <MapPin className="w-5 h-5 text-dark" strokeWidth={2.5} />
+              )}
             </button>
 
             <button className="flex-1 h-14 rounded-full bg-dark text-white font-bold flex items-center justify-center gap-2 hover:bg-black active:scale-[0.98] transition-all">
