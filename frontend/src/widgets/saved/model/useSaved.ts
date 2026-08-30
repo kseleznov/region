@@ -1,9 +1,22 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { usePlaces } from "@/entities/place";
+import {
+  hasSeenSwipeHint,
+  markSwipeHintSeen,
+  subscribeSwipeHintSeen,
+} from "@/shared/lib/swipeHintSeen";
 
 type HintPhase = "category" | "card" | "done";
+
+export type SavedTab = "saved" | "visited";
 
 type SavedCategory = {
   id: string;
@@ -14,12 +27,16 @@ const ALL_CATEGORY: SavedCategory = { id: "all", value: "All" };
 
 export function useSaved() {
   const { data: allCards = [] } = usePlaces();
+
+  const [tab, setTab] = useState<SavedTab>("saved");
   const savedCards = allCards.filter((card) => card.isSaved);
+  const visitedCards = allCards.filter((card) => card.isVisited);
+  const places = tab === "saved" ? savedCards : visitedCards;
 
   const categories = useMemo<SavedCategory[]>(() => {
-    const unique = Array.from(new Set(savedCards.map((c) => c.category)));
+    const unique = Array.from(new Set(places.map((c) => c.category)));
     return [ALL_CATEGORY, ...unique.map((cat) => ({ id: cat, value: cat }))];
-  }, [savedCards]);
+  }, [places]);
 
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -30,14 +47,41 @@ export function useSaved() {
   const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
+  // A vertical swipe moves the hint to "category"; a horizontal one then moves
+  // it to "done". Remember the hint as seen only once both have happened.
+  const hintReachedCategoryRef = useRef(false);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  // One-time onboarding hint — show it once, then never again (persisted).
+  const hintSeen = useSyncExternalStore(
+    subscribeSwipeHintSeen,
+    hasSeenSwipeHint,
+    () => true,
+  );
+
+  useEffect(() => {
+    if (hintSeen) return;
+    if (hintPhase === "category") {
+      hintReachedCategoryRef.current = true;
+    }
+    if (hintPhase === "done" && hintReachedCategoryRef.current) {
+      markSwipeHintSeen();
+    }
+  }, [hintSeen, hintPhase]);
 
   const safeIndex = Math.min(activeCategoryIndex, categories.length - 1);
   const activeCategory = categories[safeIndex];
 
   const filteredPlaces = useMemo(() => {
-    if (activeCategory.id === "all") return savedCards;
-    return savedCards.filter((card) => card.category === activeCategory.id);
-  }, [savedCards, activeCategory]);
+    if (activeCategory.id === "all") return places;
+    return places.filter((card) => card.category === activeCategory.id);
+  }, [places, activeCategory]);
 
   function handleCategoryChange(newIndex: number, dir: "up" | "down") {
     setActiveCategoryIndex(newIndex);
@@ -59,8 +103,20 @@ export function useSaved() {
     setHintPhase("done");
   }
 
+  function changeTab(next: SavedTab) {
+    if (next === tab) return;
+    setTab(next);
+    setActiveCategoryIndex(0);
+    setCurrentCardIndex(0);
+    setTransitionDirection(null);
+  }
+
   return {
-    savedCards,
+    tab,
+    changeTab,
+    savedCount: savedCards.length,
+    visitedCount: visitedCards.length,
+    isEmpty: places.length === 0,
     categories,
     activeCategoryIndex: safeIndex,
     activeCategory,
@@ -68,7 +124,7 @@ export function useSaved() {
     totalCount: filteredPlaces.length,
     currentCardIndex,
     transitionDirection,
-    hintPhase,
+    hintPhase: hintSeen ? "done" : hintPhase,
     handleCategoryChange,
     handleChipChange,
     setCurrentCardIndex,

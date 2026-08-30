@@ -17,6 +17,7 @@ import { setSessionExpiredHandler } from "@/shared/api/axios";
 export function useAuthBootstrap() {
   const setUser = useAuthStore((state) => state.setUser);
   const clearUser = useAuthStore((state) => state.clearUser);
+  const markReady = useAuthStore((state) => state.markReady);
 
   useEffect(() => {
     setSessionExpiredHandler(clearUser);
@@ -24,6 +25,7 @@ export function useAuthBootstrap() {
     authApi
       .me()
       .then(({ data }) => setUser(data))
-      .catch(() => {});
-  }, [setUser, clearUser]);
+      .catch(() => {})
+      .finally(markReady);
+  }, [setUser, clearUser, markReady]);
 }

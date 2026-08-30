@@ -1,9 +1,20 @@
+"use client";
+
 import { Chips } from "@/shared/ui";
 import { regions } from "../model/regions";
-import { useState } from "react";
+import { useSelectRegionStore } from "../model/useSelectRegionStore";
 
 export function RegionSelector() {
-  const [active, setActive] = useState("1");
+  const selectedRegionId = useSelectRegionStore(
+    (state) => state.selectedRegionId,
+  );
+  const selectRegion = useSelectRegionStore((state) => state.selectRegion);
 
-  return <Chips chips={regions} activeId={active} onChange={setActive} />;
+  return (
+    <Chips
+      chips={regions}
+      activeId={selectedRegionId}
+      onChange={selectRegion}
+    />
+  );
 }

@@ -10,9 +10,13 @@ import {
   ChevronRight,
   BookOpen,
   MapPin,
+  MapPinCheck,
 } from "lucide-react";
 import { DAYS } from "../model/constants";
 import { useCard } from "../model/useCard";
+import { CardExpectations } from "./CardExpectations";
+import { CardReviews } from "./CardReviews";
+import { CardSimilar } from "./CardSimilar";
 import { ImagesSlider } from "@/shared/ui/images-slider";
 import { MiniMap } from "@/shared/ui/mini-map";
 import type { CardDetailProps } from "../model/types";
@@ -25,12 +29,15 @@ export function CardDetail({
   onClose,
   onToggleSave,
   onToggleVisit,
+  onSelectSimilar,
 }: CardDetailProps) {
   const {
     hoursOpen,
     setHoursOpen,
     descExpanded,
     setDescExpanded,
+    expanded,
+    setExpanded,
     photos,
     isLongDesc,
     closingTime,
@@ -72,39 +79,39 @@ export function CardDetail({
         }}
         transition={{ type: "spring", damping: 30, stiffness: 280 }}
       >
-        <div className="relative w-full h-[250px] flex-shrink-0 bg-dark">
-          <ImagesSlider images={photos.map((url) => ({ url }))} />
+        <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-30">
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-transform"
+          >
+            <X className="w-5 h-5 text-dark" strokeWidth={2.5} />
+          </button>
 
-          <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-30">
-            <button
-              onClick={onClose}
-              aria-label="Close"
-              className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-transform"
-            >
-              <X className="w-5 h-5 text-dark" strokeWidth={2.5} />
-            </button>
-
-            <button
-              onClick={onToggleSave}
-              aria-label={isSaved ? "Unsave" : "Save"}
-              className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-transform"
-            >
-              <Heart
-                className={`w-5 h-5 transition-colors ${isSaved ? "fill-brand-pink text-brand-pink" : "text-dark"}`}
-                strokeWidth={2.5}
-              />
-            </button>
-          </div>
-
-          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-dark/70 to-transparent pointer-events-none" />
-          <div className="absolute bottom-4 left-4 z-20">
-            <span className="inline-flex items-center gap-1.5 bg-brand-yellow text-dark text-[11px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full">
-              {card.category}
-            </span>
-          </div>
+          <button
+            onClick={onToggleSave}
+            aria-label={isSaved ? "Unsave" : "Save"}
+            className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-transform"
+          >
+            <Heart
+              className={`w-5 h-5 transition-colors ${isSaved ? "fill-brand-pink text-brand-pink" : "text-dark"}`}
+              strokeWidth={2.5}
+            />
+          </button>
         </div>
 
         <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden pb-32">
+          <div className="relative w-full h-[250px] bg-dark">
+            <ImagesSlider images={photos.map((url) => ({ url }))} />
+
+            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-dark/70 to-transparent pointer-events-none" />
+            <div className="absolute bottom-4 left-4 z-20">
+              <span className="inline-flex items-center gap-1.5 bg-brand-yellow text-dark text-[11px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full">
+                {card.category}
+              </span>
+            </div>
+          </div>
+
           <div className="px-6 pt-5 pb-6">
             <h2 className="text-[28px] leading-[1.1] font-extrabold text-dark tracking-tighter mb-3">
               {card.name}
@@ -230,12 +237,32 @@ export function CardDetail({
               </div>
             )}
 
-            <div>
+            <div className={expanded ? "mb-8" : ""}>
               <div className="text-xs font-bold text-dark/50 uppercase tracking-wider mb-2 px-1">
                 Location
               </div>
               <MiniMap address={card.address} />
             </div>
+
+            {expanded && (
+              <>
+                {!!card.expectations?.length && (
+                  <CardExpectations items={card.expectations} />
+                )}
+                {card.ratingSummary && card.reviews?.length ? (
+                  <CardReviews
+                    summary={card.ratingSummary}
+                    reviews={card.reviews}
+                  />
+                ) : null}
+                {!!card.similar?.length && (
+                  <CardSimilar
+                    places={card.similar}
+                    onSelect={onSelectSimilar}
+                  />
+                )}
+              </>
+            )}
           </div>
         </div>
 
@@ -265,16 +292,25 @@ export function CardDetail({
                   : "bg-white border-dark/10 hover:border-dark/30"
               }`}
             >
-              <MapPin
-                className={`w-5 h-5 ${isVisited ? "fill-dark text-dark" : "text-dark"}`}
-                strokeWidth={2.5}
-              />
+              {isVisited ? (
+                <MapPinCheck className="w-5 h-5 text-dark" strokeWidth={2.5} />
+              ) : (
+                <MapPin className="w-5 h-5 text-dark" strokeWidth={2.5} />
+              )}
             </button>
 
-            <button className="flex-1 h-14 rounded-full bg-dark text-white font-bold flex items-center justify-center gap-2 hover:bg-black active:scale-[0.98] transition-all">
+            <button
+              onClick={() => setExpanded((v) => !v)}
+              className="flex-1 h-14 rounded-full bg-dark text-white font-bold flex items-center justify-center gap-2 hover:bg-black active:scale-[0.98] transition-all"
+            >
               <BookOpen className="w-5 h-5" strokeWidth={2.5} />
-              <span>Read more</span>
-              <ChevronRight className="w-5 h-5 -ml-1" strokeWidth={2.5} />
+              <span>{expanded ? "Show less" : "Read more"}</span>
+              <ChevronRight
+                className={`w-5 h-5 -ml-1 transition-transform ${
+                  expanded ? "rotate-90" : ""
+                }`}
+                strokeWidth={2.5}
+              />
             </button>
           </div>
         </div>

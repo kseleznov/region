@@ -1,11 +1,22 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { useRouter } from "next/navigation";
 import { useSelectCityStore } from "@/features/select-city";
 import { usePlaces } from "@/entities/place";
 import { ROUTES } from "@/shared/config/routes";
 import type { ICard } from "@/shared/types/card";
+import {
+  hasSeenSwipeHint,
+  markSwipeHintSeen,
+  subscribeSwipeHintSeen,
+} from "@/shared/lib/swipeHintSeen";
 import type { Category, HintPhase } from "./types";
 
 export function useExploringWindow(
@@ -28,6 +39,17 @@ export function useExploringWindow(
   const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
+  // A vertical swipe moves the hint to "category"; a horizontal one then moves
+  // it to "done". Remember the hint as seen only once both have happened.
+  const hintReachedCategoryRef = useRef(false);
+
+  // The swipe hint is a one-time onboarding thing — show it once, then never
+  // again (persisted in localStorage), so it doesn't reappear on every visit.
+  const hintSeen = useSyncExternalStore(
+    subscribeSwipeHintSeen,
+    hasSeenSwipeHint,
+    () => true,
+  );
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -35,6 +57,18 @@ export function useExploringWindow(
       document.body.style.overflow = "";
     };
   }, []);
+
+  useEffect(() => {
+    if (hintSeen) return;
+    if (hintPhase === "category") {
+      hintReachedCategoryRef.current = true;
+    }
+    // "done" reached after a vertical swipe (→ "category") and then changing
+    // category — i.e. the user actually did both gestures.
+    if (hintPhase === "done" && hintReachedCategoryRef.current) {
+      markSwipeHintSeen();
+    }
+  }, [hintSeen, hintPhase]);
 
   const activeCategory = categories[activeCategoryIndex];
   const filteredPlaces = useMemo(() => {
@@ -84,7 +118,7 @@ export function useExploringWindow(
     subcategoryModalOpen,
     currentCardIndex,
     transitionDirection,
-    hintPhase,
+    hintPhase: hintSeen ? "done" : hintPhase,
     activeCategory,
     filteredPlaces,
     totalCount: filteredPlaces.length,

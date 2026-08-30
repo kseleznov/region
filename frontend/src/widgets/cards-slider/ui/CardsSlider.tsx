@@ -56,6 +56,7 @@ export function CardsSlider({ title, initialCards }: CardSliderProps) {
       <AnimatePresence>
         {selected && (
           <CardDetail
+            key={selected.card.id ?? selected.card.name}
             card={selected.card}
             sourceRect={selected.rect}
             isSaved={isSelectedSaved}
@@ -63,6 +64,7 @@ export function CardsSlider({ title, initialCards }: CardSliderProps) {
             onClose={closeSelected}
             onToggleSave={toggleSaveSelected}
             onToggleVisit={toggleVisitSelected}
+            onSelectSimilar={handleCardClick}
           />
         )}
       </AnimatePresence>

@@ -1,11 +1,11 @@
 "use client";
 
-import { CityCard, cities } from "@/entities/city";
-import { toLowerCase } from "@/shared/lib/toLowerCase";
+import { CityCard } from "@/entities/city";
 import { usePopularDestinations } from "../model/usePopularDestinations";
 
 export function PopularDestinations() {
-  const { selectedCity, handleCitySelect } = usePopularDestinations();
+  const { visibleCities, selectedCity, handleCitySelect } =
+    usePopularDestinations();
 
   return (
     <div>
@@ -13,16 +13,20 @@ export function PopularDestinations() {
         Popular destinations
       </h1>
 
-      <ul className="grid grid-cols-2 gap-3">
-        {cities.map((city) => (
-          <CityCard
-            key={city.name}
-            {...city}
-            isSelected={selectedCity === toLowerCase(city.name)}
-            onSelect={() => handleCitySelect(city.name)}
-          />
-        ))}
-      </ul>
+      {visibleCities.length === 0 ? (
+        <p className="text-sm text-brand-gray">Нет городов в этом регионе</p>
+      ) : (
+        <ul className="grid grid-cols-2 gap-3">
+          {visibleCities.map((city) => (
+            <CityCard
+              key={city.name}
+              {...city}
+              isSelected={selectedCity === city.name}
+              onSelect={() => handleCitySelect(city.name)}
+            />
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

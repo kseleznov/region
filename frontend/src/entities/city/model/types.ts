@@ -1,8 +1,11 @@
 import type { WeatherCondition } from "@/shared/ui/icons";
 
+export type CityRegion = "europe" | "usa" | "asia";
+
 export interface City {
   name: string;
   country: string;
+  region: CityRegion;
   image: string;
   weather: {
     temperature: number;
