@@ -5,7 +5,117 @@ import { PrismaPg } from '@prisma/adapter-pg';
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter });
 
+type Expectation = { icon: string; label: string; note?: string };
+
+function buildExpectations(place: {
+  price: number;
+  workingHours: unknown;
+}): Expectation[] {
+  const hours = place.workingHours as Record<string, string>;
+  const roundTheClock = Object.values(hours).every(
+    (h) => h === 'Круглосуточно',
+  );
+
+  return [
+    place.price > 0
+      ? { icon: 'ticket', label: 'Входной билет', note: `${place.price} €` }
+      : { icon: 'ticket', label: 'Бесплатный вход' },
+    {
+      icon: 'clock',
+      label: 'На осмотр',
+      note: roundTheClock ? '30–60 минут' : '1–2 часа',
+    },
+    { icon: 'camera', label: 'Фотосъёмка разрешена' },
+    { icon: 'footprints', label: 'Удобная обувь' },
+  ];
+}
+
+// Denormalised rating totals — the design shows counts in the thousands,
+// far more than the handful of seeded Review rows.
+function buildRatingStats(stars: number): {
+  ratingCount: number;
+  ratingBreakdown: number[];
+} {
+  const ratingCount = Math.round(240 + stars * 210);
+  const weights = [2, 3, 6, 24, 65]; // rough % for 1★ … 5★
+  const weightSum = weights.reduce((sum, w) => sum + w, 0);
+  const ratingBreakdown = weights.map((w) =>
+    Math.round((w / weightSum) * ratingCount),
+  );
+  // push any rounding drift into the 5★ bucket so the parts sum to the whole
+  ratingBreakdown[4] +=
+    ratingCount - ratingBreakdown.reduce((sum, n) => sum + n, 0);
+
+  return { ratingCount, ratingBreakdown };
+}
+
+const REVIEW_POOL = [
+  {
+    author: 'Sarah Jenkins',
+    rating: 5,
+    text: 'Совершенно потрясающее место. Атмосфера, детали, вид — всё на высоте. Обязательно вернусь.',
+  },
+  {
+    author: 'David O’Connor',
+    rating: 5,
+    text: 'Безупречно. Пришли к открытию и почти час были почти одни. Очень рекомендую ранний визит.',
+  },
+  {
+    author: 'Марина Соколова',
+    rating: 4,
+    text: 'Красиво и интересно, но народу многовато в середине дня. Берите билеты заранее онлайн.',
+  },
+  {
+    author: 'Tomáš Novák',
+    rating: 5,
+    text: 'Одно из лучших впечатлений за всю поездку. Стоит каждой потраченной минуты.',
+  },
+  {
+    author: 'Aisha Rahman',
+    rating: 4,
+    text: 'Очень достойно. Немного не хватило указателей на английском, в остальном отлично.',
+  },
+  {
+    author: 'Lucas Almeida',
+    rating: 5,
+    text: 'Местные не зря сюда ходят. Спокойно, живописно и совсем не туристическая толкотня.',
+  },
+  {
+    author: 'Hannah Weber',
+    rating: 3,
+    text: 'Ожидала большего за эту цену. Само место симпатичное, но быстро осматривается.',
+  },
+  {
+    author: 'Ігор Коваленко',
+    rating: 5,
+    text: 'Приехали на закате — вид просто невероятный. Одна из главных точек города.',
+  },
+];
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function buildReviews(placeId: number, offset: number) {
+  return Array.from({ length: 4 }, (_, i) => {
+    const pick = REVIEW_POOL[(offset + i) % REVIEW_POOL.length];
+    const avatarId = ((offset * 4 + i) % 70) + 1;
+
+    return {
+      placeId,
+      author: pick.author,
+      avatar: `https://i.pravatar.cc/120?img=${avatarId}`,
+      rating: pick.rating,
+      text: pick.text,
+      createdAt: new Date(Date.now() - (i * 9 + offset * 3 + 3) * DAY_MS),
+    };
+  });
+}
+
 async function main() {
+  // Clear child rows before places to satisfy foreign keys.
+  await prisma.review.deleteMany();
+  await prisma.savedPlace.deleteMany();
+  await prisma.visitedPlace.deleteMany();
+
   await prisma.place.deleteMany();
 
   await prisma.city.deleteMany();
@@ -339,7 +449,25 @@ async function main() {
     ],
   });
 
-  console.log('Seeded 9 places');
+  const places = await prisma.place.findMany();
+
+  await Promise.all(
+    places.map((place) =>
+      prisma.place.update({
+        where: { id: place.id },
+        data: {
+          expectations: buildExpectations(place),
+          ...buildRatingStats(place.stars),
+        },
+      }),
+    ),
+  );
+
+  await prisma.review.createMany({
+    data: places.flatMap((place, index) => buildReviews(place.id, index)),
+  });
+
+  console.log(`Seeded ${places.length} places with expectations and reviews`);
 }
 
 main()
