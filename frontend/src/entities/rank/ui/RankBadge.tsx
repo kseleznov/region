@@ -148,10 +148,7 @@ export function RankBadge({ userProgress }: RankBadgeProps) {
                     {nextRank.min - userProgress.placesVisited}
                   </span>{" "}
                   more places to{" "}
-                  <span
-                    className="font-bold"
-                    style={{ color: nextRank.color }}
-                  >
+                  <span className="font-bold" style={{ color: nextRank.color }}>
                     {nextRank.name}
                   </span>
                 </p>
