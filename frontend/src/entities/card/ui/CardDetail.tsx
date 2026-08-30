@@ -78,39 +78,39 @@ export function CardDetail({
         }}
         transition={{ type: "spring", damping: 30, stiffness: 280 }}
       >
-        <div className="relative w-full h-[250px] flex-shrink-0 bg-dark">
-          <ImagesSlider images={photos.map((url) => ({ url }))} />
+        <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-30">
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-transform"
+          >
+            <X className="w-5 h-5 text-dark" strokeWidth={2.5} />
+          </button>
 
-          <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-30">
-            <button
-              onClick={onClose}
-              aria-label="Close"
-              className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-transform"
-            >
-              <X className="w-5 h-5 text-dark" strokeWidth={2.5} />
-            </button>
-
-            <button
-              onClick={onToggleSave}
-              aria-label={isSaved ? "Unsave" : "Save"}
-              className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-transform"
-            >
-              <Heart
-                className={`w-5 h-5 transition-colors ${isSaved ? "fill-brand-pink text-brand-pink" : "text-dark"}`}
-                strokeWidth={2.5}
-              />
-            </button>
-          </div>
-
-          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-dark/70 to-transparent pointer-events-none" />
-          <div className="absolute bottom-4 left-4 z-20">
-            <span className="inline-flex items-center gap-1.5 bg-brand-yellow text-dark text-[11px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full">
-              {card.category}
-            </span>
-          </div>
+          <button
+            onClick={onToggleSave}
+            aria-label={isSaved ? "Unsave" : "Save"}
+            className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-transform"
+          >
+            <Heart
+              className={`w-5 h-5 transition-colors ${isSaved ? "fill-brand-pink text-brand-pink" : "text-dark"}`}
+              strokeWidth={2.5}
+            />
+          </button>
         </div>
 
         <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden pb-32">
+          <div className="relative w-full h-[250px] bg-dark">
+            <ImagesSlider images={photos.map((url) => ({ url }))} />
+
+            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-dark/70 to-transparent pointer-events-none" />
+            <div className="absolute bottom-4 left-4 z-20">
+              <span className="inline-flex items-center gap-1.5 bg-brand-yellow text-dark text-[11px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full">
+                {card.category}
+              </span>
+            </div>
+          </div>
+
           <div className="px-6 pt-5 pb-6">
             <h2 className="text-[28px] leading-[1.1] font-extrabold text-dark tracking-tighter mb-3">
               {card.name}

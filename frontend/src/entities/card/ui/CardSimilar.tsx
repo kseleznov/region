@@ -12,7 +12,7 @@ export function CardSimilar({ places }: CardSimilarProps) {
       <h3 className="text-xs font-bold text-dark/50 uppercase tracking-wider mb-3 px-1">
         You might also like
       </h3>
-      <ul className="flex overflow-x-auto gap-3 -mx-6 px-6 snap-x [&::-webkit-scrollbar]:hidden">
+      <ul className="flex overflow-x-auto gap-3 -mr-6 pr-6 snap-x [&::-webkit-scrollbar]:hidden">
         {places.map((place) => (
           <li
             key={place.id ?? place.name}
