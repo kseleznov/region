@@ -16,6 +16,8 @@ import {
 
 type HintPhase = "category" | "card" | "done";
 
+export type SavedTab = "saved" | "visited";
+
 type SavedCategory = {
   id: string;
   value: string;
@@ -25,12 +27,16 @@ const ALL_CATEGORY: SavedCategory = { id: "all", value: "All" };
 
 export function useSaved() {
   const { data: allCards = [] } = usePlaces();
+
+  const [tab, setTab] = useState<SavedTab>("saved");
   const savedCards = allCards.filter((card) => card.isSaved);
+  const visitedCards = allCards.filter((card) => card.isVisited);
+  const places = tab === "saved" ? savedCards : visitedCards;
 
   const categories = useMemo<SavedCategory[]>(() => {
-    const unique = Array.from(new Set(savedCards.map((c) => c.category)));
+    const unique = Array.from(new Set(places.map((c) => c.category)));
     return [ALL_CATEGORY, ...unique.map((cat) => ({ id: cat, value: cat }))];
-  }, [savedCards]);
+  }, [places]);
 
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -66,9 +72,9 @@ export function useSaved() {
   const activeCategory = categories[safeIndex];
 
   const filteredPlaces = useMemo(() => {
-    if (activeCategory.id === "all") return savedCards;
-    return savedCards.filter((card) => card.category === activeCategory.id);
-  }, [savedCards, activeCategory]);
+    if (activeCategory.id === "all") return places;
+    return places.filter((card) => card.category === activeCategory.id);
+  }, [places, activeCategory]);
 
   function handleCategoryChange(newIndex: number, dir: "up" | "down") {
     setActiveCategoryIndex(newIndex);
@@ -90,8 +96,20 @@ export function useSaved() {
     setHintPhase("done");
   }
 
+  function changeTab(next: SavedTab) {
+    if (next === tab) return;
+    setTab(next);
+    setActiveCategoryIndex(0);
+    setCurrentCardIndex(0);
+    setTransitionDirection(null);
+  }
+
   return {
-    savedCards,
+    tab,
+    changeTab,
+    savedCount: savedCards.length,
+    visitedCount: visitedCards.length,
+    isEmpty: places.length === 0,
     categories,
     activeCategoryIndex: safeIndex,
     activeCategory,
