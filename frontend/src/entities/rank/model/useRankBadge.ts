@@ -22,6 +22,15 @@ export function useRankBadge(userProgress: UserProgress) {
         (nextRank.min - currentRank.min)) *
       100
     : 100;
+  const hasAchievements =
+    userProgress.isNightExplorer || userProgress.isFoodHunter;
 
-  return { isOpen, setIsOpen, currentRank, nextRank, progress };
+  return {
+    isOpen,
+    setIsOpen,
+    currentRank,
+    nextRank,
+    progress,
+    hasAchievements,
+  };
 }

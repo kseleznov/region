@@ -88,8 +88,14 @@ function ProgressRing({
 }
 
 export function RankBadge({ userProgress }: RankBadgeProps) {
-  const { isOpen, setIsOpen, currentRank, nextRank, progress } =
-    useRankBadge(userProgress);
+  const {
+    isOpen,
+    setIsOpen,
+    currentRank,
+    nextRank,
+    progress,
+    hasAchievements,
+  } = useRankBadge(userProgress);
 
   return (
     <>
@@ -169,35 +175,41 @@ export function RankBadge({ userProgress }: RankBadgeProps) {
                 label="Places visited"
                 value={userProgress.placesVisited}
               />
-              <PassportStat
-                icon={<span className="text-lg">🗺️</span>}
-                bg="bg-lime-100"
-                label="Districts unlocked"
-                value={userProgress.districts}
-              />
+              {userProgress.districts > 0 && (
+                <PassportStat
+                  icon={<span className="text-lg">🗺️</span>}
+                  bg="bg-lime-100"
+                  label="Districts unlocked"
+                  value={userProgress.districts}
+                />
+              )}
             </div>
 
-            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
-              Achievements
-            </h3>
-            <div className="flex gap-2 flex-wrap">
-              {userProgress.isNightExplorer && (
-                <div className="flex items-center gap-2 px-4 py-2 bg-indigo-50 rounded-full">
-                  <MoonIcon className="w-4 h-4 text-indigo-600" />
-                  <span className="text-sm font-bold text-indigo-900">
-                    Night Explorer
-                  </span>
+            {hasAchievements && (
+              <>
+                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+                  Achievements
+                </h3>
+                <div className="flex gap-2 flex-wrap">
+                  {userProgress.isNightExplorer && (
+                    <div className="flex items-center gap-2 px-4 py-2 bg-indigo-50 rounded-full">
+                      <MoonIcon className="w-4 h-4 text-indigo-600" />
+                      <span className="text-sm font-bold text-indigo-900">
+                        Night Explorer
+                      </span>
+                    </div>
+                  )}
+                  {userProgress.isFoodHunter && (
+                    <div className="flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-full">
+                      <UtensilsIcon className="w-4 h-4 text-orange-600" />
+                      <span className="text-sm font-bold text-orange-900">
+                        Food Hunter
+                      </span>
+                    </div>
+                  )}
                 </div>
-              )}
-              {userProgress.isFoodHunter && (
-                <div className="flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-full">
-                  <UtensilsIcon className="w-4 h-4 text-orange-600" />
-                  <span className="text-sm font-bold text-orange-900">
-                    Food Hunter
-                  </span>
-                </div>
-              )}
-            </div>
+              </>
+            )}
           </div>
         </div>
       )}
