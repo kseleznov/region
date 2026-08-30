@@ -24,6 +24,23 @@ export function useCard({ card }: UseCardProps) {
     ? todayHours.split("–")[1]?.split(",")[0]
     : null;
 
+  const handleShare = async () => {
+    if (typeof window === "undefined") return;
+
+    const url = window.location.href;
+    const text = card.address ? `${card.name} — ${card.address}` : card.name;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: card.name, text, url });
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(`${text}\n${url}`);
+      }
+    } catch {
+      // Share sheet dismissed or unavailable — nothing to do.
+    }
+  };
+
   return {
     hoursOpen,
     setHoursOpen,
@@ -34,5 +51,6 @@ export function useCard({ card }: UseCardProps) {
     photos,
     isLongDesc,
     closingTime,
+    handleShare,
   };
 }

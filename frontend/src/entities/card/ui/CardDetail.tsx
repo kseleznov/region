@@ -11,6 +11,7 @@ import {
   BookOpen,
   MapPin,
   MapPinCheck,
+  Share2,
 } from "lucide-react";
 import { DAYS } from "../model/constants";
 import { useCard } from "../model/useCard";
@@ -41,6 +42,7 @@ export function CardDetail({
     photos,
     isLongDesc,
     closingTime,
+    handleShare,
   } = useCard({ card });
 
   return (
@@ -300,17 +302,19 @@ export function CardDetail({
             </button>
 
             <button
+              onClick={handleShare}
+              aria-label="Share"
+              className="flex-shrink-0 w-14 h-14 rounded-full border-2 border-brand-purple bg-brand-purple flex items-center justify-center transition-all hover:brightness-95 active:scale-95"
+            >
+              <Share2 className="w-5 h-5 text-white" strokeWidth={2.5} />
+            </button>
+
+            <button
               onClick={() => setExpanded((v) => !v)}
               className="flex-1 h-14 rounded-full bg-dark text-white font-bold flex items-center justify-center gap-2 hover:bg-black active:scale-[0.98] transition-all"
             >
               <BookOpen className="w-5 h-5" strokeWidth={2.5} />
               <span>{expanded ? "Show less" : "Read more"}</span>
-              <ChevronRight
-                className={`w-5 h-5 -ml-1 transition-transform ${
-                  expanded ? "rotate-90" : ""
-                }`}
-                strokeWidth={2.5}
-              />
             </button>
           </div>
         </div>
