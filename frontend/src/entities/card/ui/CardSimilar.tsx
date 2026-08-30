@@ -4,9 +4,10 @@ import type { ICard } from "@/shared/types/card";
 
 interface CardSimilarProps {
   places: ICard[];
+  onSelect: (place: ICard, rect: DOMRect) => void;
 }
 
-export function CardSimilar({ places }: CardSimilarProps) {
+export function CardSimilar({ places, onSelect }: CardSimilarProps) {
   return (
     <section className="mb-4">
       <h3 className="text-xs font-bold text-dark/50 uppercase tracking-wider mb-3 px-1">
@@ -16,7 +17,10 @@ export function CardSimilar({ places }: CardSimilarProps) {
         {places.map((place) => (
           <li
             key={place.id ?? place.name}
-            className="w-44 flex-shrink-0 snap-start"
+            onClick={(e) =>
+              onSelect(place, e.currentTarget.getBoundingClientRect())
+            }
+            className="w-44 flex-shrink-0 snap-start cursor-pointer active:scale-[0.98] transition-transform"
           >
             <div className="relative w-full h-32 rounded-2xl overflow-hidden mb-2">
               <Image

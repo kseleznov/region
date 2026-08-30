@@ -14,6 +14,8 @@ export interface CardDetailProps {
   onClose: () => void;
   onToggleSave: () => void;
   onToggleVisit: () => void;
+  /** Open another place (a "You might also like" card) in the same sheet. */
+  onSelectSimilar: (card: ICard, rect: DOMRect) => void;
 }
 
 export interface UseCardProps {

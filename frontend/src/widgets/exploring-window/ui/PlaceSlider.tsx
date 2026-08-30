@@ -25,7 +25,10 @@ function SliderContent({
     <div ref={emblaRef} className="overflow-hidden h-full">
       <div className="flex flex-col h-full">
         {cards.map((card) => (
-          <div key={card.id ?? card.name} className="flex-[0_0_100%] min-h-0 w-full px-4">
+          <div
+            key={card.id ?? card.name}
+            className="flex-[0_0_100%] min-h-0 w-full px-4"
+          >
             <Card
               {...card}
               className="w-full max-w-none snap-none aspect-auto h-full"
@@ -132,6 +135,7 @@ export function PlaceSlider({
       <AnimatePresence>
         {selected && (
           <CardDetail
+            key={selected.card.id ?? selected.card.name}
             card={selected.card}
             sourceRect={selected.rect}
             isSaved={isSelectedSaved}
@@ -139,6 +143,7 @@ export function PlaceSlider({
             onClose={() => setSelected(null)}
             onToggleSave={toggleSaveSelected}
             onToggleVisit={toggleVisitSelected}
+            onSelectSimilar={handleCardSelect}
           />
         )}
       </AnimatePresence>

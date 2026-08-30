@@ -29,6 +29,7 @@ export function CardDetail({
   onClose,
   onToggleSave,
   onToggleVisit,
+  onSelectSimilar,
 }: CardDetailProps) {
   const {
     hoursOpen,
@@ -255,7 +256,10 @@ export function CardDetail({
                   />
                 ) : null}
                 {!!card.similar?.length && (
-                  <CardSimilar places={card.similar} />
+                  <CardSimilar
+                    places={card.similar}
+                    onSelect={onSelectSimilar}
+                  />
                 )}
               </>
             )}
