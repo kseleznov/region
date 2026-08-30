@@ -51,6 +51,13 @@ export function useSaved() {
   // it to "done". Remember the hint as seen only once both have happened.
   const hintReachedCategoryRef = useRef(false);
 
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   // One-time onboarding hint — show it once, then never again (persisted).
   const hintSeen = useSyncExternalStore(
     subscribeSwipeHintSeen,
