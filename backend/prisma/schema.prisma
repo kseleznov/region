@@ -27,19 +27,34 @@ model SavedPlace {
 }
 
 model Place {
-  id           Int          @id @default(autoincrement())
-  name         String
-  category     String
-  description  String
-  image        String
-  photos       Json         @default("[]")
-  stars        Float
-  price        Int
-  address      String
-  isOpen       Boolean
-  workingHours Json
-  savedBy      SavedPlace[]
-  visitedBy    VisitedPlace[]
+  id              Int            @id @default(autoincrement())
+  name            String
+  category        String
+  description     String
+  image           String
+  photos          Json           @default("[]")
+  stars           Float
+  price           Int
+  address         String
+  isOpen          Boolean
+  workingHours    Json
+  expectations    Json           @default("[]")
+  ratingCount     Int            @default(0)
+  ratingBreakdown Json           @default("[0, 0, 0, 0, 0]")
+  savedBy         SavedPlace[]
+  visitedBy       VisitedPlace[]
+  reviews         Review[]
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  place     Place    @relation(fields: [placeId], references: [id])
+  placeId   Int
+  author    String
+  avatar    String
+  rating    Int
+  text      String
+  createdAt DateTime @default(now())
 }
 
 model City {

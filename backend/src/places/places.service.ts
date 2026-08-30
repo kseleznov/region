@@ -41,15 +41,68 @@ export class PlacesService {
   async findOne(id: number, userId?: number) {
     const place = await this.prisma.place.findUnique({
       where: { id },
-      select: { ...BASE_PLACE_SELECT, description: true, workingHours: true },
+      select: {
+        ...BASE_PLACE_SELECT,
+        description: true,
+        workingHours: true,
+        expectations: true,
+        ratingCount: true,
+        ratingBreakdown: true,
+      },
     });
 
     if (!place) {
       throw new NotFoundException(`Place with id ${id} not found`);
     }
 
+    const { ratingCount, ratingBreakdown, ...rest } = place;
+
+    // "You might also like" — places in the same parent group (Culture, Nature…),
+    // falling back to the exact category if the group can't be resolved.
+    const parentId = SUBCATEGORY_TO_PARENT[rest.category]?.id;
+    const siblingCategories = parentId
+      ? Object.entries(SUBCATEGORY_TO_PARENT)
+          .filter(([, parent]) => parent.id === parentId)
+          .map(([category]) => category)
+      : [rest.category];
+
+    const [reviews, similar] = await Promise.all([
+      this.prisma.review.findMany({
+        where: { placeId: id },
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          author: true,
+          avatar: true,
+          rating: true,
+          text: true,
+          createdAt: true,
+        },
+      }),
+      this.prisma.place.findMany({
+        where: { category: { in: siblingCategories }, id: { not: id } },
+        take: 6,
+        select: BASE_PLACE_SELECT,
+      }),
+    ]);
+
+    const detail = {
+      ...rest,
+      reviews,
+      similar: similar.map((item) => ({
+        ...item,
+        isSaved: false,
+        isVisited: false,
+      })),
+      ratingSummary: {
+        average: rest.stars,
+        total: ratingCount,
+        breakdown: ratingBreakdown as unknown as number[],
+      },
+    };
+
     if (!userId) {
-      return { ...place, isSaved: false, isVisited: false };
+      return { ...detail, isSaved: false, isVisited: false };
     }
 
     const [saved, visited] = await Promise.all([
@@ -61,7 +114,7 @@ export class PlacesService {
       }),
     ]);
 
-    return { ...place, isSaved: saved !== null, isVisited: visited !== null };
+    return { ...detail, isSaved: saved !== null, isVisited: visited !== null };
   }
 
   async getCategories() {
