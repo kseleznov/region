@@ -3,8 +3,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { authApi } from "../api/authApi";
 import { useAuthStore } from "./useAuthStore";
-
-type AuthMode = "sign-in" | "sign-up";
+import { getAuthErrorMessage } from "./getAuthErrorMessage";
+import type { AuthMode } from "./types";
 
 export function useAuth(mode: AuthMode) {
   const router = useRouter();
@@ -15,33 +15,38 @@ export function useAuth(mode: AuthMode) {
   const [error, setError] = useState("");
 
   const mutation = useMutation({
-    mutationFn: () =>
-      mode === "sign-in"
-        ? authApi.login({ email, password })
-        : authApi.register({ name, email, password }),
-    onSuccess: async () => {
+    mutationFn: async () => {
+      if (mode === "sign-in") {
+        await authApi.login({ email, password });
+      } else {
+        await authApi.register({ name, email, password });
+      }
+
+      // Part of the same operation: if this fails the whole sign-in fails,
+      // so it belongs in mutationFn (onError), not in onSuccess.
       const { data } = await authApi.me();
 
-      setUser(data);
+      return data;
+    },
+    onSuccess: (user) => {
+      setUser(user);
 
       router.push("/overview");
     },
-    onError: (err: { response?: { status?: number } }) => {
-      if (mode === "sign-up" && err.response?.status === 409) {
-        setError("Этот email уже зарегистрирован");
-      }
-
-      setError(
-        mode === "sign-in"
-          ? "Неверный email или пароль"
-          : "Что-то пошло не так. Попробуйте ещё раз.",
-      );
+    onError: (err) => {
+      setError(getAuthErrorMessage(err, mode));
     },
   });
 
   function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (mutation.isPending) {
+      return;
+    }
+
     setError("");
+
     mutation.mutate();
   }
 
