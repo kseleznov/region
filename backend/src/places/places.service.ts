@@ -43,6 +43,7 @@ export class PlacesService {
       where: { id },
       select: {
         ...BASE_PLACE_SELECT,
+        photos: true,
         description: true,
         workingHours: true,
         expectations: true,
