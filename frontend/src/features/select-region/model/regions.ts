@@ -1,20 +1,22 @@
 import type { Chip } from "@/shared/ui/chips";
 
+export const ALL_REGIONS_ID = "all";
+
 export const regions: Chip[] = [
   {
-    id: "1",
+    id: ALL_REGIONS_ID,
     value: "All",
   },
   {
-    id: "2",
+    id: "europe",
     value: "Europe",
   },
   {
-    id: "3",
+    id: "usa",
     value: "USA",
   },
   {
-    id: "4",
+    id: "asia",
     value: "Asia",
   },
 ];
