@@ -41,7 +41,10 @@ export function SwipeHint({ phase, isVisible }: SwipeHintProps) {
               <div className="relative w-[200px] h-[50px] flex items-center">
                 <motion.div
                   animate={{ x: [160, 160, 0], opacity: [0, 1, 1, 0] }}
-                  transition={{ x: circleTransition, opacity: opacityTransition }}
+                  transition={{
+                    x: circleTransition,
+                    opacity: opacityTransition,
+                  }}
                   className="w-[30px] h-[30px] rounded-full border-2 border-white/60"
                 />
               </div>
@@ -54,7 +57,10 @@ export function SwipeHint({ phase, isVisible }: SwipeHintProps) {
               <div className="relative w-[50px] h-[160px] flex flex-col items-center justify-start">
                 <motion.div
                   animate={{ y: [130, 130, 0], opacity: [0, 1, 1, 0] }}
-                  transition={{ y: circleTransition, opacity: opacityTransition }}
+                  transition={{
+                    y: circleTransition,
+                    opacity: opacityTransition,
+                  }}
                   className="w-[30px] h-[30px] rounded-full border-2 border-white/60"
                 />
               </div>

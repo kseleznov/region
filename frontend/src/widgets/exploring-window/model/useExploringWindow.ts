@@ -1,11 +1,22 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { useRouter } from "next/navigation";
 import { useSelectCityStore } from "@/features/select-city";
 import { usePlaces } from "@/entities/place";
 import { ROUTES } from "@/shared/config/routes";
 import type { ICard } from "@/shared/types/card";
+import {
+  hasSeenSwipeHint,
+  markSwipeHintSeen,
+  subscribeSwipeHintSeen,
+} from "./swipeHintSeen";
 import type { Category, HintPhase } from "./types";
 
 export function useExploringWindow(
@@ -29,12 +40,24 @@ export function useExploringWindow(
     null,
   );
 
+  // The swipe hint is a one-time onboarding thing — show it once, then never
+  // again (persisted in localStorage), so it doesn't reappear on every visit.
+  const hintSeen = useSyncExternalStore(
+    subscribeSwipeHintSeen,
+    hasSeenSwipeHint,
+    () => true,
+  );
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "";
     };
   }, []);
+
+  useEffect(() => {
+    if (!hintSeen) markSwipeHintSeen();
+  }, [hintSeen]);
 
   const activeCategory = categories[activeCategoryIndex];
   const filteredPlaces = useMemo(() => {
@@ -84,7 +107,7 @@ export function useExploringWindow(
     subcategoryModalOpen,
     currentCardIndex,
     transitionDirection,
-    hintPhase,
+    hintPhase: hintSeen ? "done" : hintPhase,
     activeCategory,
     filteredPlaces,
     totalCount: filteredPlaces.length,
