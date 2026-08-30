@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { toAssetUrl } from '../common/assets.util';
 import {
   BASE_PLACE_SELECT,
   PARENT_ORDER,
@@ -18,6 +19,7 @@ export class PlacesService {
       });
       return places.map((place) => ({
         ...place,
+        image: toAssetUrl(place.image),
         isSaved: false,
         isVisited: false,
       }));
@@ -33,6 +35,7 @@ export class PlacesService {
 
     return places.map(({ savedBy, visitedBy, ...place }) => ({
       ...place,
+      image: toAssetUrl(place.image),
       isSaved: savedBy.length > 0,
       isVisited: visitedBy.length > 0,
     }));
@@ -89,9 +92,12 @@ export class PlacesService {
 
     const detail = {
       ...rest,
+      image: toAssetUrl(rest.image),
+      photos: (rest.photos as string[]).map(toAssetUrl),
       reviews,
       similar: similar.map((item) => ({
         ...item,
+        image: toAssetUrl(item.image),
         isSaved: false,
         isVisited: false,
       })),

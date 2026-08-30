@@ -1,10 +1,28 @@
 import type { NextConfig } from "next";
 
+// Self-hosted place/city photos are served by the backend under /static.
+// Deriving the pattern from NEXT_PUBLIC_API_URL means dev (localhost:3001)
+// and the deployed API host both work without touching this file.
+const apiUrl = new URL(
+  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001",
+);
+
 const nextConfig: NextConfig = {
   reactCompiler: true,
   allowedDevOrigins: ["192.168.1.156"],
   images: {
+    // Next 16 blocks the image optimizer from fetching upstream images that
+    // resolve to a private/loopback IP (SSRF guard). In dev the API is on
+    // localhost, so allow it there; in production the API is a public host
+    // and this stays off.
+    dangerouslyAllowLocalIP: process.env.NODE_ENV !== "production",
     remotePatterns: [
+      {
+        protocol: apiUrl.protocol.replace(":", "") as "http" | "https",
+        hostname: apiUrl.hostname,
+        port: apiUrl.port || undefined,
+        pathname: "/static/**",
+      },
       { hostname: "bucket-files.city-sightseeing.com" },
       { hostname: "images.squarespace-cdn.com" },
       { hostname: "upload.wikimedia.org" },

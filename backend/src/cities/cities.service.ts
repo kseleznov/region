@@ -1,5 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { toAssetUrl } from '../common/assets.util';
+
+type CityImage = { url: string; name?: string };
 
 @Injectable()
 export class CitiesService {
@@ -10,6 +13,12 @@ export class CitiesService {
     if (!city) {
       throw new NotFoundException(`City "${slug}" not found`);
     }
-    return city;
+    return {
+      ...city,
+      images: (city.images as CityImage[]).map((image) => ({
+        ...image,
+        url: toAssetUrl(image.url),
+      })),
+    };
   }
 }
