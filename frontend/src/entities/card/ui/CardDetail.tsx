@@ -14,6 +14,9 @@ import {
 } from "lucide-react";
 import { DAYS } from "../model/constants";
 import { useCard } from "../model/useCard";
+import { CardExpectations } from "./CardExpectations";
+import { CardReviews } from "./CardReviews";
+import { CardSimilar } from "./CardSimilar";
 import { ImagesSlider } from "@/shared/ui/images-slider";
 import { MiniMap } from "@/shared/ui/mini-map";
 import type { CardDetailProps } from "../model/types";
@@ -32,6 +35,8 @@ export function CardDetail({
     setHoursOpen,
     descExpanded,
     setDescExpanded,
+    expanded,
+    setExpanded,
     photos,
     isLongDesc,
     closingTime,
@@ -231,12 +236,29 @@ export function CardDetail({
               </div>
             )}
 
-            <div>
+            <div className={expanded ? "mb-8" : ""}>
               <div className="text-xs font-bold text-dark/50 uppercase tracking-wider mb-2 px-1">
                 Location
               </div>
               <MiniMap address={card.address} />
             </div>
+
+            {expanded && (
+              <>
+                {!!card.expectations?.length && (
+                  <CardExpectations items={card.expectations} />
+                )}
+                {card.ratingSummary && card.reviews?.length ? (
+                  <CardReviews
+                    summary={card.ratingSummary}
+                    reviews={card.reviews}
+                  />
+                ) : null}
+                {!!card.similar?.length && (
+                  <CardSimilar places={card.similar} />
+                )}
+              </>
+            )}
           </div>
         </div>
 
@@ -273,10 +295,18 @@ export function CardDetail({
               )}
             </button>
 
-            <button className="flex-1 h-14 rounded-full bg-dark text-white font-bold flex items-center justify-center gap-2 hover:bg-black active:scale-[0.98] transition-all">
+            <button
+              onClick={() => setExpanded((v) => !v)}
+              className="flex-1 h-14 rounded-full bg-dark text-white font-bold flex items-center justify-center gap-2 hover:bg-black active:scale-[0.98] transition-all"
+            >
               <BookOpen className="w-5 h-5" strokeWidth={2.5} />
-              <span>Read more</span>
-              <ChevronRight className="w-5 h-5 -ml-1" strokeWidth={2.5} />
+              <span>{expanded ? "Show less" : "Read more"}</span>
+              <ChevronRight
+                className={`w-5 h-5 -ml-1 transition-transform ${
+                  expanded ? "rotate-90" : ""
+                }`}
+                strokeWidth={2.5}
+              />
             </button>
           </div>
         </div>

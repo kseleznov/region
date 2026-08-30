@@ -5,6 +5,7 @@ import type { UseCardProps } from "./types";
 export function useCard({ card }: UseCardProps) {
   const [hoursOpen, setHoursOpen] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     const original = document.body.style.overflow;
@@ -28,6 +29,8 @@ export function useCard({ card }: UseCardProps) {
     setHoursOpen,
     descExpanded,
     setDescExpanded,
+    expanded,
+    setExpanded,
     photos,
     isLongDesc,
     closingTime,

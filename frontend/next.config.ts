@@ -32,6 +32,7 @@ const nextConfig: NextConfig = {
       { hostname: "portugal-traveling.ru" },
       { hostname: "downloader.disk.yandex.ru" },
       { hostname: "withportugal.com" },
+      { hostname: "i.pravatar.cc" },
     ],
   },
 };
