@@ -41,6 +41,9 @@ export function useSaved() {
   const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
+  // A vertical swipe moves the hint to "category"; a horizontal one then moves
+  // it to "done". Remember the hint as seen only once both have happened.
+  const hintReachedCategoryRef = useRef(false);
 
   // One-time onboarding hint — show it once, then never again (persisted).
   const hintSeen = useSyncExternalStore(
@@ -50,8 +53,14 @@ export function useSaved() {
   );
 
   useEffect(() => {
-    if (!hintSeen) markSwipeHintSeen();
-  }, [hintSeen]);
+    if (hintSeen) return;
+    if (hintPhase === "category") {
+      hintReachedCategoryRef.current = true;
+    }
+    if (hintPhase === "done" && hintReachedCategoryRef.current) {
+      markSwipeHintSeen();
+    }
+  }, [hintSeen, hintPhase]);
 
   const safeIndex = Math.min(activeCategoryIndex, categories.length - 1);
   const activeCategory = categories[safeIndex];

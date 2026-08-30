@@ -39,6 +39,9 @@ export function useExploringWindow(
   const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
+  // A vertical swipe moves the hint to "category"; a horizontal one then moves
+  // it to "done". Remember the hint as seen only once both have happened.
+  const hintReachedCategoryRef = useRef(false);
 
   // The swipe hint is a one-time onboarding thing — show it once, then never
   // again (persisted in localStorage), so it doesn't reappear on every visit.
@@ -56,8 +59,16 @@ export function useExploringWindow(
   }, []);
 
   useEffect(() => {
-    if (!hintSeen) markSwipeHintSeen();
-  }, [hintSeen]);
+    if (hintSeen) return;
+    if (hintPhase === "category") {
+      hintReachedCategoryRef.current = true;
+    }
+    // "done" reached after a vertical swipe (→ "category") and then changing
+    // category — i.e. the user actually did both gestures.
+    if (hintPhase === "done" && hintReachedCategoryRef.current) {
+      markSwipeHintSeen();
+    }
+  }, [hintSeen, hintPhase]);
 
   const activeCategory = categories[activeCategoryIndex];
   const filteredPlaces = useMemo(() => {
