@@ -27,7 +27,7 @@ function SliderContent({
         {cards.map((card) => (
           <div
             key={card.id ?? card.name}
-            className="flex-[0_0_100%] min-h-0 w-full px-4"
+            className="flex-[0_0_100%] min-h-0 w-full px-4 py-2"
           >
             <Card
               {...card}
