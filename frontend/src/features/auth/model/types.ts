@@ -7,3 +7,5 @@ export interface User {
 export interface AuthTokenResponse {
   message: string;
 }
+
+export type AuthMode = "sign-in" | "sign-up";

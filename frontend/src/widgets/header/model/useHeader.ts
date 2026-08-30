@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useSelectCityStore } from "@/features/select-city";
 import { ROUTES } from "@/shared/config/routes";
-import { authApi } from "@/features/auth";
+import { authApi, useAuthStore } from "@/features/auth";
 import type { UserProgress } from "@/entities/rank";
 
 const DEFAULT_PROGRESS: UserProgress = {
@@ -13,12 +13,14 @@ const DEFAULT_PROGRESS: UserProgress = {
 };
 
 export function useHeader() {
+  const user = useAuthStore((state) => state.user);
   const { selectedCity } = useSelectCityStore();
   const router = useRouter();
 
   const { data: userProgress = DEFAULT_PROGRESS } = useQuery({
     queryKey: ["userProgress"],
     queryFn: authApi.getUserProgress,
+    enabled: !!user,
   });
 
   function redirect() {

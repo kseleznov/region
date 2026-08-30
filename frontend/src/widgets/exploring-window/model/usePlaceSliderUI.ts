@@ -1,9 +1,12 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useToggleSave } from "@/features/save-card";
 import { useToggleVisit } from "@/features/visit-card";
+import { useAuthStore } from "@/features/auth";
 import { placeApi } from "@/entities/place";
+import { ROUTES } from "@/shared/config/routes";
 import type { ICard, SelectedCard } from "@/shared/types/card";
 
 interface UsePlaceSliderUIProps {
@@ -23,6 +26,8 @@ export function usePlaceSliderUI({
 }: UsePlaceSliderUIProps) {
   const { mutate: toggleSave } = useToggleSave();
   const { mutate: toggleVisit } = useToggleVisit();
+  const user = useAuthStore((state) => state.user);
+  const router = useRouter();
   const [selected, setSelected] = useState<SelectedCard | null>(null);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
   const animDir = useRef<"left" | "right" | null>(null);
@@ -114,8 +119,26 @@ export function usePlaceSliderUI({
     }
   }
 
+  // Save / visited need an account — send a guest to sign-in instead.
+  function requireAuth() {
+    if (user) {
+      return true;
+    }
+
+    router.push(ROUTES.signIn);
+
+    return false;
+  }
+
   function toggleSaveSelected() {
-    if (!selected?.card.id) return;
+    if (!requireAuth()) {
+      return;
+    }
+
+    if (!selected?.card.id) {
+      return;
+    }
+
     toggleSave(selected.card.id, {
       onSuccess: (updated) =>
         setSelected(
@@ -129,7 +152,14 @@ export function usePlaceSliderUI({
   }
 
   function toggleVisitSelected() {
-    if (!selected?.card.id) return;
+    if (!requireAuth()) {
+      return;
+    }
+
+    if (!selected?.card.id) {
+      return;
+    }
+
     toggleVisit(selected.card.id, {
       onSuccess: (updated) =>
         setSelected(

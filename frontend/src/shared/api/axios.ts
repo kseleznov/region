@@ -1,6 +1,5 @@
 import axios from "axios";
-
-import { ROUTES } from "@/shared/config/routes";
+import createAuthRefreshInterceptor from "axios-auth-refresh";
 
 /**
  * Base HTTP client for the application.
@@ -14,77 +13,59 @@ export const apiClient = axios.create({
   withCredentials: true,
 });
 
-/** True while a token refresh request is in flight. */
-let isRefreshing = false;
-
 /**
- * Queue of requests that arrived while a refresh was in progress.
- * Each entry is a callback that receives the refresh outcome:
- * null on success (request will be retried) or an error on failure.
- */
-let failedQueue: Array<(err: unknown) => void> = [];
-
-/**
- * Resolves or rejects every queued request based on the refresh outcome,
- * then empties the queue.
+ * Endpoints where a 401 is the final answer (wrong credentials, invalid or
+ * missing refresh token) — not a stale access token. Kicking off the silent
+ * refresh-and-retry flow for these is pointless and, for login/register,
+ * would swallow the real error the form needs to show.
  *
- * @param err - null if the refresh succeeded; the refresh error otherwise.
+ * `/auth/refresh` doesn't need to be listed: axios-auth-refresh pauses the
+ * instance while a refresh is in flight, so the refresh call's own response
+ * is never re-intercepted.
  */
-function flushQueue(err: unknown) {
-  failedQueue.forEach((cb) => cb(err));
-  failedQueue = [];
+const AUTH_ENDPOINTS = ["/auth/login", "/auth/register"];
+
+function isAuthEndpoint(url?: string) {
+  return !!url && AUTH_ENDPOINTS.some((path) => url.startsWith(path));
+}
+
+let onSessionExpired: (() => void) | undefined;
+
+/**
+ * Register a callback fired when a 401 can't be recovered by a token refresh —
+ * the session is gone for good. Kept as an injected handler so this layer
+ * doesn't import from `features/*` (FSD: `shared` can't depend on `features`);
+ * it's wired to the auth store in `features/auth`.
+ *
+ * Note: this only clears client state. Navigation is a UI concern — nothing
+ * here redirects, so a logged-out visitor stays on whatever public page they
+ * were on and the UI falls back to its guest state.
+ */
+export function setSessionExpiredHandler(handler: () => void) {
+  onSessionExpired = handler;
 }
 
 /**
- * Navigates the user to the sign-in page.
- * The `typeof window` guard prevents this from running during SSR.
- */
-function redirectToSignIn() {
-  if (typeof window !== "undefined") {
-    window.location.href = ROUTES.signIn;
-  }
-}
-
-/**
- * Response interceptor that transparently refreshes the access token on 401.
+ * Transparently refreshes the access token on a 401.
  *
- * Flow:
- * 1. Any 401 that hasn't been retried yet triggers a token refresh.
- * 2. Requests that arrive while a refresh is already in flight are queued.
- * 3. On successful refresh — flush the queue and retry the original request.
- * 4. On failed refresh — reject the entire queue and redirect to sign-in.
+ * axios-auth-refresh pauses every other request on `apiClient` until this
+ * promise settles: on success it replays the paused requests, on failure it
+ * rejects the whole queue. A failed refresh means the session is gone, so we
+ * let the registered handler clear client auth state.
  */
-apiClient.interceptors.response.use(undefined, async (error) => {
-  const originalRequest = error.config;
-
-  // Skip: not a 401, or the request already went through a retry (prevents infinite loops)
-  if (error.response?.status !== 401 || originalRequest._retry) {
-    return Promise.reject(error);
-  }
-
-  // A refresh is already running — queue this request and wait for the outcome
-  if (isRefreshing) {
-    return new Promise((resolve, reject) => {
-      failedQueue.push((err) => {
-        if (err) reject(err);
-        else resolve(apiClient(originalRequest));
-      });
-    });
-  }
-
-  // Mark the request as retried so it won't trigger another refresh cycle
-  originalRequest._retry = true;
-  isRefreshing = true;
-
+async function refreshAuth() {
   try {
-    await apiClient.post("/auth/refresh");
-    flushQueue(null);
-    return apiClient(originalRequest);
+    return await apiClient.post("/auth/refresh");
   } catch (refreshError) {
-    flushQueue(refreshError);
-    redirectToSignIn();
-    return Promise.reject(refreshError);
-  } finally {
-    isRefreshing = false;
+    onSessionExpired?.();
+    throw refreshError;
   }
+}
+
+createAuthRefreshInterceptor(apiClient, refreshAuth, {
+  // One refresh cycle per failed request — if the retry still 401s, surface it.
+  maxRetries: 1,
+  shouldRefresh: (error) =>
+    error.response?.status === 401 &&
+    !isAuthEndpoint(error.response?.config.url),
 });
