@@ -11,6 +11,7 @@ features/<name>/
   model/
     useX.ts       ← the feature's primary hook: mutation/state-machine logic
     use<Name>Store.ts  ← Zustand store, only if state must survive across components
+    <helper>.ts   ← pure slice-local helper (err→message map, formatter, table); out of index.ts
     types.ts
   ui/             ← optional — some features are pure logic, rendered by a widget/entity
     Component.tsx
@@ -26,10 +27,12 @@ features/auth/
     types.ts                ← User, auth-related types
     useAuth.ts               ← mode: "sign-in" | "sign-up" — form state + mutation + navigation
     useAuthStore.ts          ← Zustand: { user, setUser, clearUser }
+    useAuthBootstrap.ts      ← one-shot /auth/me probe + wires the axios session-expired handler
+    getAuthErrorMessage.ts   ← pure err → user-message map used by useAuth (not in index.ts)
     useLogout.ts
 ```
 
-`useAuth.ts` owns the whole sign-in/sign-up flow: local field state, the `useMutation` call, success (fetch `me`, set user, redirect) and error handling (mapped to Russian user-facing messages). The widget that renders the form (`widgets/auth-form`) only calls into this hook — no fetch/mutation logic in the widget's JSX.
+`useAuth.ts` owns the whole sign-in/sign-up flow: local field state, the `useMutation` call, success (fetch `me`, set user, redirect) and error handling. The err→message mapping is a pure helper in `model/getAuthErrorMessage.ts`, not inline in the hook. The widget that renders the form (`widgets/auth-form`) only calls into this hook — no fetch/mutation logic in the widget's JSX.
 
 ## Example: `save-card` (hook-only feature, no `ui/`)
 

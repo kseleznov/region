@@ -7,7 +7,7 @@ paths: ['frontend/src/shared/api/**']
 `shared/api/axios.ts` exports `apiClient` — the one and only axios instance in the app. It:
 
 - Sets `baseURL` from `NEXT_PUBLIC_API_URL` and `withCredentials: true` (the backend uses httpOnly cookies for the JWT access/refresh pair — there is no bearer token in JS-visible storage).
-- Has a response interceptor that transparently refreshes the access token on a 401, queues concurrent requests during the refresh, and retries them; on refresh failure it redirects to `ROUTES.signIn`.
+- Wires up `axios-auth-refresh` (`createAuthRefreshInterceptor`) to transparently refresh the access token on a 401: it pauses concurrent requests during the refresh and replays them on success. `shouldRefresh` skips `/auth/login` and `/auth/register` (a 401 there is a real failure the form must show; the refresh call itself is covered by the library pausing the instance mid-refresh). On refresh failure it calls the handler registered via `setSessionExpiredHandler` (wired to the auth store's `clearUser` in `features/auth/model/useAuthBootstrap.ts`) — it does **not** navigate. Redirects to sign-in are a UI concern triggered by explicit user actions (logout, a "Sign in" button); a logged-out visitor stays on whatever page they're on and the UI falls back to its guest state.
 
 ## Rules
 
