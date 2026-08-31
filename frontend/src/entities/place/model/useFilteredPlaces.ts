@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { useLocaleStore } from "@/shared/i18n";
+import { useLocale } from "@/shared/i18n";
 import { placeApi } from "../api/placeApi";
 import { placesKey } from "./usePlaces";
 import type { PlacesQuery } from "./types";
@@ -18,7 +18,7 @@ export const filteredPlacesKey = (locale: Locale, query: PlacesQuery) =>
  * filter combination loads, so the slider doesn't flash empty.
  */
 export function useFilteredPlaces(query: PlacesQuery, initialData?: ICard[]) {
-  const locale = useLocaleStore((state) => state.locale);
+  const locale = useLocale();
 
   const isUnfiltered = Object.values(query).every(
     (value) => value === undefined,

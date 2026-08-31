@@ -7,7 +7,7 @@ import { useToggleVisit } from "@/features/visit-card";
 import { useAuthStore } from "@/features/auth";
 import { placeApi } from "@/entities/place";
 import { ROUTES } from "@/shared/config/routes";
-import { useLocaleStore } from "@/shared/i18n";
+import { useLocale } from "@/shared/i18n";
 import type { ICard, SelectedCard } from "@/shared/types/card";
 import type { SwipeDirection } from "./types";
 
@@ -30,7 +30,7 @@ export function usePlaceSliderUI({
   const { mutate: toggleVisit } = useToggleVisit();
   const user = useAuthStore((state) => state.user);
   const router = useRouter();
-  const locale = useLocaleStore((state) => state.locale);
+  const locale = useLocale();
   const [selected, setSelected] = useState<SelectedCard | null>(null);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
   const animDir = useRef<SwipeDirection | null>(null);

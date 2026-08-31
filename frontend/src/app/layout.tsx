@@ -3,7 +3,7 @@ import { inter } from "./fonts";
 import "./globals.css";
 import { Providers } from "./providers";
 import { Dock } from "@/widgets/dock";
-import { LocaleProvider, dictionaries } from "@/shared/i18n";
+import { dictionaries } from "@/shared/i18n";
 import { getServerLocale } from "@/shared/i18n/getServerLocale";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -25,12 +25,10 @@ export default async function RootLayout({
   return (
     <html lang={locale} className={`${inter.variable} h-full antialiased`}>
       <body className="h-full">
-        <LocaleProvider initialLocale={locale}>
-          <Providers>
-            <div className="pb-28">{children}</div>
-            <Dock />
-          </Providers>
-        </LocaleProvider>
+        <Providers initialLocale={locale}>
+          <div className="pb-28">{children}</div>
+          <Dock />
+        </Providers>
       </body>
     </html>
   );

@@ -5,7 +5,7 @@ import { useToggleSave } from "@/features/save-card";
 import { useToggleVisit } from "@/features/visit-card";
 import { useAuthStore } from "@/features/auth";
 import { ROUTES } from "@/shared/config/routes";
-import { useLocaleStore } from "@/shared/i18n";
+import { useLocale } from "@/shared/i18n";
 import type { ICard, SelectedCard } from "@/shared/types/card";
 
 export function useCardsSlider() {
@@ -14,7 +14,7 @@ export function useCardsSlider() {
   const { mutate: toggleVisit } = useToggleVisit();
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
-  const locale = useLocaleStore((state) => state.locale);
+  const locale = useLocale();
 
   function viewMore() {
     router.push(ROUTES.exploring);
