@@ -1,18 +1,11 @@
+import type { TranslationKey } from "@/shared/i18n";
+
 export const explanationCards = [
-  {
-    text: "CREATE YOUR OWN EVENTS",
-    variant: "first",
-  },
-  {
-    text: "FIND THE PERFECT ACTIVITY",
-    variant: "second",
-  },
-  {
-    text: "BUY TICKETS ONLINE",
-    variant: "third",
-  },
-  {
-    text: "STAY INFORMED ABOUT EVENTS",
-    variant: "fourd",
-  },
-] as const;
+  { textKey: "explanation.createEvents", variant: "first" },
+  { textKey: "explanation.findActivity", variant: "second" },
+  { textKey: "explanation.buyTickets", variant: "third" },
+  { textKey: "explanation.stayInformed", variant: "fourd" },
+] as const satisfies ReadonlyArray<{
+  textKey: TranslationKey;
+  variant: string;
+}>;

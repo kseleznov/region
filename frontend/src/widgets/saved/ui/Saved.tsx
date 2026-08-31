@@ -4,6 +4,8 @@ import { Heart, MapPinCheck } from "lucide-react";
 import { Chips } from "@/shared/ui";
 import { PlaceSlider } from "@/widgets/exploring-window/ui/PlaceSlider";
 import { ViewControl } from "@/widgets/exploring-window/ui/ViewControl";
+import { useCategoryLabel, useTranslation } from "@/shared/i18n";
+import type { TranslationKey } from "@/shared/i18n";
 import { SavedTabs } from "./SavedTabs";
 import { useSaved } from "../model/useSaved";
 
@@ -11,14 +13,14 @@ const EMPTY_STATE = {
   saved: {
     icon: Heart,
     iconClass: "text-brand-pink fill-brand-pink",
-    title: "Nothing saved yet",
-    hint: "Tap the heart on any place to save it here for later",
+    titleKey: "saved.empty.savedTitle" as TranslationKey,
+    hintKey: "saved.empty.savedHint" as TranslationKey,
   },
   visited: {
     icon: MapPinCheck,
     iconClass: "text-brand-pink",
-    title: "Nothing visited yet",
-    hint: "Mark a place as visited and it shows up here",
+    titleKey: "saved.empty.visitedTitle" as TranslationKey,
+    hintKey: "saved.empty.visitedHint" as TranslationKey,
   },
 } as const;
 
@@ -42,18 +44,26 @@ export function Saved() {
     setCurrentCardIndex,
     setHintPhase,
   } = useSaved();
+  const { t } = useTranslation();
+  const categoryLabel = useCategoryLabel();
 
   const empty = EMPTY_STATE[tab];
   const EmptyIcon = empty.icon;
+  const localizedCategories = categories.map((category) => ({
+    ...category,
+    value: categoryLabel(category.id),
+  }));
 
   return (
     <div className="h-dvh overflow-hidden flex flex-col pt-6 pb-28">
       <div className="px-4 mb-4">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <p className="text-sm text-brand-gray">Your collection</p>
+            <p className="text-sm text-brand-gray">{t("saved.label")}</p>
             <h1 className="text-3xl font-bold text-dark">
-              {tab === "saved" ? "Saved" : "Visited"}
+              {tab === "saved"
+                ? t("saved.tabs.saved")
+                : t("saved.tabs.visited")}
             </h1>
           </div>
           {!isEmpty && (
@@ -80,15 +90,17 @@ export function Saved() {
             <EmptyIcon size={40} className={empty.iconClass} />
           </div>
           <div className="flex flex-col items-center gap-2">
-            <p className="text-xl font-bold text-dark">{empty.title}</p>
-            <p className="text-sm text-brand-gray text-center">{empty.hint}</p>
+            <p className="text-xl font-bold text-dark">{t(empty.titleKey)}</p>
+            <p className="text-sm text-brand-gray text-center">
+              {t(empty.hintKey)}
+            </p>
           </div>
         </div>
       ) : (
         <>
           <div className="px-4 mb-6">
             <Chips
-              chips={categories}
+              chips={localizedCategories}
               activeId={activeCategory.id}
               onChange={handleChipChange}
             />
@@ -101,7 +113,7 @@ export function Saved() {
               places={filteredPlaces}
               categoryIndex={activeCategoryIndex}
               totalCategories={categories.length}
-              categoryName={activeCategory.value}
+              categoryName={categoryLabel(activeCategory.id)}
               onCategoryChange={handleCategoryChange}
               onCardIndexChange={(index) => {
                 setCurrentCardIndex(index);

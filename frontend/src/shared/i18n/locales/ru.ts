@@ -11,6 +11,7 @@ export const ru: Dictionary = {
     showLess: "Свернуть",
     viewAll: "Все",
     retry: "Повторить",
+    close: "Закрыть",
   },
 
   metadata: {
@@ -189,6 +190,7 @@ export const ru: Dictionary = {
   cityFacts: {
     didYouKnow: "Знаешь ли ты?",
     about: "О городе {city}",
+    slideAria: "Перейти к слайду {index}",
     lisbon: {
       yearsHistoryValue: "3 000+",
       yearsHistoryLabel: "лет истории",
@@ -215,6 +217,21 @@ export const ru: Dictionary = {
     urbanLegend: "Городская легенда",
     placesVisited: "Мест посещено",
     districtsUnlocked: "Районов открыто",
+    badgeAria: "Ранг: {name}. Нажмите для деталей.",
+    moreToNext: "Ещё {count} мест до ранга",
+    reachedTop: "Вы достигли вершины.",
+    cityPassport: "Паспорт города",
+    achievements: "Достижения",
+    nightExplorer: "Ночной исследователь",
+    foodHunter: "Охотник за едой",
+    taglines: {
+      wanderer: "только начинает",
+      explorer: "просыпается любопытство",
+      insider: "знает места",
+      localSoul: "почти местный",
+      cityHunter: "эксперт",
+      urbanLegend: "настоящая элита",
+    },
   },
 
   explanation: {

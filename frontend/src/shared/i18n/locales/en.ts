@@ -17,6 +17,7 @@ export const en = {
     showLess: "Show less",
     viewAll: "View All",
     retry: "Try again",
+    close: "Close",
   },
 
   metadata: {
@@ -196,6 +197,7 @@ export const en = {
   cityFacts: {
     didYouKnow: "Did you know?",
     about: "About {city}",
+    slideAria: "Go to slide {index}",
     lisbon: {
       yearsHistoryValue: "3,000+",
       yearsHistoryLabel: "years of history",
@@ -222,6 +224,21 @@ export const en = {
     urbanLegend: "Urban Legend",
     placesVisited: "Places visited",
     districtsUnlocked: "Districts unlocked",
+    badgeAria: "Rank: {name}. Tap for details.",
+    moreToNext: "{count} more places to",
+    reachedTop: "You've reached the top.",
+    cityPassport: "City Passport",
+    achievements: "Achievements",
+    nightExplorer: "Night Explorer",
+    foodHunter: "Food Hunter",
+    taglines: {
+      wanderer: "just starting out",
+      explorer: "getting curious",
+      insider: "knows the spots",
+      localSoul: "almost a local",
+      cityHunter: "an expert",
+      urbanLegend: "pure elite",
+    },
   },
 
   explanation: {

@@ -1,12 +1,16 @@
 "use client";
 
 import { Sparkles } from "lucide-react";
+import { useCityName } from "@/entities/city";
+import { useTranslation } from "@/shared/i18n";
 import { FactCard } from "./FactCard";
 import { useCityFacts } from "../model/useCityFacts";
 
 export function CityFacts() {
   const { emblaRef, selectedIndex, scrollSnaps, scrollTo, facts } =
     useCityFacts();
+  const { t } = useTranslation();
+  const cityName = useCityName();
 
   return (
     <div className="mb-[70px]">
@@ -15,9 +19,11 @@ export function CityFacts() {
           <Sparkles className="w-5 h-5 text-dark" />
         </div>
         <div>
-          <p className="text-xs text-dark/50 font-medium">Знаешь ли ты?</p>
+          <p className="text-xs text-dark/50 font-medium">
+            {t("cityFacts.didYouKnow")}
+          </p>
           <p className="text-base font-extrabold text-dark leading-tight">
-            О Лиссабоне
+            {t("cityFacts.about", { city: cityName("Lisbon") })}
           </p>
         </div>
       </div>
@@ -36,7 +42,7 @@ export function CityFacts() {
         {scrollSnaps.map((_, i) => (
           <button
             key={i}
-            aria-label={`Перейти к слайду ${i + 1}`}
+            aria-label={t("cityFacts.slideAria", { index: i + 1 })}
             className={`w-1.5 h-1.5 rounded-full transition-colors ${
               i === selectedIndex ? "bg-dark" : "bg-dark/20"
             }`}

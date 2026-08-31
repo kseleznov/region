@@ -1,8 +1,10 @@
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState } from "react";
-import { lisbonFacts } from "./facts";
+import { useTranslation } from "@/shared/i18n";
+import { buildLisbonFacts } from "./facts";
 
 export function useCityFacts() {
+  const { t } = useTranslation();
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     containScroll: "trimSnaps",
@@ -33,5 +35,11 @@ export function useCityFacts() {
     emblaApi?.scrollTo(index);
   }
 
-  return { emblaRef, selectedIndex, scrollSnaps, scrollTo, facts: lisbonFacts };
+  return {
+    emblaRef,
+    selectedIndex,
+    scrollSnaps,
+    scrollTo,
+    facts: buildLisbonFacts(t),
+  };
 }

@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { useTranslation } from "@/shared/i18n";
 
 export function CityDescription({ description }: { description: string }) {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -13,7 +15,7 @@ export function CityDescription({ description }: { description: string }) {
       onClick={() => setIsOpen((value) => !value)}
     >
       <button className="w-full flex items-center justify-between mb-3">
-        <span className="text-lg font-extrabold">Обзор</span>
+        <span className="text-lg font-extrabold">{t("cityInfo.overview")}</span>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3 }}

@@ -1,4 +1,7 @@
+"use client";
+
 import { cn } from "@/shared/lib/cn";
+import { useTranslation, type TranslationKey } from "@/shared/i18n";
 import type { SavedTab } from "../model/useSaved";
 
 interface SavedTabsProps {
@@ -8,9 +11,9 @@ interface SavedTabsProps {
   onChange: (tab: SavedTab) => void;
 }
 
-const TABS: { id: SavedTab; label: string }[] = [
-  { id: "saved", label: "Saved" },
-  { id: "visited", label: "Visited" },
+const TABS: { id: SavedTab; labelKey: TranslationKey }[] = [
+  { id: "saved", labelKey: "saved.tabs.saved" },
+  { id: "visited", labelKey: "saved.tabs.visited" },
 ];
 
 export function SavedTabs({
@@ -19,6 +22,7 @@ export function SavedTabs({
   visitedCount,
   onChange,
 }: SavedTabsProps) {
+  const { t } = useTranslation();
   const counts: Record<SavedTab, number> = {
     saved: savedCount,
     visited: visitedCount,
@@ -26,7 +30,7 @@ export function SavedTabs({
 
   return (
     <div className="flex bg-search-bg rounded-full p-1">
-      {TABS.map(({ id, label }) => (
+      {TABS.map(({ id, labelKey }) => (
         <button
           key={id}
           type="button"
@@ -36,7 +40,7 @@ export function SavedTabs({
             tab === id ? "bg-brand-purple text-white" : "text-brand-gray",
           )}
         >
-          {label}
+          {t(labelKey)}
           <span
             className={cn(
               "ml-1.5 text-xs font-semibold",
