@@ -7,7 +7,8 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { usePlaces } from "@/entities/place";
+import { usePlaces, useCategories } from "@/entities/place";
+import type { Category } from "@/shared/types/category";
 import {
   hasSeenSwipeHint,
   markSwipeHintSeen,
@@ -18,25 +19,28 @@ type HintPhase = "category" | "card" | "done";
 
 export type SavedTab = "saved" | "visited";
 
-type SavedCategory = {
-  id: string;
-  value: string;
-};
-
-const ALL_CATEGORY: SavedCategory = { id: "all", value: "All" };
+const ALL_CATEGORY: Category = { id: "all", value: "All", subcategories: [] };
 
 export function useSaved() {
   const { data: allCards = [] } = usePlaces();
+  const { data: allCategories = [] } = useCategories();
 
   const [tab, setTab] = useState<SavedTab>("saved");
   const savedCards = allCards.filter((card) => card.isSaved);
   const visitedCards = allCards.filter((card) => card.isVisited);
   const places = tab === "saved" ? savedCards : visitedCards;
 
-  const categories = useMemo<SavedCategory[]>(() => {
-    const unique = Array.from(new Set(places.map((c) => c.category)));
-    return [ALL_CATEGORY, ...unique.map((cat) => ({ id: cat, value: cat }))];
-  }, [places]);
+  // Use the same canonical category list as the explore page, narrowed to the
+  // categories that actually have a place in the current tab.
+  const categories = useMemo<Category[]>(() => {
+    const present = new Set(places.map((p) => p.category));
+    const matched = allCategories.filter((cat) =>
+      cat.subcategories.length === 0
+        ? present.has(cat.id)
+        : cat.subcategories.some((sub) => present.has(sub)),
+    );
+    return [ALL_CATEGORY, ...matched];
+  }, [places, allCategories]);
 
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -80,7 +84,12 @@ export function useSaved() {
 
   const filteredPlaces = useMemo(() => {
     if (activeCategory.id === "all") return places;
-    return places.filter((card) => card.category === activeCategory.id);
+    if (activeCategory.subcategories.length === 0) {
+      return places.filter((card) => card.category === activeCategory.id);
+    }
+    return places.filter((card) =>
+      activeCategory.subcategories.includes(card.category),
+    );
   }, [places, activeCategory]);
 
   function handleCategoryChange(newIndex: number, dir: "up" | "down") {
