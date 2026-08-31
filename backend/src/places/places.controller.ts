@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import type { Request } from 'express';
 import type { JwtUser } from '../auth/auth.types';
+import { parseLocale } from '../common/i18n';
 import { PlacesService } from './places.service';
 import { FindPlacesQueryDto } from './dto/find-places-query.dto';
 import { JwtGuard } from '../auth/guards/jwt.guard';
@@ -23,7 +24,7 @@ export class PlacesController {
   @Get()
   findAll(@Query() query: FindPlacesQueryDto, @Req() req: Request) {
     const userId = (req.user as JwtUser | undefined)?.id;
-    return this.placesService.findAll(query, userId);
+    return this.placesService.findAll(query, userId, parseLocale(query.lang));
   }
 
   @Get('categories')
@@ -33,9 +34,13 @@ export class PlacesController {
 
   @UseGuards(JwtOptionalGuard)
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('lang') lang: string | undefined,
+    @Req() req: Request,
+  ) {
     const userId = (req.user as JwtUser | undefined)?.id;
-    return this.placesService.findOne(id, userId);
+    return this.placesService.findOne(id, userId, parseLocale(lang));
   }
 
   @UseGuards(JwtGuard)

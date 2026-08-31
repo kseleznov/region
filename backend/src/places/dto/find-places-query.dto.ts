@@ -1,4 +1,5 @@
 import { IsIn, IsOptional } from 'class-validator';
+import { LOCALES, type Locale } from '../../common/i18n';
 
 export const PLACE_SORT_OPTIONS = [
   'top-rated',
@@ -35,4 +36,8 @@ export class FindPlacesQueryDto {
   @IsOptional()
   @IsIn(['true', 'false'])
   openNow?: 'true' | 'false';
+
+  @IsOptional()
+  @IsIn([...LOCALES])
+  lang?: Locale;
 }

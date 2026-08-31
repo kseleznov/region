@@ -3,9 +3,18 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { toAssetUrl } from '../common/assets.util';
 import {
-  BASE_PLACE_SELECT,
+  DEFAULT_LOCALE,
+  localeCandidates,
+  pickTranslation,
+  type Locale,
+} from '../common/i18n';
+import {
+  detailPlaceSelect,
+  listPlaceSelect,
   PARENT_ORDER,
   SUBCATEGORY_TO_PARENT,
+  type PlaceDetailRow,
+  type PlaceListRow,
 } from './places.constants';
 import type { Category } from './places.types';
 import type {
@@ -52,65 +61,92 @@ function buildPlaceOrderBy(
   }
 }
 
+/**
+ * Fold the locale's translation row back into a flat list card, so the API
+ * response shape is identical to the pre-i18n one.
+ */
+function toListCard(
+  place: PlaceListRow,
+  locale: Locale,
+  flags: { isSaved: boolean; isVisited: boolean },
+) {
+  const { translations, image, ...rest } = place;
+  const t = pickTranslation(translations, locale);
+
+  return {
+    ...rest,
+    name: t.name,
+    address: t.address,
+    image: toAssetUrl(image),
+    ...flags,
+  };
+}
+
 @Injectable()
 export class PlacesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(query: FindPlacesQueryDto, userId?: number) {
+  async findAll(
+    query: FindPlacesQueryDto,
+    userId?: number,
+    locale: Locale = DEFAULT_LOCALE,
+  ) {
     const where = buildPlaceWhere(query);
     const orderBy = buildPlaceOrderBy(query.sort);
+    const baseSelect = listPlaceSelect(locale);
 
     if (!userId) {
-      const places = await this.prisma.place.findMany({
+      const places = (await this.prisma.place.findMany({
         where,
         orderBy,
-        select: BASE_PLACE_SELECT,
-      });
-      return places.map((place) => ({
-        ...place,
-        image: toAssetUrl(place.image),
-        isSaved: false,
-        isVisited: false,
-      }));
+        select: baseSelect,
+      })) as PlaceListRow[];
+
+      return places.map((place) =>
+        toListCard(place, locale, { isSaved: false, isVisited: false }),
+      );
     }
 
-    const places = await this.prisma.place.findMany({
+    const places = (await this.prisma.place.findMany({
       where,
       orderBy,
       select: {
-        ...BASE_PLACE_SELECT,
+        ...baseSelect,
         savedBy: { where: { userId }, select: { id: true } },
         visitedBy: { where: { userId }, select: { id: true } },
       },
-    });
+    })) as (PlaceListRow & {
+      savedBy: { id: number }[];
+      visitedBy: { id: number }[];
+    })[];
 
-    return places.map(({ savedBy, visitedBy, ...place }) => ({
-      ...place,
-      image: toAssetUrl(place.image),
-      isSaved: savedBy.length > 0,
-      isVisited: visitedBy.length > 0,
-    }));
+    return places.map(({ savedBy, visitedBy, ...place }) =>
+      toListCard(place, locale, {
+        isSaved: savedBy.length > 0,
+        isVisited: visitedBy.length > 0,
+      }),
+    );
   }
 
-  async findOne(id: number, userId?: number) {
-    const place = await this.prisma.place.findUnique({
+  async findOne(id: number, userId?: number, locale: Locale = DEFAULT_LOCALE) {
+    const place = (await this.prisma.place.findUnique({
       where: { id },
-      select: {
-        ...BASE_PLACE_SELECT,
-        photos: true,
-        description: true,
-        workingHours: true,
-        expectations: true,
-        ratingCount: true,
-        ratingBreakdown: true,
-      },
-    });
+      select: detailPlaceSelect(locale),
+    })) as PlaceDetailRow | null;
 
     if (!place) {
       throw new NotFoundException(`Place with id ${id} not found`);
     }
 
-    const { ratingCount, ratingBreakdown, ...rest } = place;
+    const {
+      translations,
+      photos,
+      ratingCount,
+      ratingBreakdown,
+      image,
+      ...rest
+    } = place;
+    const t = pickTranslation(translations, locale);
 
     // "You might also like" — places in the same parent group (Culture, Nature…),
     // falling back to the exact category if the group can't be resolved.
@@ -130,28 +166,36 @@ export class PlacesService {
           author: true,
           avatar: true,
           rating: true,
-          text: true,
           createdAt: true,
+          translations: {
+            where: { locale: { in: localeCandidates(locale) } },
+            select: { locale: true, text: true },
+          },
         },
       }),
       this.prisma.place.findMany({
         where: { category: { in: siblingCategories }, id: { not: id } },
         take: 6,
-        select: BASE_PLACE_SELECT,
-      }),
+        select: listPlaceSelect(locale),
+      }) as Promise<PlaceListRow[]>,
     ]);
 
     const detail = {
       ...rest,
-      image: toAssetUrl(rest.image),
-      photos: (rest.photos as string[]).map(toAssetUrl),
-      reviews,
-      similar: similar.map((item) => ({
-        ...item,
-        image: toAssetUrl(item.image),
-        isSaved: false,
-        isVisited: false,
+      name: t.name,
+      description: t.description,
+      address: t.address,
+      workingHours: t.workingHours,
+      expectations: t.expectations,
+      image: toAssetUrl(image),
+      photos: (photos as string[]).map(toAssetUrl),
+      reviews: reviews.map(({ translations: reviewTr, ...review }) => ({
+        ...review,
+        text: pickTranslation(reviewTr, locale).text,
       })),
+      similar: similar.map((item) =>
+        toListCard(item, locale, { isSaved: false, isVisited: false }),
+      ),
       ratingSummary: {
         average: rest.stars,
         total: ratingCount,

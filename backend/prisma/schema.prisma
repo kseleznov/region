@@ -27,44 +27,74 @@ model SavedPlace {
 }
 
 model Place {
-  id              Int            @id @default(autoincrement())
-  name            String
+  id              Int                @id @default(autoincrement())
   category        String
-  description     String
   image           String
-  photos          Json           @default("[]")
+  photos          Json               @default("[]")
   stars           Float
   price           Int
-  address         String
   isOpen          Boolean
-  workingHours    Json
-  expectations    Json           @default("[]")
-  ratingCount     Int            @default(0)
-  ratingBreakdown Json           @default("[0, 0, 0, 0, 0]")
+  ratingCount     Int                @default(0)
+  ratingBreakdown Json               @default("[0, 0, 0, 0, 0]")
+  translations    PlaceTranslation[]
   savedBy         SavedPlace[]
   visitedBy       VisitedPlace[]
   reviews         Review[]
 }
 
+/// Per-locale text for a Place. `locale` is a lowercase code ("en", "ru").
+model PlaceTranslation {
+  place        Place  @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  placeId      Int
+  locale       String
+  name         String
+  description  String
+  address      String
+  workingHours Json
+  expectations Json   @default("[]")
+
+  @@id([placeId, locale])
+}
+
 model Review {
-  id        Int      @id @default(autoincrement())
-  place     Place    @relation(fields: [placeId], references: [id])
-  placeId   Int
-  author    String
-  avatar    String
-  rating    Int
-  text      String
-  createdAt DateTime @default(now())
+  id           Int                 @id @default(autoincrement())
+  place        Place               @relation(fields: [placeId], references: [id])
+  placeId      Int
+  author       String
+  avatar       String
+  rating       Int
+  createdAt    DateTime            @default(now())
+  translations ReviewTranslation[]
+}
+
+/// Per-locale body text for a Review. The author name stays language-neutral.
+model ReviewTranslation {
+  review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  reviewId Int
+  locale   String
+  text     String
+
+  @@id([reviewId, locale])
 }
 
 model City {
-  id          Int    @id @default(autoincrement())
-  slug        String @unique
+  id           Int               @id @default(autoincrement())
+  slug         String            @unique
+  images       Json              @default("[]")
+  location     Json
+  translations CityTranslation[]
+}
+
+/// Per-locale text for a City, including the localised weather label.
+model CityTranslation {
+  city        City   @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  cityId      Int
+  locale      String
   name        String
   description String
-  images      Json   @default("[]")
-  location    Json
   weather     Json
+
+  @@id([cityId, locale])
 }
 
 model VisitedPlace {
