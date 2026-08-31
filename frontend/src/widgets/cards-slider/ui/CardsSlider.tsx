@@ -5,11 +5,13 @@ import { Card, CardDetail } from "@/entities/card";
 import { usePlaces } from "@/entities/place";
 import { Button } from "@/shared/ui";
 import { ViewAllArrowIcon } from "@/shared/ui/icons";
+import { useTranslation } from "@/shared/i18n";
 import { useCardsSlider } from "../model/useCardsSlider";
 import type { CardSliderProps } from "../model/types";
 
 export function CardsSlider({ title, initialCards }: CardSliderProps) {
   const { data: cards = [] } = usePlaces(initialCards);
+  const { t } = useTranslation();
   const {
     selected,
     isSelectedSaved,
@@ -27,10 +29,12 @@ export function CardsSlider({ title, initialCards }: CardSliderProps) {
         className="flex items-center justify-between mb-[24px] px-4"
         onClick={viewMore}
       >
-        <h1 className="text-[32px] leading-[1.05] font-extrabold">{title}</h1>
+        <h1 className="text-[32px] leading-[1.05] font-extrabold">
+          {title ?? t("overview.whereToGo")}
+        </h1>
         <div className="flex items-center gap-[12px]">
           <span className="text-brand-purple font-semibold text-[16px]">
-            View All
+            {t("common.viewAll")}
           </span>
           <Button variant="viewAll">
             <ViewAllArrowIcon />

@@ -89,6 +89,7 @@ export const ru: Dictionary = {
     popular: {
       title: "Популярные направления",
       empty: "Нет городов в этом регионе",
+      comingSoon: "Скоро",
     },
   },
 

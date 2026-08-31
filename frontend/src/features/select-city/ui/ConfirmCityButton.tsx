@@ -2,10 +2,14 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/shared/ui";
+import { useCityName } from "@/entities/city";
+import { useTranslation } from "@/shared/i18n";
 import { useConfirmCityButton } from "../model/useConfirmCityButton";
 
 export function ConfirmCityButton() {
   const { selectedCity, onClick } = useConfirmCityButton();
+  const { t } = useTranslation();
+  const cityName = useCityName();
 
   return (
     <AnimatePresence>
@@ -18,7 +22,7 @@ export function ConfirmCityButton() {
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
           <Button variant="confirmCity" onClick={onClick}>
-            Continue with {selectedCity}
+            {t("region.confirm", { city: cityName(selectedCity) })}
           </Button>
         </motion.div>
       )}

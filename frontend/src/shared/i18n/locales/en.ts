@@ -95,6 +95,7 @@ export const en = {
     popular: {
       title: "Popular destinations",
       empty: "No cities in this region",
+      comingSoon: "Coming Soon",
     },
   },
 

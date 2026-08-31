@@ -5,13 +5,18 @@ import { SearchCity } from "@/features/search-city";
 import { RegionSelector } from "@/features/select-region";
 import { BackButton } from "@/shared/ui";
 import { ConfirmCityButton } from "@/features/select-city";
+import { useTranslation } from "@/shared/i18n";
 
 export default function Region() {
+  const { t } = useTranslation();
+
   return (
     <div className="px-[16px] py-[24px]">
       <div className="flex gap-[10px] mb-[24px]">
         <BackButton />
-        <h1 className="text-dark text-2xl font-extrabold">Choose your city</h1>
+        <h1 className="text-dark text-2xl font-extrabold">
+          {t("region.title")}
+        </h1>
       </div>
       <div className="mb-[24px]">
         <SearchCity />

@@ -22,7 +22,7 @@ export default async function Overview() {
         <Banner />
       </div>
       <CityInfo />
-      <CardsSlider title="Where to go" initialCards={whereToGo} />
+      <CardsSlider initialCards={whereToGo} />
       <CityFacts />
     </>
   );

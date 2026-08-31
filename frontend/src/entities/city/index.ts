@@ -2,3 +2,4 @@ export { CityCard } from "./ui/CityCard";
 export type { City } from "./model/types";
 export { cities } from "./model/cities";
 export { getCityInfo } from "./api";
+export { useCityName } from "./model/useCityName";
