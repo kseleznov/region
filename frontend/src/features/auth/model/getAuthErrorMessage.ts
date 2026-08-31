@@ -1,37 +1,41 @@
 import { isAxiosError } from "axios";
+import type { TranslationKey } from "@/shared/i18n";
 import type { AuthMode } from "./types";
 
 /**
- * Maps a failed auth request to a user-facing message. Network / no-response
- * errors get their own message so a dead backend doesn't read as "wrong
- * password".
+ * Maps a failed auth request to a dictionary key for a user-facing message.
+ * Network / no-response errors get their own key so a dead backend doesn't
+ * read as "wrong password".
  */
-export function getAuthErrorMessage(err: unknown, mode: AuthMode): string {
+export function getAuthErrorMessage(
+  err: unknown,
+  mode: AuthMode,
+): TranslationKey {
   if (!isAxiosError(err) || !err.response) {
-    return "Can't reach the server. Check your connection and try again.";
+    return "auth.errors.network";
   }
 
   const status = err.response.status;
 
   if (mode === "sign-in") {
     if (status === 401) {
-      return "Incorrect email or password";
+      return "auth.errors.invalidCredentials";
     }
 
     if (status === 400) {
-      return "Enter a valid email and password";
+      return "auth.errors.invalidInput";
     }
 
-    return "Couldn't sign you in. Please try again.";
+    return "auth.errors.signInGeneric";
   }
 
   if (status === 409) {
-    return "This email is already registered";
+    return "auth.errors.emailTaken";
   }
 
   if (status === 400) {
-    return "Check your details: password must be at least 6 characters";
+    return "auth.errors.weakPassword";
   }
 
-  return "Couldn't create your account. Please try again.";
+  return "auth.errors.signUpGeneric";
 }

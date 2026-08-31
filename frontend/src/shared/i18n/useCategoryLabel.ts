@@ -1,13 +1,14 @@
 "use client";
 
 import { useCallback } from "react";
-import { useTranslation, type TranslationKey } from "@/shared/i18n";
+import { useTranslation } from "./useTranslation";
+import type { TranslationKey } from "./translate";
 
 /**
- * The API keeps category values language-neutral — parent ids (`culture`,
+ * The API keeps place categories language-neutral: parent ids (`culture`,
  * `nature`, …) and Russian subcategory strings (`Музей`) double as filter
- * keys. This hook turns either into a label for the active locale, falling
- * back to the raw value if there's no dictionary entry.
+ * keys. This turns either into a label for the active locale, falling back
+ * to the raw value when there's no dictionary entry.
  */
 export function useCategoryLabel(): (raw: string) => string {
   const { t } = useTranslation();

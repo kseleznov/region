@@ -12,6 +12,7 @@ import {
   Wine,
   type LucideIcon,
 } from "lucide-react";
+import { useTranslation } from "@/shared/i18n";
 import type { Expectation } from "@/shared/types/card";
 
 const EXPECTATION_ICONS: Record<string, LucideIcon> = {
@@ -32,10 +33,12 @@ interface CardExpectationsProps {
 }
 
 export function CardExpectations({ items }: CardExpectationsProps) {
+  const { t } = useTranslation();
+
   return (
     <section className="mb-8">
       <h3 className="text-xs font-bold text-dark/50 uppercase tracking-wider mb-3 px-1">
-        What to expect
+        {t("card.whatToExpect")}
       </h3>
       <div className="grid grid-cols-2 gap-3">
         {items.map(({ icon, label, note }) => {

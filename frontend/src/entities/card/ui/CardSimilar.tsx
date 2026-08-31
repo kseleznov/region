@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Star } from "lucide-react";
+import { useCategoryLabel, useTranslation } from "@/shared/i18n";
 import type { ICard } from "@/shared/types/card";
 
 interface CardSimilarProps {
@@ -8,10 +9,13 @@ interface CardSimilarProps {
 }
 
 export function CardSimilar({ places, onSelect }: CardSimilarProps) {
+  const { t } = useTranslation();
+  const categoryLabel = useCategoryLabel();
+
   return (
     <section className="mb-4">
       <h3 className="text-xs font-bold text-dark/50 uppercase tracking-wider mb-3 px-1">
-        You might also like
+        {t("card.similarTitle")}
       </h3>
       <ul className="flex overflow-x-auto gap-3 -mr-6 pr-6 snap-x [&::-webkit-scrollbar]:hidden">
         {places.map((place) => (
@@ -31,7 +35,7 @@ export function CardSimilar({ places, onSelect }: CardSimilarProps) {
                 className="object-cover"
               />
               <span className="absolute top-2 left-2 bg-white/95 backdrop-blur-sm text-dark text-[10px] font-extrabold uppercase tracking-wide px-2 py-1 rounded-full">
-                {place.category}
+                {categoryLabel(place.category)}
               </span>
             </div>
             <div className="flex items-center justify-between gap-2">

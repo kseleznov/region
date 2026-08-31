@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { cn } from "@/shared/lib/cn";
 import { useAuth } from "@/features/auth";
+import { useTranslation } from "@/shared/i18n";
 import { SignInForm } from "./SignInForm";
 import { SignUpForm } from "./SignUpForm";
 import { GoogleIcon, AppleIcon } from "./icons";
@@ -13,6 +14,7 @@ interface AuthFormProps {
 }
 
 export function AuthForm({ initialMode }: AuthFormProps) {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<Mode>(initialMode);
   const [showPassword, setShowPassword] = useState(false);
   const {
@@ -30,10 +32,10 @@ export function AuthForm({ initialMode }: AuthFormProps) {
   return (
     <div className="px-5 py-8">
       <p className="text-sm text-brand-gray mb-1">
-        {mode === "sign-up" ? "Get started" : "Welcome back"}
+        {mode === "sign-up" ? t("auth.getStarted") : t("auth.welcomeBack")}
       </p>
       <h1 className="text-3xl font-bold text-dark mb-6">
-        {mode === "sign-up" ? "Create account" : "Sign in"}
+        {mode === "sign-up" ? t("auth.createAccount") : t("auth.signIn")}
       </h1>
 
       <div className="flex bg-search-bg rounded-full p-1 mb-5">
@@ -47,7 +49,7 @@ export function AuthForm({ initialMode }: AuthFormProps) {
               mode === m ? "bg-brand-purple text-white" : "text-brand-gray",
             )}
           >
-            {m === "sign-in" ? "Sign in" : "Sign up"}
+            {m === "sign-in" ? t("auth.signIn") : t("auth.signUp")}
           </button>
         ))}
       </div>
@@ -82,7 +84,7 @@ export function AuthForm({ initialMode }: AuthFormProps) {
 
       <div className="flex items-center gap-3 my-5">
         <div className="flex-1 h-px bg-gray-200" />
-        <span className="text-sm text-brand-gray">or</span>
+        <span className="text-sm text-brand-gray">{t("auth.orDivider")}</span>
         <div className="flex-1 h-px bg-gray-200" />
       </div>
 
@@ -92,27 +94,25 @@ export function AuthForm({ initialMode }: AuthFormProps) {
           className="w-full flex items-center justify-center gap-3 bg-search-bg py-4 rounded-full text-sm font-semibold text-dark"
         >
           <GoogleIcon />
-          Continue with Google
+          {t("auth.continueWithGoogle")}
         </button>
         <button
           type="button"
           className="w-full flex items-center justify-center gap-3 bg-search-bg py-4 rounded-full text-sm font-semibold text-dark"
         >
           <AppleIcon />
-          Continue with Apple
+          {t("auth.continueWithApple")}
         </button>
       </div>
 
       <p className="text-center text-sm text-brand-gray mt-6">
-        {mode === "sign-up"
-          ? "Already have an account? "
-          : "Don't have an account? "}
+        {mode === "sign-up" ? t("auth.haveAccount") : t("auth.noAccount")}
         <button
           type="button"
           onClick={() => setMode(mode === "sign-up" ? "sign-in" : "sign-up")}
           className="text-dark font-bold"
         >
-          {mode === "sign-up" ? "Sign in" : "Sign up"}
+          {mode === "sign-up" ? t("auth.signIn") : t("auth.signUp")}
         </button>
       </p>
     </div>

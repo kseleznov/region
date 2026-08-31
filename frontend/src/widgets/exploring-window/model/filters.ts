@@ -1,4 +1,5 @@
 import type { PlacesQuery } from "@/entities/place";
+import type { TranslationKey } from "@/shared/i18n";
 import type {
   FiltersState,
   PriceOption,
@@ -13,10 +14,16 @@ export const DEFAULT_FILTERS: FiltersState = {
   openNow: false,
 };
 
-export const SORT_LABELS: Record<SortOption, string> = {
-  "top-rated": "Top rated",
-  "price-low": "Price (low → high)",
-  "price-high": "Price (high → low)",
+export const SORT_OPTIONS: SortOption[] = [
+  "top-rated",
+  "price-low",
+  "price-high",
+];
+
+export const SORT_LABEL_KEYS: Record<SortOption, TranslationKey> = {
+  "top-rated": "explore.sort.top-rated",
+  "price-low": "explore.sort.price-low",
+  "price-high": "explore.sort.price-high",
 };
 
 export const PRICE_OPTIONS: PriceOption[] = [
@@ -26,11 +33,11 @@ export const PRICE_OPTIONS: PriceOption[] = [
   "over-25",
 ];
 
-export const PRICE_LABELS: Record<PriceOption, string> = {
-  free: "Free",
-  "under-10": "≤ 10€",
-  "10-25": "10–25€",
-  "over-25": "25€ +",
+export const PRICE_LABEL_KEYS: Record<PriceOption, TranslationKey> = {
+  free: "explore.priceBuckets.free",
+  "under-10": "explore.priceBuckets.under-10",
+  "10-25": "explore.priceBuckets.10-25",
+  "over-25": "explore.priceBuckets.over-25",
 };
 
 export const RATING_OPTIONS: RatingOption[] = ["any", "3", "4", "4.5"];

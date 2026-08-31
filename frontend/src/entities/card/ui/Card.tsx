@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Heart, MapPin } from "lucide-react";
 import { StarRating } from "@/shared/ui";
 import { cn } from "@/shared/lib/cn";
+import { useCategoryLabel, useTranslation } from "@/shared/i18n";
 import type { CardProps } from "../model/types";
 
 export function Card({
@@ -18,6 +19,9 @@ export function Card({
   className,
   onClick,
 }: CardProps) {
+  const { t } = useTranslation();
+  const categoryLabel = useCategoryLabel();
+
   return (
     <li
       onClick={onClick}
@@ -50,7 +54,7 @@ export function Card({
 
       <div className="absolute bottom-0 left-0 right-0 p-4 flex flex-col gap-2">
         <div className="self-start bg-brand-yellow text-dark text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide">
-          {category}
+          {categoryLabel(category)}
         </div>
 
         <h2 className="text-white text-3xl font-bold leading-tight">{name}</h2>
@@ -62,7 +66,9 @@ export function Card({
           <span className="text-white/40">•</span>
 
           <div className="flex items-center gap-1 text-white text-sm">
-            <span>{price > 0 ? `from ${price}€` : "Free"}</span>
+            <span>
+              {price > 0 ? t("common.from", { price }) : t("common.free")}
+            </span>
           </div>
 
           <span className="text-white/40">•</span>
@@ -74,7 +80,7 @@ export function Card({
             <span
               className={`text-sm font-medium ${isOpen ? "text-brand-yellow" : "text-brand-pink"}`}
             >
-              {isOpen ? "Open" : "Closed"}
+              {isOpen ? t("common.open") : t("common.closed")}
             </span>
           </div>
         </div>

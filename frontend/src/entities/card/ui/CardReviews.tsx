@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { formatRelativeTime } from "../model/formatRelativeTime";
+import { useTranslation } from "@/shared/i18n";
 import type { RatingSummary, Review } from "@/shared/types/card";
 
 const VISIBLE_BY_DEFAULT = 2;
@@ -29,6 +30,7 @@ function ReviewStars({ rating }: { rating: number }) {
 }
 
 export function CardReviews({ summary, reviews }: CardReviewsProps) {
+  const { t, locale } = useTranslation();
   const [showAll, setShowAll] = useState(false);
 
   const maxCount = Math.max(...summary.breakdown, 1);
@@ -41,13 +43,13 @@ export function CardReviews({ summary, reviews }: CardReviewsProps) {
     <section className="mb-8">
       <div className="flex items-baseline justify-between mb-4 px-1">
         <h3 className="text-xs font-bold text-dark/50 uppercase tracking-wider">
-          Reviews
+          {t("card.reviewsTitle")}
         </h3>
         <p className="text-sm text-dark/50">
           <span className="text-base font-extrabold text-dark">
             {summary.average.toFixed(1)}
           </span>{" "}
-          ({summary.total.toLocaleString("en-US")})
+          ({summary.total.toLocaleString(locale)})
         </p>
       </div>
 
@@ -85,7 +87,7 @@ export function CardReviews({ summary, reviews }: CardReviewsProps) {
                   {review.author}
                 </p>
                 <p className="text-xs text-dark/50">
-                  {formatRelativeTime(review.createdAt)}
+                  {formatRelativeTime(review.createdAt, locale)}
                 </p>
               </div>
               <ReviewStars rating={review.rating} />
@@ -102,7 +104,7 @@ export function CardReviews({ summary, reviews }: CardReviewsProps) {
           onClick={() => setShowAll((v) => !v)}
           className="mt-4 text-brand-purple font-bold text-sm"
         >
-          {showAll ? "Show fewer reviews" : "See all reviews"}
+          {showAll ? t("card.showFewerReviews") : t("card.seeAllReviews")}
         </button>
       )}
     </section>

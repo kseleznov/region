@@ -2,6 +2,8 @@
 
 import { MapPin, RefreshCw } from "lucide-react";
 import { Chips, Search } from "@/shared/ui";
+import { useCategoryLabel, useTranslation } from "@/shared/i18n";
+import { useCityName } from "@/entities/city";
 import { Filters } from "./Filters";
 import { PlaceSlider } from "./PlaceSlider";
 import { SubcategoryModal } from "./SubcategoryModal";
@@ -42,15 +44,24 @@ export function ExploringWindow({
     setCurrentCardIndex,
     setHintPhase,
   } = useExploringWindow(categories, initialPlaces);
+  const { t } = useTranslation();
+  const categoryLabel = useCategoryLabel();
+  const cityName = useCityName();
+  const localizedCategories = categories.map((category) => ({
+    ...category,
+    value: categoryLabel(category.id),
+  }));
+  const activeCategoryLabel = categoryLabel(activeCategory.id);
+  const displayCity = cityName(selectedCity);
 
   return (
     <div className="h-dvh overflow-hidden flex flex-col pt-6 pb-28">
       <div className="flex justify-between items-start mb-4 px-4">
         <div>
-          <p className="text-sm text-brand-gray">Exploring</p>
+          <p className="text-sm text-brand-gray">{t("explore.label")}</p>
           <div className="flex gap-1 items-center">
             <MapPin className="text-brand-purple" strokeWidth={3} />
-            <h1 className="text-3xl font-bold text-dark">{selectedCity}</h1>
+            <h1 className="text-3xl font-bold text-dark">{displayCity}</h1>
           </div>
         </div>
 
@@ -59,15 +70,18 @@ export function ExploringWindow({
             className="flex items-center gap-2 rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-dark"
             onClick={changeCity}
           >
-            Change city
+            {t("explore.changeCity")}
             <RefreshCw className="h-4 w-4" />
           </button>
         </div>
       </div>
-      <Search className="mb-4 mx-4" placeholder={`Search in ${selectedCity}`} />
+      <Search
+        className="mb-4 mx-4"
+        placeholder={t("explore.searchInCity", { city: displayCity })}
+      />
       <div className="px-4 mb-4">
         <Chips
-          chips={categories}
+          chips={localizedCategories}
           activeId={activeCategory.id}
           onChange={handleChipChange}
           subcategoryLabel={activeSubcategory}
@@ -91,7 +105,7 @@ export function ExploringWindow({
           places={filteredPlaces}
           categoryIndex={activeCategoryIndex}
           totalCategories={categories.length}
-          categoryName={activeCategory.value}
+          categoryName={activeCategoryLabel}
           hasActiveFilters={hasActiveFilters}
           onResetFilters={resetFilters}
           onCategoryChange={handleCategoryChange}
@@ -112,7 +126,7 @@ export function ExploringWindow({
       <SubcategoryModal
         isOpen={subcategoryModalOpen}
         onClose={() => setSubcategoryModalOpen(false)}
-        categoryName={activeCategory.value}
+        categoryName={activeCategoryLabel}
         subcategories={activeCategory.subcategories}
         activeSubcategory={activeSubcategory}
         onApply={(subcategory) => setActiveSubcategory(subcategory)}

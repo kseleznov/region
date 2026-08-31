@@ -2,6 +2,7 @@
 
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useCategoryLabel, useTranslation } from "@/shared/i18n";
 
 interface SubcategoryModalProps {
   isOpen: boolean;
@@ -20,6 +21,8 @@ export function SubcategoryModal({
   activeSubcategory,
   onApply,
 }: SubcategoryModalProps) {
+  const { t } = useTranslation();
+  const categoryLabel = useCategoryLabel();
   const [pending, setPending] = useState<string | null>(activeSubcategory);
 
   useEffect(() => {
@@ -54,7 +57,7 @@ export function SubcategoryModal({
         </div>
 
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-brand-gray">
-          Subcategory
+          {t("explore.filters.subcategory")}
         </p>
         <div className="mb-8 grid grid-cols-2 gap-2">
           {subcategories.map((sub) => (
@@ -67,7 +70,7 @@ export function SubcategoryModal({
                   : "border-gray-200 bg-white text-dark"
               }`}
             >
-              {sub}
+              {categoryLabel(sub)}
             </button>
           ))}
         </div>
@@ -77,13 +80,13 @@ export function SubcategoryModal({
             onClick={handleReset}
             className="flex-1 rounded-full border border-gray-200 py-4 text-sm font-bold text-dark"
           >
-            Reset
+            {t("explore.filters.reset")}
           </button>
           <button
             onClick={handleApply}
             className="flex-[2] rounded-full bg-brand-yellow py-4 text-sm font-bold text-dark"
           >
-            Show results
+            {t("explore.filters.showResults")}
           </button>
         </div>
       </div>
