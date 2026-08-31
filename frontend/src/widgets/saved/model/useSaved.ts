@@ -45,7 +45,7 @@ export function useSaved() {
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [transitionDirection, setTransitionDirection] = useState<
-    "up" | "down" | null
+    "left" | "right" | "up" | "down" | null
   >(null);
   const [hintPhase, setHintPhase] = useState<HintPhase>("card");
   const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
@@ -92,7 +92,10 @@ export function useSaved() {
     );
   }, [places, activeCategory]);
 
-  function handleCategoryChange(newIndex: number, dir: "up" | "down") {
+  function handleCategoryChange(
+    newIndex: number,
+    dir: "left" | "right" | "up" | "down",
+  ) {
     setActiveCategoryIndex(newIndex);
     setCurrentCardIndex(0);
     setTransitionDirection(dir);

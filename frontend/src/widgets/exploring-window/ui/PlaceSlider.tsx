@@ -8,7 +8,11 @@ import { usePlaceSliderUI } from "../model/usePlaceSliderUI";
 import { SectionTransition } from "./SectionTransition";
 import { SwipeHint } from "./SwipeHint";
 import { EmptyPlaces } from "./EmptyPlaces";
-import type { PlaceSliderProps, SliderContentProps } from "../model/types";
+import type {
+  PlaceSliderProps,
+  SliderContentProps,
+  SwipeDirection,
+} from "../model/types";
 
 function SliderContent({
   categoryId,
@@ -113,12 +117,12 @@ export function PlaceSlider({
             key={categoryId}
             custom={animDir.current}
             variants={{
-              enter: (dir: "left" | "right" | null) => ({
+              enter: (dir: SwipeDirection | null) => ({
                 x: dir === "right" ? 300 : dir === "left" ? -300 : 0,
                 opacity: 0,
               }),
               center: { x: 0, opacity: 1 },
-              exit: (dir: "left" | "right" | null) => ({
+              exit: (dir: SwipeDirection | null) => ({
                 x: dir === "right" ? -300 : dir === "left" ? 300 : 0,
                 opacity: 0,
               }),

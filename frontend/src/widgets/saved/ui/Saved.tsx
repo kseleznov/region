@@ -114,6 +114,8 @@ export function Saved() {
               categoryIndex={activeCategoryIndex}
               totalCategories={categories.length}
               categoryName={categoryLabel(activeCategory.id)}
+              hasActiveFilters={false}
+              onResetFilters={() => {}}
               onCategoryChange={handleCategoryChange}
               onCardIndexChange={(index) => {
                 setCurrentCardIndex(index);
