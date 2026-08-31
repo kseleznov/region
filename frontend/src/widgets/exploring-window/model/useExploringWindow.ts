@@ -9,7 +9,7 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { useSelectCityStore } from "@/features/select-city";
-import { usePlaces } from "@/entities/place";
+import { useFilteredPlaces } from "@/entities/place";
 import { ROUTES } from "@/shared/config/routes";
 import type { ICard } from "@/shared/types/card";
 import {
@@ -17,13 +17,18 @@ import {
   markSwipeHintSeen,
   subscribeSwipeHintSeen,
 } from "@/shared/lib/swipeHintSeen";
-import type { Category, HintPhase } from "./types";
+import { DEFAULT_FILTERS, hasActiveFilters, toPlacesQuery } from "./filters";
+import type { Category, FiltersState, HintPhase } from "./types";
 
 export function useExploringWindow(
   categories: Category[],
   initialPlaces: ICard[],
 ) {
-  const { data: places = [] } = usePlaces(initialPlaces);
+  const [filters, setFilters] = useState<FiltersState>(DEFAULT_FILTERS);
+  const { data: places = [] } = useFilteredPlaces(
+    toPlacesQuery(filters),
+    initialPlaces,
+  );
   const { selectedCity } = useSelectCityStore();
   const router = useRouter();
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
@@ -113,6 +118,10 @@ export function useExploringWindow(
 
   return {
     selectedCity,
+    filters,
+    applyFilters: setFilters,
+    hasActiveFilters: hasActiveFilters(filters),
+    resetFilters: () => setFilters(DEFAULT_FILTERS),
     activeCategoryIndex,
     activeSubcategory,
     subcategoryModalOpen,

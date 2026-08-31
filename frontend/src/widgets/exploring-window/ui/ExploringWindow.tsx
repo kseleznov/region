@@ -21,6 +21,10 @@ export function ExploringWindow({
 }: ExploringWindowProps) {
   const {
     selectedCity,
+    filters,
+    applyFilters,
+    hasActiveFilters,
+    resetFilters,
     activeCategoryIndex,
     activeSubcategory,
     subcategoryModalOpen,
@@ -72,11 +76,11 @@ export function ExploringWindow({
       </div>
       <div className="flex items-center gap-2 mb-6">
         <div className="flex-1 min-w-0 overflow-hidden">
-          <Filters />
+          <Filters filters={filters} onApply={applyFilters} />
         </div>
         <div className="flex-shrink-0 pr-4">
           <ViewControl
-            currentCount={currentCardIndex + 1}
+            currentCount={totalCount === 0 ? 0 : currentCardIndex + 1}
             totalCount={totalCount}
           />
         </div>
@@ -88,6 +92,8 @@ export function ExploringWindow({
           categoryIndex={activeCategoryIndex}
           totalCategories={categories.length}
           categoryName={activeCategory.value}
+          hasActiveFilters={hasActiveFilters}
+          onResetFilters={resetFilters}
           onCategoryChange={handleCategoryChange}
           onCardIndexChange={(index) => {
             setCurrentCardIndex(index);

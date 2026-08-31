@@ -8,7 +8,7 @@ import { CityInfo } from "@/widgets/city-info";
 
 export default async function Overview() {
   const cookieStore = await cookies();
-  const whereToGo = await placeApi.getAll(cookieStore.toString());
+  const whereToGo = await placeApi.getAll(undefined, cookieStore.toString());
 
   return (
     <>

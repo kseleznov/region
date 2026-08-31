@@ -7,6 +7,7 @@ import { usePlaceSlider } from "../model/usePlaceSlider";
 import { usePlaceSliderUI } from "../model/usePlaceSliderUI";
 import { SectionTransition } from "./SectionTransition";
 import { SwipeHint } from "./SwipeHint";
+import { EmptyPlaces } from "./EmptyPlaces";
 import type { PlaceSliderProps, SliderContentProps } from "../model/types";
 
 function SliderContent({
@@ -14,12 +15,23 @@ function SliderContent({
   places,
   onCardSelect,
   onIndexChange,
+  hasActiveFilters,
+  onResetFilters,
 }: SliderContentProps) {
   const { emblaRef, cards, selectedIndex } = usePlaceSlider(categoryId, places);
 
   useEffect(() => {
     onIndexChange(selectedIndex);
   }, [selectedIndex, onIndexChange]);
+
+  if (cards.length === 0) {
+    return (
+      <EmptyPlaces
+        hasActiveFilters={hasActiveFilters}
+        onResetFilters={onResetFilters}
+      />
+    );
+  }
 
   return (
     <div ref={emblaRef} className="overflow-hidden h-full">
@@ -57,6 +69,8 @@ export function PlaceSlider({
   hintPhase,
   onHideHint,
   transitionDirection,
+  hasActiveFilters,
+  onResetFilters,
 }: PlaceSliderProps) {
   const {
     selected,
@@ -120,6 +134,8 @@ export function PlaceSlider({
               places={places}
               onCardSelect={handleCardSelect}
               onIndexChange={onCardIndexChange}
+              hasActiveFilters={hasActiveFilters}
+              onResetFilters={onResetFilters}
             />
           </motion.div>
         </AnimatePresence>
