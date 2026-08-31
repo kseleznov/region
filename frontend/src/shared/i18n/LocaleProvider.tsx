@@ -46,17 +46,15 @@ export function LocaleProvider({
 
   const setLocale = useCallback(
     (next: Locale) => {
-      setLocaleState((current) => {
-        if (current === next) {
-          return current;
-        }
-        writeCookieLocale(next);
-        void queryClient.invalidateQueries();
-        router.refresh();
-        return next;
-      });
+      if (next === locale) {
+        return;
+      }
+      writeCookieLocale(next);
+      setLocaleState(next);
+      void queryClient.invalidateQueries();
+      router.refresh();
     },
-    [queryClient, router],
+    [locale, queryClient, router],
   );
 
   const value = useMemo(() => ({ locale, setLocale }), [locale, setLocale]);
