@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { toAssetUrl } from '../common/assets.util';
 import {
@@ -7,14 +8,62 @@ import {
   SUBCATEGORY_TO_PARENT,
 } from './places.constants';
 import type { Category } from './places.types';
+import type {
+  FindPlacesQueryDto,
+  PriceBucket,
+} from './dto/find-places-query.dto';
+
+// Disjoint buckets so a place lands in exactly one; the boundary values
+// (10, 25) belong to the lower/upper neighbour to match the "25€ +" label.
+const PRICE_BUCKET_FILTERS: Record<PriceBucket, Prisma.IntFilter | number> = {
+  free: 0,
+  'under-10': { gt: 0, lte: 10 },
+  '10-25': { gt: 10, lt: 25 },
+  'over-25': { gte: 25 },
+};
+
+function buildPlaceWhere(query: FindPlacesQueryDto): Prisma.PlaceWhereInput {
+  const where: Prisma.PlaceWhereInput = {};
+
+  if (query.price) {
+    where.price = PRICE_BUCKET_FILTERS[query.price];
+  }
+  if (query.minRating) {
+    where.stars = { gte: Number(query.minRating) };
+  }
+  if (query.openNow === 'true') {
+    where.isOpen = true;
+  }
+
+  return where;
+}
+
+function buildPlaceOrderBy(
+  sort: FindPlacesQueryDto['sort'],
+): Prisma.PlaceOrderByWithRelationInput[] {
+  switch (sort) {
+    case 'price-low':
+      return [{ price: 'asc' }, { stars: 'desc' }];
+    case 'price-high':
+      return [{ price: 'desc' }, { stars: 'desc' }];
+    case 'top-rated':
+    default:
+      return [{ stars: 'desc' }, { id: 'asc' }];
+  }
+}
 
 @Injectable()
 export class PlacesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(userId?: number) {
+  async findAll(query: FindPlacesQueryDto, userId?: number) {
+    const where = buildPlaceWhere(query);
+    const orderBy = buildPlaceOrderBy(query.sort);
+
     if (!userId) {
       const places = await this.prisma.place.findMany({
+        where,
+        orderBy,
         select: BASE_PLACE_SELECT,
       });
       return places.map((place) => ({
@@ -26,6 +75,8 @@ export class PlacesService {
     }
 
     const places = await this.prisma.place.findMany({
+      where,
+      orderBy,
       select: {
         ...BASE_PLACE_SELECT,
         savedBy: { where: { userId }, select: { id: true } },

@@ -1,17 +1,20 @@
 import { useState } from "react";
-import { FiltersState } from "./types";
-import { DEFAULT_FILTERS } from "./filters";
+import type { FiltersState } from "./types";
+import { activeFilterFlags, DEFAULT_FILTERS } from "./filters";
 
-export function useFilters() {
+/**
+ * Drives the filter sheet. `filters` is the applied state (owned by the
+ * parent so the places query can react to it); `pending` is the local
+ * draft the user edits inside the sheet until they hit "Show results".
+ */
+export function useFilters(
+  filters: FiltersState,
+  onApply: (next: FiltersState) => void,
+) {
   const [isOpen, setIsOpen] = useState(false);
-  const [filters, setFilters] = useState<FiltersState>(DEFAULT_FILTERS);
-  const [pending, setPending] = useState<FiltersState>(DEFAULT_FILTERS);
-  const activeFlags = {
-    sort: filters.sort !== "top-rated",
-    price: filters.price !== null,
-    rating: filters.rating !== "any",
-    openNow: filters.openNow,
-  };
+  const [pending, setPending] = useState<FiltersState>(filters);
+
+  const activeFlags = activeFilterFlags(filters);
   const activeCount = Object.values(activeFlags).filter(Boolean).length;
   const hasActive = activeCount > 0;
 
@@ -21,7 +24,7 @@ export function useFilters() {
   }
 
   function applyFilters() {
-    setFilters(pending);
+    onApply(pending);
     setIsOpen(false);
   }
 
@@ -34,12 +37,10 @@ export function useFilters() {
     hasActive,
     activeCount,
     activeFlags,
-    filters,
     pending,
     openModal,
     applyFilters,
     resetPending,
-    setFilters,
     setIsOpen,
     setPending,
   };

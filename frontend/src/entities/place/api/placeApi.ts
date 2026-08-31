@@ -1,10 +1,15 @@
 import type { ICard } from "@/shared/types/card";
 import { Category } from "@/shared/types/category";
 import { apiClient } from "@/shared/api/axios";
+import type { PlacesQuery } from "../model/types";
 
 export const placeApi = {
-  getAll: async (cookieHeader?: string): Promise<ICard[]> => {
+  getAll: async (
+    params?: PlacesQuery,
+    cookieHeader?: string,
+  ): Promise<ICard[]> => {
     const { data } = await apiClient.get<ICard[]>("/places", {
+      params,
       headers: cookieHeader ? { Cookie: cookieHeader } : {},
     });
     return data;

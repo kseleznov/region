@@ -1,8 +1,8 @@
 import type { ICard } from "@/shared/types/card";
 
-export type SortOption = "top-rated" | "closest" | "price-low" | "price-high";
+export type SortOption = "top-rated" | "price-low" | "price-high";
 
-export type PriceOption = "free" | "0-10€" | "10-25€" | "25€ +";
+export type PriceOption = "free" | "under-10" | "10-25" | "over-25";
 
 export type RatingOption = "any" | "3" | "4" | "4.5";
 
@@ -31,6 +31,8 @@ export interface PlaceSliderProps {
   hintPhase: HintPhase;
   onHideHint: () => void;
   transitionDirection: "left" | "right" | null;
+  hasActiveFilters: boolean;
+  onResetFilters: () => void;
 }
 
 export interface SliderContentProps {
@@ -38,6 +40,8 @@ export interface SliderContentProps {
   places: ICard[];
   onCardSelect: (card: ICard, rect: DOMRect) => void;
   onIndexChange: (index: number) => void;
+  hasActiveFilters: boolean;
+  onResetFilters: () => void;
 }
 
 export type Category = {

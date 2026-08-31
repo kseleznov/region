@@ -4,12 +4,14 @@ import {
   Param,
   ParseIntPipe,
   Patch,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import type { Request } from 'express';
 import type { JwtUser } from '../auth/auth.types';
 import { PlacesService } from './places.service';
+import { FindPlacesQueryDto } from './dto/find-places-query.dto';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { JwtOptionalGuard } from '../auth/guards/jwt-optional.guard';
 
@@ -19,9 +21,9 @@ export class PlacesController {
 
   @UseGuards(JwtOptionalGuard)
   @Get()
-  findAll(@Req() req: Request) {
+  findAll(@Query() query: FindPlacesQueryDto, @Req() req: Request) {
     const userId = (req.user as JwtUser | undefined)?.id;
-    return this.placesService.findAll(userId);
+    return this.placesService.findAll(query, userId);
   }
 
   @Get('categories')
