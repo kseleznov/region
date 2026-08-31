@@ -5,10 +5,15 @@ import { Banner } from "@/shared/ui";
 import { cookies } from "next/headers";
 import { placeApi } from "@/entities/place";
 import { CityInfo } from "@/widgets/city-info";
+import { getServerLocale } from "@/shared/i18n/getServerLocale";
 
 export default async function Overview() {
   const cookieStore = await cookies();
-  const whereToGo = await placeApi.getAll(undefined, cookieStore.toString());
+  const locale = await getServerLocale();
+  const whereToGo = await placeApi.getAll(undefined, {
+    lang: locale,
+    cookieHeader: cookieStore.toString(),
+  });
 
   return (
     <>
