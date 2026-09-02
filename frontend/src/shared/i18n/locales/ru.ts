@@ -152,6 +152,13 @@ export const ru: Dictionary = {
     },
   },
 
+  toast: {
+    saved: "Сохранено в коллекцию",
+    unsaved: "Удалено из сохранённого",
+    visited: "Отмечено как посещённое",
+    unvisited: "Отметка о посещении снята",
+  },
+
   card: {
     viewAll: "Все",
     openUntilShort: "Открыто • До {time}",
