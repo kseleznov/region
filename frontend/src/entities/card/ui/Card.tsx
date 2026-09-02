@@ -1,11 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { Heart, MapPin } from "lucide-react";
+import { Heart, MapPin, MapPinCheck } from "lucide-react";
 import { StarRating } from "@/shared/ui";
 import { cn } from "@/shared/lib/cn";
 import { useCategoryLabel, useTranslation } from "@/shared/i18n";
 import type { CardProps } from "../model/types";
+
+/** Circular chip for the saved / visited status icons — a dark scrim so the
+ * icons stay readable on bright cover images. */
+const STATUS_BADGE_CLASS =
+  "w-10 h-10 rounded-full flex items-center justify-center bg-black/45 backdrop-blur-md ring-1 ring-white/15 shadow-lg";
 
 export function Card({
   address,
@@ -13,6 +18,7 @@ export function Card({
   image,
   isOpen,
   isSaved,
+  isVisited,
   name,
   price,
   stars,
@@ -42,15 +48,27 @@ export function Card({
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-      <button
-        onClick={(event) => event.stopPropagation()}
-        className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center"
-      >
-        <Heart
-          size={18}
-          className={isSaved ? "fill-brand-pink text-brand-pink" : "text-white"}
-        />
-      </button>
+      {(isSaved || isVisited) && (
+        <div className="absolute top-4 right-4 flex flex-col gap-2 pointer-events-none">
+          {isSaved && (
+            <div className={STATUS_BADGE_CLASS}>
+              <Heart
+                size={18}
+                className="fill-brand-pink text-brand-pink drop-shadow-sm"
+              />
+            </div>
+          )}
+          {isVisited && (
+            <div className={STATUS_BADGE_CLASS}>
+              <MapPinCheck
+                size={18}
+                strokeWidth={2.5}
+                className="text-brand-green drop-shadow-sm"
+              />
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="absolute bottom-0 left-0 right-0 p-4 flex flex-col gap-2">
         <div className="self-start bg-brand-yellow text-dark text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide">
