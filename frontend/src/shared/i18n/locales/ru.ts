@@ -231,6 +231,11 @@ export const ru: Dictionary = {
     achievements: "Достижения",
     nightExplorer: "Ночной исследователь",
     foodHunter: "Охотник за едой",
+    levelUp: "Новый уровень",
+    placeAdded: "+1 место",
+    progressAria: "Прогресс до следующего ранга",
+    rankUpAria: "Вы достигли нового ранга: {name}",
+    dismissHint: "нажмите, чтобы продолжить",
     taglines: {
       wanderer: "только начинает",
       explorer: "просыпается любопытство",

@@ -43,16 +43,17 @@ export { placeApi } from "./api/placeApi";
 export { usePlaces, placesKey } from "./model/usePlaces";
 ```
 
-## Example slice: `rank` (UI-bearing entity, no API)
+## Example slice: `rank` (UI-bearing entity)
 
 ```
 entities/rank/
-  model/{constants.ts,types.ts,useRankBadge.ts}
-  ui/RankBadge.tsx
+  api/rankApi.ts          ← getUserProgress (GET /users/me/progress)
+  model/{constants.ts,types.ts,useRankBadge.ts,useUserProgress.ts}
+  ui/{RankBadge.tsx,RankGlyph.tsx,RankProgress.tsx}
   index.ts
 ```
 
-Not every entity needs `api/` — `rank` is purely derived/presentational (badge tiers computed from a score), so it only has `model/` + `ui/`.
+The rank *tiers* are purely derived (computed from a score in `model/constants.ts`), but the raw progress they read from (`placesVisited`, `districts`, …) is the entity's own server data, so it owns `api/rankApi.ts` + `model/useUserProgress.ts` like any other entity — not a `features/`-level fetch wrapper.
 
 ## Rules
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getRank, getNextRank } from "./constants";
+import { getRankProgress } from "./getRankProgress";
 import type { UserProgress } from "./types";
 
 export function useRankBadge(userProgress: UserProgress) {
@@ -15,13 +15,9 @@ export function useRankBadge(userProgress: UserProgress) {
     };
   }, [isOpen]);
 
-  const currentRank = getRank(userProgress.placesVisited);
-  const nextRank = getNextRank(currentRank.key);
-  const progress = nextRank
-    ? ((userProgress.placesVisited - currentRank.min) /
-        (nextRank.min - currentRank.min)) *
-      100
-    : 100;
+  const { currentRank, nextRank, progressPercent } = getRankProgress(
+    userProgress.placesVisited,
+  );
   const hasAchievements =
     userProgress.isNightExplorer || userProgress.isFoodHunter;
 
@@ -30,7 +26,7 @@ export function useRankBadge(userProgress: UserProgress) {
     setIsOpen,
     currentRank,
     nextRank,
-    progress,
+    progress: progressPercent,
     hasAchievements,
   };
 }

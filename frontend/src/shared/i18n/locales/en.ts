@@ -238,6 +238,11 @@ export const en = {
     achievements: "Achievements",
     nightExplorer: "Night Explorer",
     foodHunter: "Food Hunter",
+    levelUp: "Level up",
+    placeAdded: "+1 place",
+    progressAria: "Progress toward the next rank",
+    rankUpAria: "You reached a new rank: {name}",
+    dismissHint: "tap to continue",
     taglines: {
       wanderer: "just starting out",
       explorer: "getting curious",
