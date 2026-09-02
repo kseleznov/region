@@ -4,6 +4,7 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useAuthBootstrap } from "@/features/auth";
 import { LocaleProvider } from "@/shared/i18n";
+import { ToastProvider } from "@/shared/ui";
 import type { Locale } from "@/shared/i18n";
 
 export function Providers({
@@ -19,7 +20,9 @@ export function Providers({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LocaleProvider initialLocale={initialLocale}>{children}</LocaleProvider>
+      <LocaleProvider initialLocale={initialLocale}>
+        <ToastProvider>{children}</ToastProvider>
+      </LocaleProvider>
     </QueryClientProvider>
   );
 }

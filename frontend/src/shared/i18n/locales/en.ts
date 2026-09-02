@@ -159,6 +159,13 @@ export const en = {
     },
   },
 
+  toast: {
+    saved: "Saved to your collection",
+    unsaved: "Removed from saved",
+    visited: "Marked as visited",
+    unvisited: "Visited mark removed",
+  },
+
   card: {
     viewAll: "View All",
     openUntilShort: "Open • Until {time}",
