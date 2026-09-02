@@ -2,6 +2,7 @@
 
 import React from "react";
 import { X, MapIcon, MoonIcon, UtensilsIcon } from "lucide-react";
+import { useTranslation, type TranslationKey } from "@/shared/i18n";
 import { useRankBadge } from "../model/useRankBadge";
 import type { Rank, RankBadgeProps } from "../model/types";
 
@@ -321,12 +322,14 @@ export function RankBadge({ userProgress }: RankBadgeProps) {
     progress,
     hasAchievements,
   } = useRankBadge(userProgress);
+  const { t } = useTranslation();
+  const rankName = (rank: Rank) => t(`ranks.${rank.key}` as TranslationKey);
 
   return (
     <>
       <button
         onClick={() => setIsOpen(true)}
-        aria-label={`Rank: ${currentRank.name}. Tap for details.`}
+        aria-label={t("ranks.badgeAria", { name: rankName(currentRank) })}
         className="relative w-11 h-11 flex items-center justify-center rb-float hover:scale-105 active:scale-95 transition-transform"
       >
         <ProgressRing
@@ -351,7 +354,7 @@ export function RankBadge({ userProgress }: RankBadgeProps) {
             <button
               onClick={() => setIsOpen(false)}
               className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
-              aria-label="Close"
+              aria-label={t("common.close")}
             >
               <X className="w-5 h-5" />
             </button>
@@ -373,44 +376,43 @@ export function RankBadge({ userProgress }: RankBadgeProps) {
                 className="text-3xl font-black mb-1"
                 style={{ color: currentRank.color }}
               >
-                {currentRank.name}
+                {rankName(currentRank)}
               </h2>
               <p className="text-gray-400 text-sm mb-3 lowercase tracking-wide">
-                {currentRank.tagline}
+                {t(`ranks.taglines.${currentRank.key}` as TranslationKey)}
               </p>
 
               {nextRank ? (
                 <p className="text-gray-600 text-sm">
-                  <span className="font-bold text-gray-900">
-                    {nextRank.min - userProgress.placesVisited}
-                  </span>{" "}
-                  more places to{" "}
+                  {t("ranks.moreToNext", {
+                    count: nextRank.min - userProgress.placesVisited,
+                  })}{" "}
                   <span className="font-bold" style={{ color: nextRank.color }}>
-                    {nextRank.name}
+                    {rankName(nextRank)}
                   </span>
                 </p>
               ) : (
                 <p className="text-gray-600 text-sm font-bold">
-                  Youve reached the top.
+                  {t("ranks.reachedTop")}
                 </p>
               )}
             </div>
 
             <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
-              City Passport
+              {t("ranks.cityPassport")}
             </h3>
             <div className="space-y-2.5 mb-6">
               <PassportStat
                 icon={<MapIcon className="w-5 h-5 text-violet-600" />}
                 bg="bg-violet-100"
-                label="Places visited"
+                label={t("ranks.placesVisited")}
                 value={userProgress.placesVisited}
               />
               {userProgress.districts > 0 && (
                 <PassportStat
                   icon={<span className="text-lg">🗺️</span>}
                   bg="bg-lime-100"
-                  label="Districts unlocked"
+                  label={t("ranks.districtsUnlocked")}
                   value={userProgress.districts}
                 />
               )}
@@ -419,14 +421,14 @@ export function RankBadge({ userProgress }: RankBadgeProps) {
             {hasAchievements && (
               <>
                 <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
-                  Achievements
+                  {t("ranks.achievements")}
                 </h3>
                 <div className="flex gap-2 flex-wrap">
                   {userProgress.isNightExplorer && (
                     <div className="flex items-center gap-2 px-4 py-2 bg-indigo-50 rounded-full">
                       <MoonIcon className="w-4 h-4 text-indigo-600" />
                       <span className="text-sm font-bold text-indigo-900">
-                        Night Explorer
+                        {t("ranks.nightExplorer")}
                       </span>
                     </div>
                   )}
@@ -434,7 +436,7 @@ export function RankBadge({ userProgress }: RankBadgeProps) {
                     <div className="flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-full">
                       <UtensilsIcon className="w-4 h-4 text-orange-600" />
                       <span className="text-sm font-bold text-orange-900">
-                        Food Hunter
+                        {t("ranks.foodHunter")}
                       </span>
                     </div>
                   )}

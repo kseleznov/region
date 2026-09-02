@@ -1,17 +1,35 @@
 import type { ICard } from "@/shared/types/card";
 import { Category } from "@/shared/types/category";
 import { apiClient } from "@/shared/api/axios";
+import type { Locale } from "@/shared/i18n";
 import type { PlacesQuery } from "../model/types";
+
+interface RequestOptions {
+  /** Content language for translated fields (name, description, …). */
+  lang?: Locale;
+  /** Forwarded cookie header for server-side requests. */
+  cookieHeader?: string;
+}
+
+function buildConfig(
+  params: Record<string, unknown>,
+  { lang, cookieHeader }: RequestOptions = {},
+) {
+  return {
+    params: { ...params, ...(lang ? { lang } : {}) },
+    headers: cookieHeader ? { Cookie: cookieHeader } : {},
+  };
+}
 
 export const placeApi = {
   getAll: async (
     params?: PlacesQuery,
-    cookieHeader?: string,
+    options?: RequestOptions,
   ): Promise<ICard[]> => {
-    const { data } = await apiClient.get<ICard[]>("/places", {
-      params,
-      headers: cookieHeader ? { Cookie: cookieHeader } : {},
-    });
+    const { data } = await apiClient.get<ICard[]>(
+      "/places",
+      buildConfig({ ...params }, options),
+    );
     return data;
   },
 
@@ -21,9 +39,15 @@ export const placeApi = {
     return data;
   },
 
-  getById: async (id: number): Promise<ICard | null> => {
+  getById: async (
+    id: number,
+    options?: RequestOptions,
+  ): Promise<ICard | null> => {
     try {
-      const { data } = await apiClient.get<ICard>(`/places/${id}`);
+      const { data } = await apiClient.get<ICard>(
+        `/places/${id}`,
+        buildConfig({}, options),
+      );
 
       return data;
     } catch {

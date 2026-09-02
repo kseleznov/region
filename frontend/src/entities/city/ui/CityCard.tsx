@@ -3,7 +3,9 @@
 import Image from "next/image";
 import { cn } from "@/shared/lib/cn";
 import { WeatherIcon } from "@/shared/ui/icons";
+import { useTranslation, type TranslationKey } from "@/shared/i18n";
 import { City } from "../model/types";
+import { useCityName } from "../model/useCityName";
 
 interface CityCardProps extends City {
   isSelected?: boolean;
@@ -19,6 +21,11 @@ export function CityCard({
   onSelect,
   available,
 }: CityCardProps) {
+  const { t } = useTranslation();
+  const cityName = useCityName();
+  const countryKey = `countries.${country.toLowerCase()}` as TranslationKey;
+  const countryLabel = t(countryKey);
+
   return (
     <li
       onClick={available ? onSelect : undefined}
@@ -41,7 +48,7 @@ export function CityCard({
       {!available && (
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
           <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-sm">
-            Coming Soon
+            {t("region.popular.comingSoon")}
           </span>
         </div>
       )}
@@ -76,8 +83,12 @@ export function CityCard({
       </div>
 
       <div className="absolute bottom-4 left-4">
-        <p className="text-2xl font-bold text-white leading-tight">{name}</p>
-        <p className="mt-0.5 text-sm text-white/60">{country}</p>
+        <p className="text-2xl font-bold text-white leading-tight">
+          {cityName(name)}
+        </p>
+        <p className="mt-0.5 text-sm text-white/60">
+          {countryLabel === countryKey ? country : countryLabel}
+        </p>
       </div>
     </li>
   );

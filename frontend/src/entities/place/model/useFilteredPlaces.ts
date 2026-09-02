@@ -1,11 +1,13 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useLocale } from "@/shared/i18n";
 import { placeApi } from "../api/placeApi";
 import { placesKey } from "./usePlaces";
 import type { PlacesQuery } from "./types";
 import type { ICard } from "@/shared/types/card";
+import type { Locale } from "@/shared/i18n";
 
-export const filteredPlacesKey = (query: PlacesQuery) =>
-  [...placesKey, "filtered", query] as const;
+export const filteredPlacesKey = (locale: Locale, query: PlacesQuery) =>
+  [...placesKey, "filtered", locale, query] as const;
 
 /**
  * Places for the explore page, filtered and sorted by the backend.
@@ -16,13 +18,15 @@ export const filteredPlacesKey = (query: PlacesQuery) =>
  * filter combination loads, so the slider doesn't flash empty.
  */
 export function useFilteredPlaces(query: PlacesQuery, initialData?: ICard[]) {
+  const locale = useLocale();
+
   const isUnfiltered = Object.values(query).every(
     (value) => value === undefined,
   );
 
   return useQuery({
-    queryKey: filteredPlacesKey(query),
-    queryFn: () => placeApi.getAll(query),
+    queryKey: filteredPlacesKey(locale, query),
+    queryFn: () => placeApi.getAll(query, { lang: locale }),
     initialData: isUnfiltered ? initialData : undefined,
     placeholderData: keepPreviousData,
     staleTime: 30_000,

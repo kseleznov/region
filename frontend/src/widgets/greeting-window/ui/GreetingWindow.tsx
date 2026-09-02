@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import { Button } from "@/shared/ui";
+import { useTranslation } from "@/shared/i18n";
 import { useGreetingWindow } from "../model/useGreetingWindow";
 
 export function GreetingWindow() {
   const { onClick } = useGreetingWindow();
+  const { t } = useTranslation();
 
   return (
     <div className="flex flex-col items-center h-full justify-center">
@@ -31,14 +33,12 @@ export function GreetingWindow() {
       <Image src="/map.svg" alt="map" width={300} height={230} priority />
       <div className="w-[300px] mb-[50px]">
         <h1 className="text-dark text-[42px] text-center font-extrabold">
-          Explore Your City Today!
+          {t("greeting.title")}
         </h1>
-        <p className="text-brand-gray text-center">
-          Find the best places, events, and restaurants all in one place
-        </p>
+        <p className="text-brand-gray text-center">{t("greeting.subtitle")}</p>
       </div>
       <Button className="min-h-[70px]" variant="greeting" onClick={onClick}>
-        Start exploring
+        {t("greeting.cta")}
       </Button>
     </div>
   );

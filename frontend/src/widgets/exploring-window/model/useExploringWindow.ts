@@ -18,7 +18,12 @@ import {
   subscribeSwipeHintSeen,
 } from "@/shared/lib/swipeHintSeen";
 import { DEFAULT_FILTERS, hasActiveFilters, toPlacesQuery } from "./filters";
-import type { Category, FiltersState, HintPhase } from "./types";
+import type {
+  Category,
+  FiltersState,
+  HintPhase,
+  SwipeDirection,
+} from "./types";
 
 export function useExploringWindow(
   categories: Category[],
@@ -37,9 +42,8 @@ export function useExploringWindow(
   );
   const [subcategoryModalOpen, setSubcategoryModalOpen] = useState(false);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  const [transitionDirection, setTransitionDirection] = useState<
-    "left" | "right" | null
-  >(null);
+  const [transitionDirection, setTransitionDirection] =
+    useState<SwipeDirection | null>(null);
   const [hintPhase, setHintPhase] = useState<HintPhase>("card");
   const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
@@ -90,7 +94,7 @@ export function useExploringWindow(
     router.push(ROUTES.region);
   }
 
-  function handleCategoryChange(newIndex: number, dir: "left" | "right") {
+  function handleCategoryChange(newIndex: number, dir: SwipeDirection) {
     setActiveCategoryIndex(newIndex);
     setCurrentCardIndex(0);
     setTransitionDirection(dir);

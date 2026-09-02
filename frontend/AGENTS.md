@@ -54,7 +54,7 @@ See `.claude/rules/api.md` for the API-layer contract.
 
 - Components and hooks are **regular function declarations** with named exports: `export function ComponentName(...)`, `export function useSomething(...)`. No arrow-function components/hooks, no `export default` (Next.js file conventions — `page.tsx`/`layout.tsx` — are the only exception).
 - Files/exports: PascalCase components, `useX.ts` hooks, kebab-case slice folders, `UPPER_SNAKE_CASE` constants.
-- User-facing strings (labels, errors, empty states) are in **Russian**; code, identifiers, and comments are in English.
+- User-facing strings (labels, errors, empty states) are **not hardcoded** — they go through `shared/i18n` (`const { t } = useTranslation(); t("some.key")`), with the English/Russian text in `shared/i18n/locales/{en,ru}.ts`. English is the source of truth for the dictionary shape. Code, identifiers, and comments are in English. The active locale comes from the `NEXT_LOCALE` cookie (`getServerLocale()` in RSC, `LocaleProvider` context on the client); place/city content is translated server-side via `?lang=`.
 
 Full naming checklist (handler/prop/state naming quality): `.claude/rules/naming.md`.
 

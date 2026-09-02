@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 interface SectionTransitionProps {
   isVisible: boolean;
   categoryName: string;
-  direction: "left" | "right" | null;
+  direction: "left" | "right" | "up" | "down" | null;
 }
 
 export function SectionTransition({

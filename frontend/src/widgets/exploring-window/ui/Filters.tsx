@@ -2,14 +2,16 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { SlidersHorizontal, X } from "lucide-react";
-import type { FiltersState, SortOption } from "../model/types";
+import type { FiltersState } from "../model/types";
 import {
-  PRICE_LABELS,
+  PRICE_LABEL_KEYS,
   PRICE_OPTIONS,
   RATING_OPTIONS,
-  SORT_LABELS,
+  SORT_LABEL_KEYS,
+  SORT_OPTIONS,
 } from "../model/filters";
 import { useFilters } from "../model/useFilters";
+import { useTranslation } from "@/shared/i18n";
 
 interface FiltersProps {
   filters: FiltersState;
@@ -17,6 +19,7 @@ interface FiltersProps {
 }
 
 export function Filters({ filters, onApply }: FiltersProps) {
+  const { t } = useTranslation();
   const {
     openModal,
     hasActive,
@@ -39,7 +42,7 @@ export function Filters({ filters, onApply }: FiltersProps) {
           }`}
         >
           <SlidersHorizontal className="h-4 w-4" />
-          Filters
+          {t("explore.filters.title")}
           {hasActive && (
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-yellow text-xs font-bold text-dark">
               {activeCount}
@@ -69,7 +72,9 @@ export function Filters({ filters, onApply }: FiltersProps) {
               <div className="absolute left-1/2 top-3 h-1 w-10 -translate-x-1/2 rounded-full bg-gray-200" />
 
               <div className="mb-6 flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-dark">Filters</h2>
+                <h2 className="text-2xl font-bold text-dark">
+                  {t("explore.filters.title")}
+                </h2>
                 <button
                   onClick={() => setIsOpen(false)}
                   className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100"
@@ -79,10 +84,10 @@ export function Filters({ filters, onApply }: FiltersProps) {
               </div>
 
               <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-brand-gray">
-                Sort by
+                {t("explore.filters.sort")}
               </p>
               <div className="mb-6 grid grid-cols-2 gap-2">
-                {(Object.keys(SORT_LABELS) as SortOption[]).map((option) => (
+                {SORT_OPTIONS.map((option) => (
                   <button
                     key={option}
                     onClick={() =>
@@ -94,13 +99,13 @@ export function Filters({ filters, onApply }: FiltersProps) {
                         : "border-gray-200 bg-white text-dark"
                     }`}
                   >
-                    {SORT_LABELS[option]}
+                    {t(SORT_LABEL_KEYS[option])}
                   </button>
                 ))}
               </div>
 
               <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-brand-gray">
-                Price
+                {t("explore.filters.price")}
               </p>
               <div className="mb-6 flex gap-2">
                 {PRICE_OPTIONS.map((option) => (
@@ -118,13 +123,13 @@ export function Filters({ filters, onApply }: FiltersProps) {
                         : "border-gray-200 bg-white text-dark"
                     }`}
                   >
-                    {PRICE_LABELS[option]}
+                    {t(PRICE_LABEL_KEYS[option])}
                   </button>
                 ))}
               </div>
 
               <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-brand-gray">
-                Minimum Rating
+                {t("explore.filters.rating")}
               </p>
               <div className="mb-6 flex gap-2">
                 {RATING_OPTIONS.map((option) => (
@@ -139,16 +144,18 @@ export function Filters({ filters, onApply }: FiltersProps) {
                         : "border-gray-200 bg-white text-dark"
                     }`}
                   >
-                    {option === "any" ? "Any" : option}
+                    {option === "any" ? t("explore.filters.any") : option}
                   </button>
                 ))}
               </div>
 
               <div className="mb-6 flex items-center justify-between rounded-2xl bg-gray-50 px-4 py-4">
                 <div>
-                  <p className="text-sm font-semibold text-dark">Open now</p>
+                  <p className="text-sm font-semibold text-dark">
+                    {t("explore.filters.openNow")}
+                  </p>
                   <p className="text-xs text-brand-gray">
-                    Only show places currently open
+                    {t("explore.filters.openNowHint")}
                   </p>
                 </div>
                 <button
@@ -172,13 +179,13 @@ export function Filters({ filters, onApply }: FiltersProps) {
                   onClick={resetPending}
                   className="flex-1 rounded-full border border-gray-200 py-4 text-sm font-bold text-dark"
                 >
-                  Reset
+                  {t("explore.filters.reset")}
                 </button>
                 <button
                   onClick={applyFilters}
                   className="flex-[2] rounded-full bg-brand-yellow py-4 text-sm font-bold text-dark"
                 >
-                  Show results
+                  {t("explore.filters.showResults")}
                 </button>
               </div>
             </motion.div>

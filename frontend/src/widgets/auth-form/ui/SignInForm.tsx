@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslation } from "@/shared/i18n";
 import { EnvelopeIcon, LockIcon, EyeIcon, ArrowIcon } from "./icons";
 import type { AuthFormFields } from "../model/types";
 
@@ -14,13 +15,15 @@ export function SignInForm({
   isPending,
   handleSubmit,
 }: AuthFormFields) {
+  const { t } = useTranslation();
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
       <label className="flex items-center gap-3 bg-search-bg rounded-2xl px-4 py-4">
         <EnvelopeIcon />
         <input
           type="email"
-          placeholder="Email address"
+          placeholder={t("auth.emailPlaceholder")}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -32,7 +35,7 @@ export function SignInForm({
         <LockIcon />
         <input
           type={showPassword ? "text" : "password"}
-          placeholder="Password"
+          placeholder={t("auth.passwordPlaceholder")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -54,7 +57,7 @@ export function SignInForm({
         disabled={isPending}
         className="w-full bg-brand-purple text-white font-bold py-4 rounded-full flex items-center justify-center gap-2 mt-1 disabled:opacity-60 transition-opacity"
       >
-        {isPending ? "Signing in..." : "Sign in"}
+        {isPending ? t("auth.signingIn") : t("auth.signIn")}
         {!isPending && <ArrowIcon />}
       </button>
     </form>

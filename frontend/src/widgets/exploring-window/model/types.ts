@@ -15,6 +15,9 @@ export interface FiltersState {
 
 export type HintPhase = "category" | "card" | "done";
 
+/** Explore swipes categories horizontally; Saved swipes them vertically. */
+export type SwipeDirection = "left" | "right" | "up" | "down";
+
 export interface ExploringWindowProps {
   categories: Category[];
   initialPlaces: ICard[];
@@ -26,11 +29,11 @@ export interface PlaceSliderProps {
   categoryIndex: number;
   totalCategories: number;
   categoryName: string;
-  onCategoryChange: (newIndex: number, dir: "left" | "right") => void;
+  onCategoryChange: (newIndex: number, dir: SwipeDirection) => void;
   onCardIndexChange: (index: number) => void;
   hintPhase: HintPhase;
   onHideHint: () => void;
-  transitionDirection: "left" | "right" | null;
+  transitionDirection: SwipeDirection | null;
   hasActiveFilters: boolean;
   onResetFilters: () => void;
 }

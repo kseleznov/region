@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "@/shared/i18n";
 import { authApi } from "../api/authApi";
 import { useAuthStore } from "./useAuthStore";
 import { getAuthErrorMessage } from "./getAuthErrorMessage";
@@ -8,6 +9,7 @@ import type { AuthMode } from "./types";
 
 export function useAuth(mode: AuthMode) {
   const router = useRouter();
+  const { t } = useTranslation();
   const setUser = useAuthStore((state) => state.setUser);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -34,7 +36,7 @@ export function useAuth(mode: AuthMode) {
       router.push("/overview");
     },
     onError: (err) => {
-      setError(getAuthErrorMessage(err, mode));
+      setError(t(getAuthErrorMessage(err, mode)));
     },
   });
 

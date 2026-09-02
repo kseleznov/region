@@ -7,7 +7,6 @@ import {
   Star,
   Clock,
   ChevronDown,
-  ChevronRight,
   BookOpen,
   MapPin,
   MapPinCheck,
@@ -20,6 +19,7 @@ import { CardReviews } from "./CardReviews";
 import { CardSimilar } from "./CardSimilar";
 import { ImagesSlider } from "@/shared/ui/images-slider";
 import { MiniMap } from "@/shared/ui/mini-map";
+import { useCategoryLabel, useTranslation } from "@/shared/i18n";
 import type { CardDetailProps } from "../model/types";
 
 export function CardDetail({
@@ -44,6 +44,8 @@ export function CardDetail({
     closingTime,
     handleShare,
   } = useCard({ card });
+  const { t } = useTranslation();
+  const categoryLabel = useCategoryLabel();
 
   return (
     <motion.div
@@ -84,7 +86,7 @@ export function CardDetail({
         <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-30">
           <button
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("card.aria.close")}
             className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-transform"
           >
             <X className="w-5 h-5 text-dark" strokeWidth={2.5} />
@@ -92,7 +94,7 @@ export function CardDetail({
 
           <button
             onClick={onToggleSave}
-            aria-label={isSaved ? "Unsave" : "Save"}
+            aria-label={t(isSaved ? "card.aria.unsave" : "card.aria.save")}
             className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-transform"
           >
             <Heart
@@ -109,7 +111,7 @@ export function CardDetail({
             <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-dark/70 to-transparent pointer-events-none" />
             <div className="absolute bottom-4 left-4 z-20">
               <span className="inline-flex items-center gap-1.5 bg-brand-yellow text-dark text-[11px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full">
-                {card.category}
+                {categoryLabel(card.category)}
               </span>
             </div>
           </div>
@@ -139,7 +141,9 @@ export function CardDetail({
               <span className="text-dark/30">•</span>
 
               <span className="text-sm font-bold text-dark">
-                {card.price > 0 ? `${card.price}€` : "Free"}
+                {card.price > 0
+                  ? t("common.price", { price: card.price })
+                  : t("common.free")}
               </span>
 
               <span className="text-dark/30">•</span>
@@ -156,9 +160,9 @@ export function CardDetail({
                 />
                 {card.isOpen
                   ? closingTime
-                    ? `Open • Until ${closingTime}`
-                    : "Open"
-                  : "Closed"}
+                    ? t("card.openUntilShort", { time: closingTime })
+                    : t("common.open")
+                  : t("common.closed")}
               </span>
             </div>
 
@@ -175,7 +179,7 @@ export function CardDetail({
                   onClick={() => setDescExpanded((e) => !e)}
                   className="mt-2 text-brand-purple font-bold text-sm"
                 >
-                  {descExpanded ? "Show less" : "Read more"}
+                  {descExpanded ? t("common.showLess") : t("common.readMore")}
                 </button>
               )}
             </div>
@@ -192,14 +196,14 @@ export function CardDetail({
                     </div>
                     <div className="text-left">
                       <div className="text-xs font-bold text-dark/50 uppercase tracking-wider">
-                        Opening hours
+                        {t("card.openingHours")}
                       </div>
                       <div className="text-sm font-bold text-dark">
                         {card.isOpen && closingTime
-                          ? `Open until ${closingTime}`
+                          ? t("card.openUntil", { time: closingTime })
                           : card.isOpen
-                            ? "Open"
-                            : "Closed"}
+                            ? t("common.open")
+                            : t("common.closed")}
                       </div>
                     </div>
                   </div>
@@ -221,13 +225,13 @@ export function CardDetail({
                   className="overflow-hidden"
                 >
                   <div className="px-4 pb-4 pt-1 flex flex-col gap-2">
-                    {DAYS.map(([key, label]) => (
+                    {DAYS.map(([key, labelKey]) => (
                       <div
                         key={key}
                         className="flex items-center justify-between text-sm"
                       >
                         <span className="font-bold text-dark/70 w-12">
-                          {label}
+                          {t(labelKey)}
                         </span>
                         <span className="font-medium text-dark">
                           {card.workingHours?.[key]}
@@ -241,7 +245,7 @@ export function CardDetail({
 
             <div className={expanded ? "mb-8" : ""}>
               <div className="text-xs font-bold text-dark/50 uppercase tracking-wider mb-2 px-1">
-                Location
+                {t("card.location")}
               </div>
               <MiniMap address={card.address} />
             </div>
@@ -272,7 +276,7 @@ export function CardDetail({
           <div className="flex items-center gap-3">
             <button
               onClick={onToggleSave}
-              aria-label={isSaved ? "Unsave" : "Save"}
+              aria-label={t(isSaved ? "card.aria.unsave" : "card.aria.save")}
               className={`flex-shrink-0 w-14 h-14 rounded-full border-2 flex items-center justify-center transition-all ${
                 isSaved
                   ? "bg-brand-pink border-brand-pink"
@@ -287,7 +291,9 @@ export function CardDetail({
 
             <button
               onClick={onToggleVisit}
-              aria-label={isVisited ? "Unmark as visited" : "Mark as visited"}
+              aria-label={t(
+                isVisited ? "card.aria.unmarkVisited" : "card.aria.markVisited",
+              )}
               className={`flex-shrink-0 w-14 h-14 rounded-full border-2 flex items-center justify-center transition-all ${
                 isVisited
                   ? "bg-brand-yellow border-brand-yellow"
@@ -303,7 +309,7 @@ export function CardDetail({
 
             <button
               onClick={handleShare}
-              aria-label="Share"
+              aria-label={t("card.aria.share")}
               className="flex-shrink-0 w-14 h-14 rounded-full border-2 border-brand-purple bg-brand-purple flex items-center justify-center transition-all hover:brightness-95 active:scale-95"
             >
               <Share2 className="w-5 h-5 text-white" strokeWidth={2.5} />
@@ -314,7 +320,9 @@ export function CardDetail({
               className="flex-1 h-14 rounded-full bg-dark text-white font-bold flex items-center justify-center gap-2 hover:bg-black active:scale-[0.98] transition-all"
             >
               <BookOpen className="w-5 h-5" strokeWidth={2.5} />
-              <span>{expanded ? "Show less" : "Read more"}</span>
+              <span>
+                {expanded ? t("common.showLess") : t("common.readMore")}
+              </span>
             </button>
           </div>
         </div>
