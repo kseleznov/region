@@ -83,24 +83,13 @@ export function CardDetail({
         }}
         transition={{ type: "spring", damping: 30, stiffness: 280 }}
       >
-        <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-30">
+        <div className="absolute top-4 left-4 right-4 flex items-center justify-end z-30">
           <button
             onClick={onClose}
             aria-label={t("card.aria.close")}
             className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-transform"
           >
             <X className="w-5 h-5 text-dark" strokeWidth={2.5} />
-          </button>
-
-          <button
-            onClick={onToggleSave}
-            aria-label={t(isSaved ? "card.aria.unsave" : "card.aria.save")}
-            className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-transform"
-          >
-            <Heart
-              className={`w-5 h-5 transition-colors ${isSaved ? "fill-brand-pink text-brand-pink" : "text-dark"}`}
-              strokeWidth={2.5}
-            />
           </button>
         </div>
 
