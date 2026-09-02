@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useAuthBootstrap } from "@/features/auth";
+import { RankProgressProvider } from "@/features/visit-card";
 import { LocaleProvider } from "@/shared/i18n";
 import { ToastProvider } from "@/shared/ui";
 import type { Locale } from "@/shared/i18n";
@@ -21,7 +22,9 @@ export function Providers({
   return (
     <QueryClientProvider client={queryClient}>
       <LocaleProvider initialLocale={initialLocale}>
-        <ToastProvider>{children}</ToastProvider>
+        <ToastProvider>
+          <RankProgressProvider>{children}</RankProgressProvider>
+        </ToastProvider>
       </LocaleProvider>
     </QueryClientProvider>
   );
