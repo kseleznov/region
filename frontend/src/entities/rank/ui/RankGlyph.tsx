@@ -3,6 +3,7 @@ import type { Rank } from "../model/types";
 interface RankGlyphProps {
   rank: Rank;
   size?: "sm" | "lg";
+  color?: string;
 }
 
 /**
@@ -11,10 +12,10 @@ interface RankGlyphProps {
  * Only rotationally neutral shapes spin — no letterforms, so nothing ever
  * reads mirrored mid-animation.
  */
-export function RankGlyph({ rank, size = "sm" }: RankGlyphProps) {
+export function RankGlyph({ rank, size = "sm", color }: RankGlyphProps) {
   const stroke = size === "sm" ? 5 : 4;
   const dot = size === "sm" ? 7 : 6;
-  const c = rank.color;
+  const c = color ?? rank.color;
   const glow = `drop-shadow(0 0 6px ${c}88)`;
   // Unique per rank + size so the header badge and the open panel (both on the
   // page at once, same rank) don't collide on SVG def ids.

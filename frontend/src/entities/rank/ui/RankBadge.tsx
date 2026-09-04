@@ -67,6 +67,9 @@ function ProgressRing({
   );
 }
 
+const HEADER_COLOR = "var(--yellow)";
+const POPUP_COLOR = "var(--pink)";
+
 export function RankBadge({ userProgress }: RankBadgeProps) {
   const {
     isOpen,
@@ -88,12 +91,12 @@ export function RankBadge({ userProgress }: RankBadgeProps) {
       >
         <ProgressRing
           progress={progress}
-          color={currentRank.color}
+          color={HEADER_COLOR}
           size={44}
           stroke={2.5}
         />
         <div className="absolute inset-[7px] flex items-center justify-center">
-          <RankGlyph rank={currentRank} size="sm" />
+          <RankGlyph rank={currentRank} size="sm" color={HEADER_COLOR} />
         </div>
       </button>
 
@@ -117,18 +120,18 @@ export function RankBadge({ userProgress }: RankBadgeProps) {
               <div className="relative inline-flex items-center justify-center w-32 h-32 mb-5">
                 <ProgressRing
                   progress={progress}
-                  color={currentRank.color}
+                  color={POPUP_COLOR}
                   size={128}
                   stroke={4}
                 />
                 <div className="absolute inset-5 flex items-center justify-center">
-                  <RankGlyph rank={currentRank} size="lg" />
+                  <RankGlyph rank={currentRank} size="lg" color={POPUP_COLOR} />
                 </div>
               </div>
 
               <h2
                 className="text-3xl font-black mb-1"
-                style={{ color: currentRank.color }}
+                style={{ color: POPUP_COLOR }}
               >
                 {rankName(currentRank)}
               </h2>

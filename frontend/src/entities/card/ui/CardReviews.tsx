@@ -53,24 +53,6 @@ export function CardReviews({ summary, reviews }: CardReviewsProps) {
         </p>
       </div>
 
-      <div className="flex flex-col gap-1.5 mb-6">
-        {[5, 4, 3, 2, 1].map((stars) => (
-          <div key={stars} className="flex items-center gap-2">
-            <span className="text-xs font-bold text-dark/50 w-3 text-right">
-              {stars}
-            </span>
-            <div className="flex-1 h-2 rounded-full bg-dark/10 overflow-hidden">
-              <div
-                className="h-full rounded-full bg-brand-yellow"
-                style={{
-                  width: `${(summary.breakdown[stars - 1] / maxCount) * 100}%`,
-                }}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-
       <div className="flex flex-col gap-3">
         {visibleReviews.map((review) => (
           <article key={review.id} className="bg-dark/[0.03] rounded-2xl p-4">

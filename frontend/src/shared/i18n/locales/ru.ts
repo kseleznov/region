@@ -161,7 +161,6 @@ export const ru: Dictionary = {
 
   card: {
     viewAll: "Все",
-    openUntilShort: "Открыто • До {time}",
     openUntil: "Открыто до {time}",
     openingHours: "Часы работы",
     location: "Расположение",

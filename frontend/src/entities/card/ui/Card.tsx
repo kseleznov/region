@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Heart, MapPin, MapPinCheck } from "lucide-react";
+import { Clock, Heart, MapPin, MapPinCheck, Wallet } from "lucide-react";
 import { StarRating } from "@/shared/ui";
 import { cn } from "@/shared/lib/cn";
 import { useCategoryLabel, useTranslation } from "@/shared/i18n";
@@ -77,29 +77,24 @@ export function Card({
 
         <h2 className="text-white text-3xl font-bold leading-tight">{name}</h2>
 
-        <div className="flex items-center gap-2 flex-wrap">
-          <StarRating rating={stars} />
-          <span className="text-white font-medium text-sm">{stars}</span>
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center gap-2 text-white text-sm">
+            <StarRating rating={stars} />
+            <span className="font-medium">{stars}</span>
+          </div>
 
-          <span className="text-white/40">•</span>
-
-          <div className="flex items-center gap-1 text-white text-sm">
+          <div className="flex items-center gap-1.5 text-white text-sm font-medium">
+            <Wallet size={14} className="flex-shrink-0 text-white/70" />
             <span>
               {price > 0 ? t("common.from", { price }) : t("common.free")}
             </span>
           </div>
 
-          <span className="text-white/40">•</span>
-
-          <div className="flex items-center gap-1.5">
-            <div
-              className={`w-2 h-2 rounded-full ${isOpen ? "bg-brand-yellow" : "bg-brand-pink"}`}
-            />
-            <span
-              className={`text-sm font-medium ${isOpen ? "text-brand-yellow" : "text-brand-pink"}`}
-            >
-              {isOpen ? t("common.open") : t("common.closed")}
-            </span>
+          <div
+            className={`flex items-center gap-1.5 text-sm font-medium ${isOpen ? "text-brand-yellow" : "text-brand-pink"}`}
+          >
+            <Clock size={14} className="flex-shrink-0" />
+            <span>{isOpen ? t("common.open") : t("common.closed")}</span>
           </div>
         </div>
 

@@ -149,10 +149,11 @@ export function RankProgress({
         exit={{ opacity: 0 }}
         transition={{ duration: 0.28 }}
       >
+        <div className="absolute inset-0 bg-[#07070a]/95 backdrop-blur-xl" />
         <div
-          className="absolute inset-0 backdrop-blur-md"
+          className="absolute inset-0"
           style={{
-            background: `radial-gradient(circle at 50% 42%, ${rank.color}2e, rgba(4,4,6,0.86) 58%, rgba(4,4,6,0.95))`,
+            background: `radial-gradient(circle at 50% 40%, ${rank.color}33, transparent 62%)`,
           }}
         />
 
@@ -210,11 +211,12 @@ export function RankProgress({
             <svg
               viewBox="0 0 100 100"
               className="absolute inset-0 h-full w-full -rotate-90"
+              style={{ overflow: "visible" }}
             >
               <motion.circle
                 cx="50"
                 cy="50"
-                r="46"
+                r="44"
                 fill="none"
                 stroke={rank.color}
                 strokeWidth="2.5"

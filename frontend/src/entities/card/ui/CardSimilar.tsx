@@ -17,7 +17,7 @@ export function CardSimilar({ places, onSelect }: CardSimilarProps) {
       <h3 className="text-xs font-bold text-dark/50 uppercase tracking-wider mb-3 px-1">
         {t("card.similarTitle")}
       </h3>
-      <ul className="flex overflow-x-auto gap-3 -mr-6 pr-6 snap-x [&::-webkit-scrollbar]:hidden">
+      <ul className="flex gap-3 overflow-x-auto -mx-6 px-6 snap-x snap-mandatory scroll-px-6 [&::-webkit-scrollbar]:hidden">
         {places.map((place) => (
           <li
             key={place.id ?? place.name}
@@ -34,7 +34,7 @@ export function CardSimilar({ places, onSelect }: CardSimilarProps) {
                 sizes="176px"
                 className="object-cover"
               />
-              <span className="absolute top-2 left-2 bg-white/95 backdrop-blur-sm text-dark text-[10px] font-extrabold uppercase tracking-wide px-2 py-1 rounded-full">
+              <span className="absolute top-2 left-2 inline-block max-w-[calc(100%-1rem)] truncate bg-white/95 backdrop-blur-sm text-dark text-[10px] font-extrabold uppercase tracking-wide px-2 py-1 rounded-full">
                 {categoryLabel(place.category)}
               </span>
             </div>

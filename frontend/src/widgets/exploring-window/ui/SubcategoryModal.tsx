@@ -64,7 +64,7 @@ export function SubcategoryModal({
             <button
               key={sub}
               onClick={() => setPending((prev) => (prev === sub ? null : sub))}
-              className={`rounded-full border px-4 py-2.5 text-sm font-bold transition-colors ${
+              className={`truncate rounded-full border px-4 py-2.5 text-sm font-bold transition-colors ${
                 pending === sub
                   ? "border-brand-yellow bg-brand-yellow text-dark"
                   : "border-gray-200 bg-white text-dark"

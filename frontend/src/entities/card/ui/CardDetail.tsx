@@ -7,10 +7,10 @@ import {
   Star,
   Clock,
   ChevronDown,
-  BookOpen,
   MapPin,
   MapPinCheck,
   Share2,
+  Wallet,
 } from "lucide-react";
 import { DAYS } from "../model/constants";
 import { useCard } from "../model/useCard";
@@ -93,7 +93,7 @@ export function CardDetail({
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden pb-32">
+        <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden pb-24">
           <div className="relative w-full h-[250px] bg-dark">
             <ImagesSlider images={photos.map((url) => ({ url }))} />
 
@@ -110,56 +110,60 @@ export function CardDetail({
               {card.name}
             </h2>
 
-            <div className="flex flex-wrap items-center gap-3 mb-5">
-              <div className="flex items-center gap-0.5">
-                {[...Array(5)].map((_, index) => (
+            <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-3">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-brand-yellow flex items-center justify-center flex-shrink-0">
                   <Star
-                    key={index}
-                    className={`w-4 h-4 ${
-                      index < Math.floor(card.stars)
-                        ? "fill-dark text-dark"
-                        : "fill-dark/15 text-dark/15"
-                    }`}
+                    className="w-4 h-4 fill-dark text-dark"
+                    strokeWidth={2.5}
                   />
-                ))}
-                <span className="text-sm font-bold text-dark ml-1">
+                </div>
+                <span className="text-sm font-bold text-dark">
                   {card.stars}
                 </span>
               </div>
 
-              <span className="text-dark/30">•</span>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-brand-green flex items-center justify-center flex-shrink-0">
+                  <Wallet className="w-4 h-4 text-dark" strokeWidth={2.5} />
+                </div>
+                <span className="text-sm font-bold text-dark">
+                  {card.price > 0
+                    ? t("common.price", { price: card.price })
+                    : t("common.free")}
+                </span>
+              </div>
 
-              <span className="text-sm font-bold text-dark">
-                {card.price > 0
-                  ? t("common.price", { price: card.price })
-                  : t("common.free")}
-              </span>
-
-              <span className="text-dark/30">•</span>
-
-              <span
-                className={`inline-flex items-center gap-1.5 text-xs font-bold ${
-                  card.isOpen ? "text-brand-pink" : "text-brand-pink"
-                }`}
-              >
-                <span
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    card.isOpen ? "bg-brand-pink" : "bg-brand-pink"
+              <div className="flex items-center gap-2">
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                    card.isOpen ? "bg-brand-purple" : "bg-brand-pink"
                   }`}
-                />
-                {card.isOpen
-                  ? closingTime
-                    ? t("card.openUntilShort", { time: closingTime })
-                    : t("common.open")
-                  : t("common.closed")}
-              </span>
+                >
+                  <Clock className="w-4 h-4 text-dark" strokeWidth={2.5} />
+                </div>
+                <span
+                  className={`text-sm font-bold ${
+                    card.isOpen ? "text-dark" : "text-brand-pink"
+                  }`}
+                >
+                  {card.isOpen
+                    ? closingTime
+                      ? t("card.openUntil", { time: closingTime })
+                      : t("common.open")
+                    : t("common.closed")}
+                </span>
+              </div>
             </div>
 
             <div className="mb-6">
               <p
+                onClick={
+                  isLongDesc ? () => setDescExpanded((e) => !e) : undefined
+                }
                 className={`text-dark/80 text-[15px] leading-relaxed font-medium ${
-                  !descExpanded && isLongDesc ? "line-clamp-3" : ""
-                }`}
+                  isLongDesc ? "cursor-pointer" : ""
+                } ${!descExpanded && isLongDesc ? "line-clamp-3" : ""}`}
               >
                 {card.description}
               </p>
@@ -240,7 +244,7 @@ export function CardDetail({
             </div>
 
             {expanded && (
-              <>
+              <div className="[&>section:last-child]:mb-0">
                 {!!card.expectations?.length && (
                   <CardExpectations items={card.expectations} />
                 )}
@@ -256,7 +260,7 @@ export function CardDetail({
                     onSelect={onSelectSimilar}
                   />
                 )}
-              </>
+              </div>
             )}
           </div>
         </div>
@@ -308,7 +312,6 @@ export function CardDetail({
               onClick={() => setExpanded((v) => !v)}
               className="flex-1 h-14 rounded-full bg-dark text-white font-bold flex items-center justify-center gap-2 hover:bg-black active:scale-[0.98] transition-all"
             >
-              <BookOpen className="w-5 h-5" strokeWidth={2.5} />
               <span>
                 {expanded ? t("common.showLess") : t("common.readMore")}
               </span>

@@ -168,7 +168,6 @@ export const en = {
 
   card: {
     viewAll: "View All",
-    openUntilShort: "Open • Until {time}",
     openUntil: "Open until {time}",
     openingHours: "Opening hours",
     location: "Location",

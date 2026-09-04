@@ -29,9 +29,9 @@ export function CityFacts() {
       </div>
 
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex gap-2 pl-4 pr-4">
+        <div className="flex pr-4">
           {facts.map((fact, i) => (
-            <div key={i} className="flex-[0_0_80%] min-w-0">
+            <div key={i} className="flex-[0_0_80%] min-w-0 pl-4">
               <FactCard fact={fact} />
             </div>
           ))}
