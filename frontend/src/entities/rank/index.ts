@@ -1,6 +1,11 @@
 export { RankBadge } from "./ui/RankBadge";
+export { RankDetailSheet } from "./ui/RankDetailSheet";
 export { RankProgress } from "./ui/RankProgress";
+export { RankGlyph } from "./ui/RankGlyph";
+export { ProgressRing } from "./ui/ProgressRing";
 export { getRank } from "./model/constants";
+export { getRankProgress } from "./model/getRankProgress";
+export type { RankProgress as RankProgressResult } from "./model/getRankProgress";
 export { useUserProgress, userProgressKey } from "./model/useUserProgress";
 export { rankApi } from "./api/rankApi";
-export type { UserProgress } from "./model/types";
+export type { UserProgress, Rank } from "./model/types";

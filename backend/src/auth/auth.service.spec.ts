@@ -14,7 +14,9 @@ describe('AuthService', () => {
     findByEmail: jest.Mock;
     findById: jest.Mock;
     create: jest.Mock;
+    generateUsername: jest.Mock;
     updateRefreshToken: jest.Mock;
+    getPublicSelf: jest.Mock;
   };
   let jwtService: { signAsync: jest.Mock };
 
@@ -23,7 +25,9 @@ describe('AuthService', () => {
       findByEmail: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
+      generateUsername: jest.fn(),
       updateRefreshToken: jest.fn(),
+      getPublicSelf: jest.fn(),
     };
     jwtService = { signAsync: jest.fn().mockResolvedValue('token') };
 
@@ -40,11 +44,22 @@ describe('AuthService', () => {
 
   describe('validateUser', () => {
     it('returns user without password when credentials are valid', async () => {
-      const user = { id: 1, email: 'a@a.com', password: 'hash', name: 'Alice', refreshToken: null };
+      const user = {
+        id: 1,
+        email: 'a@a.com',
+        password: 'hash',
+        name: 'Alice',
+        refreshToken: null,
+      };
       usersService.findByEmail.mockResolvedValue(user);
       (bcryptMock.compare as jest.Mock).mockResolvedValue(true);
       const result = await service.validateUser('a@a.com', 'password');
-      expect(result).toEqual({ id: 1, email: 'a@a.com', name: 'Alice', refreshToken: null });
+      expect(result).toEqual({
+        id: 1,
+        email: 'a@a.com',
+        name: 'Alice',
+        refreshToken: null,
+      });
       expect(result).not.toHaveProperty('password');
     });
 
@@ -63,13 +78,20 @@ describe('AuthService', () => {
   describe('register', () => {
     it('throws ConflictException when email already exists', async () => {
       usersService.findByEmail.mockResolvedValue({ id: 1, email: 'a@a.com' });
-      await expect(service.register('a@a.com', 'pass', 'Alice')).rejects.toThrow(ConflictException);
+      await expect(
+        service.register('a@a.com', 'pass', 'Alice'),
+      ).rejects.toThrow(ConflictException);
     });
 
     it('returns tokens on successful registration', async () => {
       usersService.findByEmail.mockResolvedValue(null);
       (bcryptMock.hash as jest.Mock).mockResolvedValue('hashed_pass');
-      usersService.create.mockResolvedValue({ id: 1, email: 'a@a.com', name: 'Alice' });
+      usersService.generateUsername.mockResolvedValue('alice');
+      usersService.create.mockResolvedValue({
+        id: 1,
+        email: 'a@a.com',
+        name: 'Alice',
+      });
       usersService.updateRefreshToken.mockResolvedValue(undefined);
       jwtService.signAsync.mockResolvedValue('signed_token');
       const result = await service.register('a@a.com', 'pass', 'Alice');
@@ -81,17 +103,30 @@ describe('AuthService', () => {
   describe('refreshTokens', () => {
     it('throws ForbiddenException when user has no refresh token', async () => {
       usersService.findById.mockResolvedValue({ id: 1, refreshToken: null });
-      await expect(service.refreshTokens(1, 'token')).rejects.toThrow(ForbiddenException);
+      await expect(service.refreshTokens(1, 'token')).rejects.toThrow(
+        ForbiddenException,
+      );
     });
 
     it('throws ForbiddenException when token does not match stored hash', async () => {
-      usersService.findById.mockResolvedValue({ id: 1, email: 'a@a.com', refreshToken: 'stored_hash' });
+      usersService.findById.mockResolvedValue({
+        id: 1,
+        email: 'a@a.com',
+        refreshToken: 'stored_hash',
+      });
       (bcryptMock.compare as jest.Mock).mockResolvedValue(false);
-      await expect(service.refreshTokens(1, 'wrong_token')).rejects.toThrow(ForbiddenException);
+      await expect(service.refreshTokens(1, 'wrong_token')).rejects.toThrow(
+        ForbiddenException,
+      );
     });
 
     it('returns new tokens when refresh token is valid', async () => {
-      usersService.findById.mockResolvedValue({ id: 1, email: 'a@a.com', name: 'Alice', refreshToken: 'stored_hash' });
+      usersService.findById.mockResolvedValue({
+        id: 1,
+        email: 'a@a.com',
+        name: 'Alice',
+        refreshToken: 'stored_hash',
+      });
       (bcryptMock.compare as jest.Mock).mockResolvedValue(true);
       usersService.updateRefreshToken.mockResolvedValue(undefined);
       jwtService.signAsync.mockResolvedValue('new_token');

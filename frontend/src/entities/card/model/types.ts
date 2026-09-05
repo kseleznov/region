@@ -16,6 +16,8 @@ export interface CardDetailProps {
   onToggleVisit: () => void;
   /** Open another place (a "You might also like" card) in the same sheet. */
   onSelectSimilar: (card: ICard, rect: DOMRect) => void;
+  /** Save a personal note about this place to the visitor's public tips list. */
+  onAddTip: (note: string) => void;
 }
 
 export interface UseCardProps {

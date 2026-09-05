@@ -2,9 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronRight, LogIn, LogOut, Settings } from "lucide-react";
+import { ChevronRight, LogIn, LogOut, Pencil } from "lucide-react";
 import { MENU_ITEMS } from "../model/constanst";
+import { useProfileSettings } from "../model/useProfileSettings";
+import type { FollowersTab } from "../model/types";
 import { LanguageSheet } from "./LanguageSheet";
+import { EditProfileSheet } from "./EditProfileSheet";
+import { FollowersSheet } from "./FollowersSheet";
+import { MyTips } from "./MyTips";
+import { AllTipsSheet } from "./AllTipsSheet";
 import { useAuthStore, useLogout } from "@/features/auth";
 import { ROUTES } from "@/shared/config/routes";
 import { LOCALE_LABELS, useTranslation } from "@/shared/i18n";
@@ -14,6 +20,23 @@ export function Profile() {
   const { logout, isPending } = useLogout();
   const { t, locale } = useTranslation();
   const [languageSheetOpen, setLanguageSheetOpen] = useState(false);
+  const [editSheetOpen, setEditSheetOpen] = useState(false);
+  const [allTipsSheetOpen, setAllTipsSheetOpen] = useState(false);
+  const [followersSheet, setFollowersSheet] = useState<FollowersTab | null>(
+    null,
+  );
+
+  const {
+    name,
+    username,
+    bio,
+    followers,
+    following,
+    tips,
+    updateProfile,
+    unfollow,
+    removeTip,
+  } = useProfileSettings();
 
   return (
     <div className="flex flex-col gap-6 px-4 pt-6 pb-8">
@@ -22,25 +45,58 @@ export function Profile() {
         <h1 className="text-3xl font-bold text-dark">{t("profile.title")}</h1>
       </div>
 
-      <div className="flex items-center justify-between bg-brand-purple rounded-2xl px-4 py-4">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-xl bg-brand-yellow flex items-center justify-center">
+      <div className="relative bg-brand-purple rounded-2xl p-4 flex flex-col gap-4">
+        <button
+          onClick={() => setEditSheetOpen(true)}
+          aria-label={t("profile.editProfile")}
+          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-light/20 flex items-center justify-center"
+        >
+          <Pencil size={16} className="text-light" />
+        </button>
+
+        <div className="flex items-center gap-4 pr-12">
+          <div className="w-14 h-14 rounded-xl bg-brand-yellow flex items-center justify-center flex-shrink-0">
             <span className="text-2xl font-bold text-dark">
-              {user?.name?.[0]?.toUpperCase() ?? "?"}
+              {name?.[0]?.toUpperCase() ?? "?"}
             </span>
           </div>
-          <div>
-            <p className="text-lg font-bold text-light">{user?.name ?? "—"}</p>
-            <p className="text-sm text-light/80">{user?.email ?? "—"}</p>
+          <div className="min-w-0">
+            <p className="text-lg font-bold text-light truncate">
+              {name || "—"}
+            </p>
+            <p className="text-sm text-light/70 truncate">@{username}</p>
           </div>
         </div>
-        <button
-          aria-label={t("profile.settings")}
-          className="w-10 h-10 rounded-full bg-light/20 flex items-center justify-center"
-        >
-          <Settings size={20} className="text-light" />
-        </button>
+
+        {bio && <p className="text-sm text-light/90 leading-relaxed">{bio}</p>}
+
+        <div className="flex items-center gap-5">
+          <button
+            onClick={() => setFollowersSheet("followers")}
+            className="text-left"
+          >
+            <span className="text-lg font-bold text-light">
+              {followers.length}
+            </span>{" "}
+            <span className="text-sm text-light/70">
+              {t("profile.followersSheet.tabs.followers")}
+            </span>
+          </button>
+          <button
+            onClick={() => setFollowersSheet("following")}
+            className="text-left"
+          >
+            <span className="text-lg font-bold text-light">
+              {following.length}
+            </span>{" "}
+            <span className="text-sm text-light/70">
+              {t("profile.followersSheet.tabs.following")}
+            </span>
+          </button>
+        </div>
       </div>
+
+      <MyTips tips={tips} onShowAllClick={() => setAllTipsSheetOpen(true)} />
 
       <div className="bg-search-bg rounded-2xl divide-y divide-gray-200">
         {MENU_ITEMS.map(({ id, icon: Icon, labelKey }) => {
@@ -98,6 +154,31 @@ export function Profile() {
       <LanguageSheet
         isOpen={languageSheetOpen}
         onClose={() => setLanguageSheetOpen(false)}
+      />
+
+      <EditProfileSheet
+        isOpen={editSheetOpen}
+        onClose={() => setEditSheetOpen(false)}
+        name={name}
+        username={username}
+        bio={bio}
+        onSave={updateProfile}
+      />
+
+      <FollowersSheet
+        isOpen={followersSheet !== null}
+        onClose={() => setFollowersSheet(null)}
+        initialTab={followersSheet ?? "followers"}
+        followers={followers}
+        following={following}
+        onUnfollow={unfollow}
+      />
+
+      <AllTipsSheet
+        isOpen={allTipsSheetOpen}
+        onClose={() => setAllTipsSheetOpen(false)}
+        tips={tips}
+        onRemove={removeTip}
       />
     </div>
   );

@@ -543,10 +543,11 @@ async function main() {
   await prisma.review.deleteMany();
   await prisma.savedPlace.deleteMany();
   await prisma.visitedPlace.deleteMany();
+  await prisma.tip.deleteMany();
   await prisma.place.deleteMany();
   await prisma.city.deleteMany();
 
-  await prisma.city.create({
+  const city = await prisma.city.create({
     data: {
       slug: CITY_SEED.slug,
       images: cityImages(CITY_SEED.slug),
@@ -569,6 +570,7 @@ async function main() {
         stars: seed.stars,
         price: seed.price,
         isOpen: seed.isOpen,
+        cityId: city.id,
         ...placeImages(seed.slug),
         ...buildRatingStats(seed.stars),
         translations: { create: placeTranslationRows(seed) },
