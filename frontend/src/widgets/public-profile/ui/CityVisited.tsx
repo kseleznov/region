@@ -4,9 +4,10 @@ import type { CityGuideStats } from "@/entities/user";
 
 interface CityVisitedProps {
   city: CityGuideStats;
+  onOpenPlace: (placeId: number, rect: DOMRect) => void;
 }
 
-export function CityVisited({ city }: CityVisitedProps) {
+export function CityVisited({ city, onOpenPlace }: CityVisitedProps) {
   const { t } = useTranslation();
 
   if (city.visited.length === 0) {
@@ -20,7 +21,16 @@ export function CityVisited({ city }: CityVisitedProps) {
   return (
     <div className="grid grid-cols-3 gap-2">
       {city.visited.map((place) => (
-        <div key={place.placeId} className="flex flex-col gap-1.5">
+        <div
+          key={place.placeId}
+          onClick={(event) =>
+            onOpenPlace(
+              place.placeId,
+              event.currentTarget.getBoundingClientRect(),
+            )
+          }
+          className="flex flex-col gap-1.5 cursor-pointer active:scale-[0.98] transition-transform"
+        >
           <div className="relative w-full aspect-square rounded-xl overflow-hidden">
             <Image
               src={place.placeImage}

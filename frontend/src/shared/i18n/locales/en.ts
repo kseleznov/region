@@ -82,7 +82,6 @@ export const en = {
       edit: "Edit",
       editAria: "Edit tip for {name}",
       removeAria: "Remove tip for {name}",
-      showAll: "Show all ({count})",
     },
     editTipSheet: {
       title: "Edit tip",
@@ -310,7 +309,6 @@ export const en = {
       tips: "Tips",
       visited: "Visited",
     },
-    tipsHeading: "Places {name} personally recommends in {city}",
     noTipsYet: "No tips yet",
     noVisitedYet: "No visited places yet",
     notFound: "This profile doesn't exist",

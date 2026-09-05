@@ -5,16 +5,22 @@ import type { MyTip } from "@/entities/tip";
 
 interface TipCardProps {
   tip: MyTip;
+  onOpenPlace: (placeId: number, rect: DOMRect) => void;
   onEdit?: (tip: MyTip) => void;
   onRemove?: (id: number) => void;
 }
 
-export function TipCard({ tip, onEdit, onRemove }: TipCardProps) {
+export function TipCard({ tip, onOpenPlace, onEdit, onRemove }: TipCardProps) {
   const { t } = useTranslation();
   const categoryLabel = useCategoryLabel();
 
   return (
-    <article className="flex gap-3 bg-search-bg rounded-2xl p-3">
+    <article
+      onClick={(event) =>
+        onOpenPlace(tip.placeId, event.currentTarget.getBoundingClientRect())
+      }
+      className="flex gap-3 bg-search-bg rounded-2xl p-3 cursor-pointer active:scale-[0.98] transition-transform"
+    >
       {tip.placeImage ? (
         <div className="relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0">
           <Image
@@ -42,7 +48,10 @@ export function TipCard({ tip, onEdit, onRemove }: TipCardProps) {
             <div className="flex items-center gap-2.5 flex-shrink-0">
               {onEdit && (
                 <button
-                  onClick={() => onEdit(tip)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onEdit(tip);
+                  }}
                   aria-label={t("profile.myTips.editAria", {
                     name: tip.placeName,
                   })}
@@ -53,7 +62,10 @@ export function TipCard({ tip, onEdit, onRemove }: TipCardProps) {
               )}
               {onRemove && (
                 <button
-                  onClick={() => onRemove(tip.id)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onRemove(tip.id);
+                  }}
                   aria-label={t("profile.myTips.removeAria", {
                     name: tip.placeName,
                   })}

@@ -36,6 +36,7 @@ const tipInclude = (locale: Locale) => ({
 
 type TipRow = {
   id: number;
+  placeId: number;
   note: string;
   place: {
     category: string;
@@ -51,6 +52,7 @@ function toMyTip(tip: TipRow, locale: Locale) {
 
   return {
     id: tip.id,
+    placeId: tip.placeId,
     placeName: placeTranslation.name,
     placeImage: toAssetUrl(tip.place.image),
     category: tip.place.category,

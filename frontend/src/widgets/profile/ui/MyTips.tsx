@@ -1,18 +1,15 @@
 import { useTranslation } from "@/shared/i18n";
-import { TipCard } from "./TipCard";
+import { TipPreviewCard } from "./TipPreviewCard";
 import type { MyTip } from "@/entities/tip";
-
-const PREVIEW_COUNT = 3;
 
 interface MyTipsProps {
   tips: MyTip[];
   onShowAllClick: () => void;
+  onOpenPlace: (placeId: number, rect: DOMRect) => void;
 }
 
-export function MyTips({ tips, onShowAllClick }: MyTipsProps) {
+export function MyTips({ tips, onShowAllClick, onOpenPlace }: MyTipsProps) {
   const { t } = useTranslation();
-  const preview = tips.slice(0, PREVIEW_COUNT);
-  const hasMore = tips.length > PREVIEW_COUNT;
 
   return (
     <div>
@@ -35,20 +32,11 @@ export function MyTips({ tips, onShowAllClick }: MyTipsProps) {
           {t("profile.myTips.empty")}
         </p>
       ) : (
-        <div className="flex flex-col gap-2.5">
-          {preview.map((tip) => (
-            <TipCard key={tip.id} tip={tip} />
+        <ul className="flex gap-3 overflow-x-auto -mx-4 px-4 snap-x snap-mandatory scroll-px-4 [&::-webkit-scrollbar]:hidden">
+          {tips.map((tip) => (
+            <TipPreviewCard key={tip.id} tip={tip} onOpenPlace={onOpenPlace} />
           ))}
-
-          {hasMore && (
-            <button
-              onClick={onShowAllClick}
-              className="text-sm font-bold text-brand-purple text-center py-1"
-            >
-              {t("profile.myTips.showAll", { count: tips.length })}
-            </button>
-          )}
-        </div>
+        </ul>
       )}
     </div>
   );

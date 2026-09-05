@@ -1,7 +1,9 @@
 "use client";
 
+import { AnimatePresence } from "framer-motion";
 import { useTranslation } from "@/shared/i18n";
 import { usePublicProfile } from "../model/usePublicProfile";
+import { usePlaceDetail } from "../model/usePlaceDetail";
 import { ProfileTopBar } from "./ProfileTopBar";
 import { ProfileHeaderCard } from "./ProfileHeaderCard";
 import { CitySelector } from "./CitySelector";
@@ -9,6 +11,7 @@ import { CityRankCard } from "./CityRankCard";
 import { ProfileTabs } from "./ProfileTabs";
 import { CityTips } from "./CityTips";
 import { CityVisited } from "./CityVisited";
+import { CardDetail } from "@/entities/card";
 
 interface PublicProfileProps {
   username: string;
@@ -29,6 +32,18 @@ export function PublicProfile({ username }: PublicProfileProps) {
     setSelectedTab,
     toggleFollow,
   } = usePublicProfile(username);
+
+  const {
+    selected,
+    isSelectedSaved,
+    isSelectedVisited,
+    openPlace,
+    selectSimilar,
+    closeSelected,
+    toggleSaveSelected,
+    toggleVisitSelected,
+    addTipForSelected,
+  } = usePlaceDetail();
 
   if (isLoading) {
     return (
@@ -78,11 +93,30 @@ export function PublicProfile({ username }: PublicProfileProps) {
           />
 
           {selectedTab === "tips" && (
-            <CityTips city={selectedCity} name={profile.name} />
+            <CityTips city={selectedCity} onOpenPlace={openPlace} />
           )}
-          {selectedTab === "visited" && <CityVisited city={selectedCity} />}
+          {selectedTab === "visited" && (
+            <CityVisited city={selectedCity} onOpenPlace={openPlace} />
+          )}
         </>
       )}
+
+      <AnimatePresence>
+        {selected && (
+          <CardDetail
+            key={selected.card.id ?? selected.card.name}
+            card={selected.card}
+            sourceRect={selected.rect}
+            isSaved={isSelectedSaved}
+            isVisited={isSelectedVisited}
+            onClose={closeSelected}
+            onToggleSave={toggleSaveSelected}
+            onToggleVisit={toggleVisitSelected}
+            onSelectSimilar={selectSimilar}
+            onAddTip={addTipForSelected}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

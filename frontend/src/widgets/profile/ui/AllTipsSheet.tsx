@@ -13,6 +13,7 @@ interface AllTipsSheetProps {
   onClose: () => void;
   tips: MyTip[];
   onRemove: (id: number) => void;
+  onOpenPlace: (placeId: number, rect: DOMRect) => void;
 }
 
 export function AllTipsSheet({
@@ -20,6 +21,7 @@ export function AllTipsSheet({
   onClose,
   tips,
   onRemove,
+  onOpenPlace,
 }: AllTipsSheetProps) {
   const { t } = useTranslation();
   const { mutate: editTip } = useEditTip();
@@ -53,6 +55,7 @@ export function AllTipsSheet({
                 <TipCard
                   key={tip.id}
                   tip={tip}
+                  onOpenPlace={onOpenPlace}
                   onEdit={setEditingTip}
                   onRemove={onRemove}
                 />

@@ -2,15 +2,18 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { AnimatePresence } from "framer-motion";
 import { ChevronRight, LogIn, LogOut, Pencil } from "lucide-react";
 import { MENU_ITEMS } from "../model/constanst";
 import { useProfileSettings } from "../model/useProfileSettings";
+import { usePlaceDetail } from "../model/usePlaceDetail";
 import type { FollowersTab } from "../model/types";
 import { LanguageSheet } from "./LanguageSheet";
 import { EditProfileSheet } from "./EditProfileSheet";
 import { FollowersSheet } from "./FollowersSheet";
 import { MyTips } from "./MyTips";
 import { AllTipsSheet } from "./AllTipsSheet";
+import { CardDetail } from "@/entities/card";
 import { useAuthStore, useLogout } from "@/features/auth";
 import { ROUTES } from "@/shared/config/routes";
 import { LOCALE_LABELS, useTranslation } from "@/shared/i18n";
@@ -37,6 +40,18 @@ export function Profile() {
     unfollow,
     removeTip,
   } = useProfileSettings();
+
+  const {
+    selected,
+    isSelectedSaved,
+    isSelectedVisited,
+    openPlace,
+    selectSimilar,
+    closeSelected,
+    toggleSaveSelected,
+    toggleVisitSelected,
+    addTipForSelected,
+  } = usePlaceDetail();
 
   return (
     <div className="flex flex-col gap-6 px-4 pt-6 pb-8">
@@ -96,7 +111,11 @@ export function Profile() {
         </div>
       </div>
 
-      <MyTips tips={tips} onShowAllClick={() => setAllTipsSheetOpen(true)} />
+      <MyTips
+        tips={tips}
+        onShowAllClick={() => setAllTipsSheetOpen(true)}
+        onOpenPlace={openPlace}
+      />
 
       <div className="bg-search-bg rounded-2xl divide-y divide-gray-200">
         {MENU_ITEMS.map(({ id, icon: Icon, labelKey }) => {
@@ -179,7 +198,25 @@ export function Profile() {
         onClose={() => setAllTipsSheetOpen(false)}
         tips={tips}
         onRemove={removeTip}
+        onOpenPlace={openPlace}
       />
+
+      <AnimatePresence>
+        {selected && (
+          <CardDetail
+            key={selected.card.id ?? selected.card.name}
+            card={selected.card}
+            sourceRect={selected.rect}
+            isSaved={isSelectedSaved}
+            isVisited={isSelectedVisited}
+            onClose={closeSelected}
+            onToggleSave={toggleSaveSelected}
+            onToggleVisit={toggleVisitSelected}
+            onSelectSimilar={selectSimilar}
+            onAddTip={addTipForSelected}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

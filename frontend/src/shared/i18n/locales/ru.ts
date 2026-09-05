@@ -76,7 +76,6 @@ export const ru: Dictionary = {
       edit: "Редактировать",
       editAria: "Редактировать совет про {name}",
       removeAria: "Удалить совет про {name}",
-      showAll: "Показать все ({count})",
     },
     editTipSheet: {
       title: "Редактировать совет",
@@ -303,7 +302,6 @@ export const ru: Dictionary = {
       tips: "Советы",
       visited: "Посещено",
     },
-    tipsHeading: "Места в городе {city}, которые {name} советует лично",
     noTipsYet: "Советов пока нет",
     noVisitedYet: "Посещённых мест пока нет",
     notFound: "Такого профиля не существует",
