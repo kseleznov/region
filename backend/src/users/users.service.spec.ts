@@ -38,10 +38,18 @@ describe('UsersService', () => {
   });
 
   it('findByEmail returns user when found', async () => {
-    const user = { id: 1, email: 'a@a.com', password: 'hash', name: 'Alice', refreshToken: null };
+    const user = {
+      id: 1,
+      email: 'a@a.com',
+      password: 'hash',
+      name: 'Alice',
+      refreshToken: null,
+    };
     prismaMock.user.findUnique.mockResolvedValue(user);
     expect(await service.findByEmail('a@a.com')).toEqual(user);
-    expect(prismaMock.user.findUnique).toHaveBeenCalledWith({ where: { email: 'a@a.com' } });
+    expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
+      where: { email: 'a@a.com' },
+    });
   });
 
   it('findByEmail returns null when not found', async () => {
@@ -50,18 +58,40 @@ describe('UsersService', () => {
   });
 
   it('findById returns user when found', async () => {
-    const user = { id: 1, email: 'a@a.com', password: 'hash', name: 'Alice', refreshToken: null };
+    const user = {
+      id: 1,
+      email: 'a@a.com',
+      password: 'hash',
+      name: 'Alice',
+      refreshToken: null,
+    };
     prismaMock.user.findUnique.mockResolvedValue(user);
     expect(await service.findById(1)).toEqual(user);
-    expect(prismaMock.user.findUnique).toHaveBeenCalledWith({ where: { id: 1 } });
+    expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
+      where: { id: 1 },
+    });
   });
 
   it('create creates a new user', async () => {
-    const user = { id: 1, email: 'a@a.com', password: 'hash', name: 'Alice', refreshToken: null };
+    const user = {
+      id: 1,
+      email: 'a@a.com',
+      password: 'hash',
+      name: 'Alice',
+      username: 'alice',
+      refreshToken: null,
+    };
     prismaMock.user.create.mockResolvedValue(user);
-    expect(await service.create('a@a.com', 'hash', 'Alice')).toEqual(user);
+    expect(await service.create('a@a.com', 'hash', 'Alice', 'alice')).toEqual(
+      user,
+    );
     expect(prismaMock.user.create).toHaveBeenCalledWith({
-      data: { email: 'a@a.com', password: 'hash', name: 'Alice' },
+      data: {
+        email: 'a@a.com',
+        password: 'hash',
+        name: 'Alice',
+        username: 'alice',
+      },
     });
   });
 
@@ -115,28 +145,36 @@ describe('UsersService', () => {
     });
 
     it('sets isNightExplorer true when 5 or more "Клуб" places visited', async () => {
-      const clubs = Array.from({ length: 5 }, () => ({ place: { category: 'Клуб' } }));
+      const clubs = Array.from({ length: 5 }, () => ({
+        place: { category: 'Клуб' },
+      }));
       prismaMock.visitedPlace.findMany.mockResolvedValue(clubs);
       const result = await service.getProgress(1);
       expect(result.isNightExplorer).toBe(true);
     });
 
     it('sets isNightExplorer false when fewer than 5 "Клуб" places visited', async () => {
-      const clubs = Array.from({ length: 4 }, () => ({ place: { category: 'Клуб' } }));
+      const clubs = Array.from({ length: 4 }, () => ({
+        place: { category: 'Клуб' },
+      }));
       prismaMock.visitedPlace.findMany.mockResolvedValue(clubs);
       const result = await service.getProgress(1);
       expect(result.isNightExplorer).toBe(false);
     });
 
     it('sets isFoodHunter true when 5 or more "Ресторан" places visited', async () => {
-      const restaurants = Array.from({ length: 5 }, () => ({ place: { category: 'Ресторан' } }));
+      const restaurants = Array.from({ length: 5 }, () => ({
+        place: { category: 'Ресторан' },
+      }));
       prismaMock.visitedPlace.findMany.mockResolvedValue(restaurants);
       const result = await service.getProgress(1);
       expect(result.isFoodHunter).toBe(true);
     });
 
     it('sets isFoodHunter false when fewer than 5 "Ресторан" places visited', async () => {
-      const restaurants = Array.from({ length: 3 }, () => ({ place: { category: 'Ресторан' } }));
+      const restaurants = Array.from({ length: 3 }, () => ({
+        place: { category: 'Ресторан' },
+      }));
       prismaMock.visitedPlace.findMany.mockResolvedValue(restaurants);
       const result = await service.getProgress(1);
       expect(result.isFoodHunter).toBe(false);

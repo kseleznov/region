@@ -1,41 +1,49 @@
+"use client";
+
 import { useMemo, useState } from "react";
-import type { CityGuideStats, PublicProfileData } from "./types";
+import { usePublicProfile as usePublicProfileQuery } from "@/entities/user";
+import { useToggleFollow } from "@/features/follow-user";
+import { useAuthStore } from "@/features/auth";
 
 export type ProfileTab = "tips" | "visited";
 
-export function usePublicProfile(initialProfile: PublicProfileData) {
-  const [isFollowing, setIsFollowing] = useState(initialProfile.isFollowing);
-  const [selectedCitySlug, setSelectedCitySlug] = useState(
-    initialProfile.cities[0]?.citySlug,
-  );
+export function usePublicProfile(username: string) {
+  const currentUsername = useAuthStore((state) => state.user?.username);
+  const { data: profile, isLoading, isError } = usePublicProfileQuery(username);
+  const { mutate: toggleFollowMutation } = useToggleFollow();
+
+  const [selectedCitySlugOverride, setSelectedCitySlugOverride] = useState<
+    string | null
+  >(null);
   const [selectedTab, setSelectedTab] = useState<ProfileTab>("tips");
 
-  const followersCount =
-    initialProfile.followersCount +
-    (isFollowing === initialProfile.isFollowing ? 0 : isFollowing ? 1 : -1);
+  const cities = useMemo(() => profile?.cities ?? [], [profile]);
+  const selectedCitySlug = selectedCitySlugOverride ?? cities[0]?.citySlug;
 
-  const totalPlacesVisited = initialProfile.cities.reduce(
+  const selectedCity = useMemo(
+    () => cities.find((city) => city.citySlug === selectedCitySlug),
+    [cities, selectedCitySlug],
+  );
+
+  const totalPlacesVisited = cities.reduce(
     (sum, city) => sum + city.placesVisited,
     0,
   );
 
-  const selectedCity: CityGuideStats | undefined = useMemo(
-    () =>
-      initialProfile.cities.find((city) => city.citySlug === selectedCitySlug),
-    [initialProfile.cities, selectedCitySlug],
-  );
-
   function toggleFollow() {
-    setIsFollowing((value) => !value);
+    toggleFollowMutation(username);
   }
 
   return {
-    profile: { ...initialProfile, isFollowing, followersCount },
+    profile,
+    isLoading,
+    isError,
+    isOwnProfile: !!currentUsername && currentUsername === username,
     totalPlacesVisited,
-    cities: initialProfile.cities,
+    cities,
     selectedCitySlug,
     selectedCity,
-    setSelectedCitySlug,
+    setSelectedCitySlug: setSelectedCitySlugOverride,
     selectedTab,
     setSelectedTab,
     toggleFollow,

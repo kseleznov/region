@@ -1,7 +1,7 @@
 "use client";
 
+import { useTranslation } from "@/shared/i18n";
 import { usePublicProfile } from "../model/usePublicProfile";
-import type { PublicProfileData } from "../model/types";
 import { ProfileTopBar } from "./ProfileTopBar";
 import { ProfileHeaderCard } from "./ProfileHeaderCard";
 import { CitySelector } from "./CitySelector";
@@ -11,13 +11,16 @@ import { CityTips } from "./CityTips";
 import { CityVisited } from "./CityVisited";
 
 interface PublicProfileProps {
-  profile: PublicProfileData;
+  username: string;
 }
 
-export function PublicProfile({ profile: initialProfile }: PublicProfileProps) {
+export function PublicProfile({ username }: PublicProfileProps) {
+  const { t } = useTranslation();
   const {
     profile,
-    totalPlacesVisited,
+    isLoading,
+    isError,
+    isOwnProfile,
     cities,
     selectedCitySlug,
     selectedCity,
@@ -25,7 +28,29 @@ export function PublicProfile({ profile: initialProfile }: PublicProfileProps) {
     selectedTab,
     setSelectedTab,
     toggleFollow,
-  } = usePublicProfile(initialProfile);
+  } = usePublicProfile(username);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-6 px-4 pt-6 pb-4">
+        <ProfileTopBar />
+        <p className="text-sm text-brand-gray text-center py-12">
+          {t("common.loading")}
+        </p>
+      </div>
+    );
+  }
+
+  if (isError || !profile) {
+    return (
+      <div className="flex flex-col gap-6 px-4 pt-6 pb-4">
+        <ProfileTopBar />
+        <p className="text-sm text-brand-gray text-center py-12">
+          {t("publicProfile.notFound")}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 px-4 pt-6 pb-4">
@@ -33,7 +58,7 @@ export function PublicProfile({ profile: initialProfile }: PublicProfileProps) {
       <ProfileHeaderCard
         profile={profile}
         citiesCount={cities.length}
-        totalPlacesVisited={totalPlacesVisited}
+        isOwnProfile={isOwnProfile}
         onToggleFollow={toggleFollow}
       />
 

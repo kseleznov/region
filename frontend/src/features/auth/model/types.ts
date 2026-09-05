@@ -2,6 +2,8 @@ export interface User {
   id: number;
   email: string;
   name: string;
+  username: string;
+  bio: string | null;
 }
 
 export interface AuthTokenResponse {

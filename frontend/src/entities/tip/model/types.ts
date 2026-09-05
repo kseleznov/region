@@ -1,8 +1,8 @@
 export interface MyTip {
-  id: string;
+  id: number;
   placeName: string;
-  placeImage?: string;
+  placeImage: string;
   category: string;
-  cityName: string | null;
+  cityName: string;
   note: string;
 }

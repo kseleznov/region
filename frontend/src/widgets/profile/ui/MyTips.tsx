@@ -1,6 +1,6 @@
 import { useTranslation } from "@/shared/i18n";
 import { TipCard } from "./TipCard";
-import type { MyTip } from "@/features/tips";
+import type { MyTip } from "@/entities/tip";
 
 const PREVIEW_COUNT = 3;
 

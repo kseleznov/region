@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useTranslation } from "@/shared/i18n";
-import type { CityGuideStats } from "../model/types";
+import type { CityGuideStats } from "@/entities/user";
 
 interface CityVisitedProps {
   city: CityGuideStats;
@@ -20,7 +20,7 @@ export function CityVisited({ city }: CityVisitedProps) {
   return (
     <div className="grid grid-cols-3 gap-2">
       {city.visited.map((place) => (
-        <div key={place.id} className="flex flex-col gap-1.5">
+        <div key={place.placeId} className="flex flex-col gap-1.5">
           <div className="relative w-full aspect-square rounded-xl overflow-hidden">
             <Image
               src={place.placeImage}

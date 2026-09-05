@@ -7,7 +7,8 @@ import { cn } from "@/shared/lib/cn";
 import { ROUTES } from "@/shared/config/routes";
 import { useTranslation } from "@/shared/i18n";
 import { useResetOnOpen } from "../model/useResetOnOpen";
-import type { FollowedUser, FollowersTab } from "../model/types";
+import type { FollowedUser } from "@/entities/user";
+import type { FollowersTab } from "../model/types";
 
 interface FollowersSheetProps {
   isOpen: boolean;
@@ -15,7 +16,7 @@ interface FollowersSheetProps {
   initialTab: FollowersTab;
   followers: FollowedUser[];
   following: FollowedUser[];
-  onUnfollow: (id: string) => void;
+  onUnfollow: (username: string) => void;
 }
 
 function PersonRow({
@@ -112,7 +113,7 @@ export function FollowersSheet({
                     action={
                       tab === "following" ? (
                         <button
-                          onClick={() => onUnfollow(person.id)}
+                          onClick={() => onUnfollow(person.username)}
                           className="flex-shrink-0 rounded-full border border-dark/10 px-3.5 py-2 text-xs font-bold text-dark"
                         >
                           {t("profile.followersSheet.unfollow")}

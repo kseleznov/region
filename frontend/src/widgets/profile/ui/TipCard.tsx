@@ -1,12 +1,12 @@
 import Image from "next/image";
 import { Pencil, Trash2 } from "lucide-react";
 import { useCategoryLabel, useTranslation } from "@/shared/i18n";
-import type { MyTip } from "@/features/tips";
+import type { MyTip } from "@/entities/tip";
 
 interface TipCardProps {
   tip: MyTip;
   onEdit?: (tip: MyTip) => void;
-  onRemove?: (id: string) => void;
+  onRemove?: (id: number) => void;
 }
 
 export function TipCard({ tip, onEdit, onRemove }: TipCardProps) {
@@ -28,7 +28,7 @@ export function TipCard({ tip, onEdit, onRemove }: TipCardProps) {
       ) : (
         <div className="w-14 h-14 rounded-xl bg-brand-purple/10 flex items-center justify-center flex-shrink-0">
           <span className="text-[10px] font-bold text-brand-purple text-center px-1">
-            {tip.cityName ?? categoryLabel(tip.category)}
+            {tip.cityName}
           </span>
         </div>
       )}
@@ -66,8 +66,7 @@ export function TipCard({ tip, onEdit, onRemove }: TipCardProps) {
           )}
         </div>
         <p className="text-[11px] font-bold uppercase tracking-wide text-brand-gray mb-1">
-          {tip.cityName ? `${tip.cityName} · ` : ""}
-          {categoryLabel(tip.category)}
+          {tip.cityName} · {categoryLabel(tip.category)}
         </p>
         <p className="text-xs text-dark/70 leading-relaxed line-clamp-2">
           {tip.note}

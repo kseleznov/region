@@ -1,7 +1,7 @@
 import { cn } from "@/shared/lib/cn";
 import { useTranslation } from "@/shared/i18n";
 import type { ProfileTab } from "../model/usePublicProfile";
-import type { CityGuideStats } from "../model/types";
+import type { CityGuideStats } from "@/entities/user";
 
 interface ProfileTabsProps {
   city: CityGuideStats;

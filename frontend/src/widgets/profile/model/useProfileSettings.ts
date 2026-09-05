@@ -1,40 +1,37 @@
 "use client";
 
-import { useState } from "react";
-import { useAuthStore } from "@/features/auth";
-import { useTipsStore } from "@/features/tips";
-import {
-  MOCK_BIO,
-  MOCK_FOLLOWERS,
-  MOCK_FOLLOWING,
-} from "./mockProfileSettings";
-import type { FollowedUser } from "./types";
+import { useAuthStore, useUpdateProfile } from "@/features/auth";
+import { useFollowers, useFollowing } from "@/entities/user";
+import { useToggleFollow } from "@/features/follow-user";
+import { useTips } from "@/entities/tip";
+import { useRemoveTip } from "@/features/tips";
 
 export function useProfileSettings() {
   const user = useAuthStore((state) => state.user);
-  const tips = useTipsStore((state) => state.tips);
-  const removeTip = useTipsStore((state) => state.removeTip);
+  const { data: followers = [] } = useFollowers();
+  const { data: following = [] } = useFollowing();
+  const { data: tips = [] } = useTips();
 
-  const [name, setName] = useState(user?.name ?? "");
-  const [bio, setBio] = useState(MOCK_BIO);
-  const [followers] = useState<FollowedUser[]>(MOCK_FOLLOWERS);
-  const [following, setFollowing] = useState<FollowedUser[]>(MOCK_FOLLOWING);
-
-  const username = user?.email ? user.email.split("@")[0] : "me";
+  const { mutate: updateProfileMutation } = useUpdateProfile();
+  const { mutate: toggleFollowMutation } = useToggleFollow();
+  const { mutate: removeTipMutation } = useRemoveTip();
 
   function updateProfile(next: { name: string; bio: string }) {
-    setName(next.name);
-    setBio(next.bio);
+    updateProfileMutation(next);
   }
 
-  function unfollow(id: string) {
-    setFollowing((list) => list.filter((person) => person.id !== id));
+  function unfollow(username: string) {
+    toggleFollowMutation(username);
+  }
+
+  function removeTip(id: number) {
+    removeTipMutation(id);
   }
 
   return {
-    name: name || user?.name || "",
-    username,
-    bio,
+    name: user?.name ?? "",
+    username: user?.username ?? "",
+    bio: user?.bio ?? "",
     followers,
     following,
     tips,

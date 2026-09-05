@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "@/shared/i18n";
-import type { MyTip } from "@/features/tips";
+import type { MyTip } from "@/entities/tip";
 
 interface EditTipSheetProps {
   tip: MyTip | null;
   onClose: () => void;
-  onSave: (id: string, note: string) => void;
+  onSave: (id: number, note: string) => void;
 }
 
 export function EditTipSheet({ tip, onClose, onSave }: EditTipSheetProps) {

@@ -1,5 +1,12 @@
+export interface FollowedUser {
+  id: number;
+  username: string;
+  name: string;
+}
+
 export interface CityTip {
-  id: string;
+  id: number;
+  placeId: number;
   placeName: string;
   placeImage: string;
   category: string;
@@ -7,7 +14,7 @@ export interface CityTip {
 }
 
 export interface CityVisitedPlace {
-  id: string;
+  placeId: number;
   placeName: string;
   placeImage: string;
 }
@@ -24,11 +31,10 @@ export interface CityGuideStats {
 }
 
 export interface PublicProfileData {
-  id: string;
+  id: number;
   username: string;
   name: string;
-  bio: string;
-  livesInLabel: string;
+  bio: string | null;
   followersCount: number;
   followingCount: number;
   isFollowing: boolean;

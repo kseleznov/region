@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useCategoryLabel, useTranslation } from "@/shared/i18n";
-import type { CityGuideStats } from "../model/types";
+import type { CityGuideStats } from "@/entities/user";
 
 interface CityTipsProps {
   city: CityGuideStats;

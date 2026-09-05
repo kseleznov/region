@@ -4,7 +4,6 @@ import { placeApi } from "@/entities/place";
 import { useToggleSave } from "@/features/save-card";
 import { useToggleVisit } from "@/features/visit-card";
 import { useAuthStore } from "@/features/auth";
-import { useSelectCityStore } from "@/features/select-city";
 import { useAddTip } from "@/features/tips";
 import { ROUTES } from "@/shared/config/routes";
 import { useLocale } from "@/shared/i18n";
@@ -14,8 +13,7 @@ export function useCardsSlider() {
   const [selected, setSelected] = useState<SelectedCard | null>(null);
   const { mutate: toggleSave } = useToggleSave();
   const { mutate: toggleVisit } = useToggleVisit();
-  const addTip = useAddTip();
-  const selectedCity = useSelectCityStore((state) => state.selectedCity);
+  const { mutate: addTip } = useAddTip();
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const locale = useLocale();
@@ -93,17 +91,11 @@ export function useCardsSlider() {
       });
     },
     addTipForSelected: (note: string) => {
-      if (!requireAuth() || !selected) {
+      if (!requireAuth() || !selected?.card.id) {
         return;
       }
 
-      addTip({
-        placeName: selected.card.name,
-        placeImage: selected.card.image,
-        category: selected.card.category,
-        cityName: selectedCity,
-        note,
-      });
+      addTip({ placeId: selected.card.id, note });
     },
   };
 }

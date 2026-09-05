@@ -18,6 +18,7 @@ export const en = {
     viewAll: "View All",
     retry: "Try again",
     close: "Close",
+    loading: "Loading...",
   },
 
   metadata: {
@@ -195,6 +196,8 @@ export const en = {
     unvisited: "Visited mark removed",
     tipAdded: "Added to your tips",
     tipUpdated: "Tip updated",
+    tipRemoved: "Tip removed",
+    profileUpdated: "Profile updated",
   },
 
   card: {
@@ -310,6 +313,7 @@ export const en = {
     tipsHeading: "Places {name} personally recommends in {city}",
     noTipsYet: "No tips yet",
     noVisitedYet: "No visited places yet",
+    notFound: "This profile doesn't exist",
     aria: {
       back: "Back",
       menu: "More options",

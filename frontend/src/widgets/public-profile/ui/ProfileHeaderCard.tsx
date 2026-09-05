@@ -1,21 +1,21 @@
 "use client";
 
-import { MapPin, Plus, Check, Share2 } from "lucide-react";
+import { Plus, Check, Share2 } from "lucide-react";
 import { cn } from "@/shared/lib/cn";
 import { useTranslation } from "@/shared/i18n";
-import type { PublicProfileData } from "../model/types";
+import type { PublicProfileData } from "@/entities/user";
 
 interface ProfileHeaderCardProps {
   profile: PublicProfileData;
   citiesCount: number;
-  totalPlacesVisited: number;
+  isOwnProfile: boolean;
   onToggleFollow: () => void;
 }
 
 export function ProfileHeaderCard({
   profile,
   citiesCount,
-  totalPlacesVisited,
+  isOwnProfile,
   onToggleFollow,
 }: ProfileHeaderCardProps) {
   const { t } = useTranslation();
@@ -43,7 +43,9 @@ export function ProfileHeaderCard({
         </div>
       </div>
 
-      <p className="text-sm text-light/90 leading-relaxed">{profile.bio}</p>
+      {profile.bio && (
+        <p className="text-sm text-light/90 leading-relaxed">{profile.bio}</p>
+      )}
 
       <div className="grid grid-cols-3 gap-2">
         <div>
@@ -62,28 +64,30 @@ export function ProfileHeaderCard({
         </div>
       </div>
 
-      <button
-        onClick={onToggleFollow}
-        aria-label={t(
-          profile.isFollowing
-            ? "publicProfile.aria.unfollow"
-            : "publicProfile.aria.follow",
-          { name: profile.name },
-        )}
-        className={cn(
-          "w-full rounded-full py-3.5 flex items-center justify-center gap-2 text-sm font-bold transition-colors",
-          profile.isFollowing
-            ? "bg-white/15 text-light"
-            : "bg-brand-yellow text-dark",
-        )}
-      >
-        {profile.isFollowing ? <Check size={16} /> : <Plus size={16} />}
-        {t(
-          profile.isFollowing
-            ? "publicProfile.followingAction"
-            : "publicProfile.follow",
-        )}
-      </button>
+      {!isOwnProfile && (
+        <button
+          onClick={onToggleFollow}
+          aria-label={t(
+            profile.isFollowing
+              ? "publicProfile.aria.unfollow"
+              : "publicProfile.aria.follow",
+            { name: profile.name },
+          )}
+          className={cn(
+            "w-full rounded-full py-3.5 flex items-center justify-center gap-2 text-sm font-bold transition-colors",
+            profile.isFollowing
+              ? "bg-white/15 text-light"
+              : "bg-brand-yellow text-dark",
+          )}
+        >
+          {profile.isFollowing ? <Check size={16} /> : <Plus size={16} />}
+          {t(
+            profile.isFollowing
+              ? "publicProfile.followingAction"
+              : "publicProfile.follow",
+          )}
+        </button>
+      )}
     </div>
   );
 }

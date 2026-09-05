@@ -6,13 +6,13 @@ import { useEditTip } from "@/features/tips";
 import { useTranslation } from "@/shared/i18n";
 import { TipCard } from "./TipCard";
 import { EditTipSheet } from "./EditTipSheet";
-import type { MyTip } from "@/features/tips";
+import type { MyTip } from "@/entities/tip";
 
 interface AllTipsSheetProps {
   isOpen: boolean;
   onClose: () => void;
   tips: MyTip[];
-  onRemove: (id: string) => void;
+  onRemove: (id: number) => void;
 }
 
 export function AllTipsSheet({
@@ -22,7 +22,7 @@ export function AllTipsSheet({
   onRemove,
 }: AllTipsSheetProps) {
   const { t } = useTranslation();
-  const editTip = useEditTip();
+  const { mutate: editTip } = useEditTip();
   const [editingTip, setEditingTip] = useState<MyTip | null>(null);
 
   return (
@@ -62,7 +62,7 @@ export function AllTipsSheet({
             <EditTipSheet
               tip={editingTip}
               onClose={() => setEditingTip(null)}
-              onSave={editTip}
+              onSave={(id, note) => editTip({ id, note })}
             />
           </motion.div>
         </motion.div>

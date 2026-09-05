@@ -1,7 +1,7 @@
 import { getRank } from "@/entities/rank";
 import { cn } from "@/shared/lib/cn";
 import { useTranslation, type TranslationKey } from "@/shared/i18n";
-import type { CityGuideStats } from "../model/types";
+import type { CityGuideStats } from "@/entities/user";
 
 interface CitySelectorProps {
   cities: CityGuideStats[];

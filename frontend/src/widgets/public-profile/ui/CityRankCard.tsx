@@ -9,7 +9,7 @@ import {
   RankGlyph,
 } from "@/entities/rank";
 import { useTranslation, type TranslationKey } from "@/shared/i18n";
-import type { CityGuideStats } from "../model/types";
+import type { CityGuideStats } from "@/entities/user";
 
 const RANK_COLOR = "var(--pink)";
 

@@ -12,6 +12,7 @@ export const ru: Dictionary = {
     viewAll: "Все",
     retry: "Повторить",
     close: "Закрыть",
+    loading: "Загрузка...",
   },
 
   metadata: {
@@ -188,6 +189,8 @@ export const ru: Dictionary = {
     unvisited: "Отметка о посещении снята",
     tipAdded: "Добавлено в советы",
     tipUpdated: "Совет обновлён",
+    tipRemoved: "Совет удалён",
+    profileUpdated: "Профиль обновлён",
   },
 
   card: {
@@ -303,6 +306,7 @@ export const ru: Dictionary = {
     tipsHeading: "Места в городе {city}, которые {name} советует лично",
     noTipsYet: "Советов пока нет",
     noVisitedYet: "Посещённых мест пока нет",
+    notFound: "Такого профиля не существует",
     aria: {
       back: "Назад",
       menu: "Ещё",
