@@ -75,11 +75,11 @@ export function FollowersSheet({
         >
           <motion.div
             onClick={(event) => event.stopPropagation()}
-            className="w-full max-w-[452px] h-[70vh] flex flex-col rounded-t-3xl bg-white px-4 pt-5 pb-8"
+            className="w-full max-w-[452px] h-[70dvh] flex flex-col rounded-t-3xl bg-white px-4 pt-5 pb-8"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            transition={{ type: "spring", stiffness: 300, damping: 40 }}
           >
             <div className="flex gap-1 bg-search-bg rounded-full p-1 mb-2 flex-shrink-0">
               {(["followers", "following"] as const).map((option) => (

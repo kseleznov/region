@@ -38,11 +38,11 @@ export function AllTipsSheet({
         >
           <motion.div
             onClick={(event) => event.stopPropagation()}
-            className="w-full max-w-[452px] h-[80vh] flex flex-col rounded-t-3xl bg-white px-4 pt-5 pb-8"
+            className="w-full max-w-[452px] h-[80dvh] flex flex-col rounded-t-3xl bg-white px-4 pt-5 pb-8"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            transition={{ type: "spring", stiffness: 300, damping: 40 }}
           >
             <h2 className="text-xl font-bold text-dark mb-4 flex-shrink-0">
               {t("profile.myTips.title")} ({tips.length})
