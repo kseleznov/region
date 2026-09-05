@@ -5,6 +5,7 @@ export const ROUTES = {
   exploring: "/exploring",
   saved: "/saved",
   profile: "/profile",
+  publicProfile: (username: string) => `/profile/${username}`,
   overview: "/overview",
   signIn: "/auth/sign-in",
   signUp: "/auth/sign-up",

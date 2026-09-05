@@ -45,7 +45,7 @@ export const en = {
   profile: {
     accountLabel: "Your account",
     title: "Profile",
-    settings: "Settings",
+    editProfile: "Edit profile",
     logOut: "Log out",
     signIn: "Sign in",
     menu: {
@@ -57,6 +57,35 @@ export const en = {
     languageSheet: {
       title: "Language",
       subtitle: "Choose the language for the whole app",
+    },
+    editSheet: {
+      title: "Edit profile",
+      nameLabel: "Name",
+      usernameLabel: "Username",
+      usernameHint: "Your username is unique and can't be changed.",
+      bioLabel: "Bio",
+      bioPlaceholder: "Tell others about yourself",
+      save: "Save",
+    },
+    followersSheet: {
+      tabs: {
+        followers: "Followers",
+        following: "Following",
+      },
+      unfollow: "Unfollow",
+      empty: "Nobody here yet",
+    },
+    myTips: {
+      title: "My tips",
+      empty: "You haven't added any tips yet",
+      edit: "Edit",
+      editAria: "Edit tip for {name}",
+      removeAria: "Remove tip for {name}",
+      showAll: "Show all ({count})",
+    },
+    editTipSheet: {
+      title: "Edit tip",
+      save: "Save",
     },
   },
 
@@ -164,6 +193,8 @@ export const en = {
     unsaved: "Removed from saved",
     visited: "Marked as visited",
     unvisited: "Visited mark removed",
+    tipAdded: "Added to your tips",
+    tipUpdated: "Tip updated",
   },
 
   card: {
@@ -192,6 +223,15 @@ export const en = {
       fri: "Fri",
       sat: "Sat",
       sun: "Sun",
+    },
+    shareMenu: {
+      share: "Share",
+      addTip: "Add to tips",
+    },
+    addTipSheet: {
+      title: "Add a tip",
+      placeholder: "What should people know before visiting?",
+      confirm: "Add tip",
     },
   },
 
@@ -252,6 +292,32 @@ export const en = {
     },
   },
 
+  publicProfile: {
+    followers: "Followers",
+    following: "Following",
+    cities: "Cities",
+    citiesCount: "{count} cities",
+    places: "places",
+    tipsLabel: "tips",
+    livesIn: "Lives in {city}",
+    follow: "Follow",
+    followingAction: "Following",
+    rankInCity: "Rank in {city}",
+    tabs: {
+      tips: "Tips",
+      visited: "Visited",
+    },
+    tipsHeading: "Places {name} personally recommends in {city}",
+    noTipsYet: "No tips yet",
+    noVisitedYet: "No visited places yet",
+    aria: {
+      back: "Back",
+      menu: "More options",
+      follow: "Follow {name}",
+      unfollow: "Unfollow {name}",
+    },
+  },
+
   explanation: {
     createEvents: "CREATE YOUR OWN EVENTS",
     findActivity: "FIND THE PERFECT ACTIVITY",
@@ -290,6 +356,7 @@ export const en = {
       Район: "District",
       Океанариум: "Oceanarium",
       "Смотровая площадка": "Viewpoint",
+      Парк: "Park",
     },
   },
 };
