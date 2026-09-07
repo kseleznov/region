@@ -52,6 +52,7 @@ export function Profile() {
     toggleVisitSelected,
     addTipForSelected,
     submitReviewForSelected,
+    deleteReviewForSelected,
   } = usePlaceDetail();
 
   return (
@@ -216,6 +217,7 @@ export function Profile() {
             onSelectSimilar={selectSimilar}
             onAddTip={addTipForSelected}
             onSubmitReview={submitReviewForSelected}
+            onDeleteReview={deleteReviewForSelected}
           />
         )}
       </AnimatePresence>

@@ -196,6 +196,7 @@ export const ru: Dictionary = {
     tipUpdated: "Рекомендация обновлена",
     tipRemoved: "Рекомендация удалена",
     reviewAdded: "Ваш отзыв опубликован",
+    reviewRemoved: "Отзыв удалён",
     profileUpdated: "Профиль обновлён",
   },
 
@@ -209,6 +210,7 @@ export const ru: Dictionary = {
     seeAllReviews: "Все отзывы",
     showFewerReviews: "Свернуть отзывы",
     writeReview: "Написать отзыв",
+    deleteReview: "Удалить отзыв",
     similarTitle: "Вам может понравиться",
     aria: {
       close: "Закрыть",
@@ -242,6 +244,12 @@ export const ru: Dictionary = {
       starsAria: "Оценить на {count} из 5",
       placeholder: "Расскажите, что запомнилось — и хорошее, и не очень.",
       confirm: "Опубликовать отзыв",
+    },
+    deleteReviewConfirm: {
+      title: "Удалить ваш отзыв?",
+      description: "Ваша оценка и комментарий для этого места будут удалены.",
+      confirm: "Удалить",
+      cancel: "Оставить",
     },
   },
 

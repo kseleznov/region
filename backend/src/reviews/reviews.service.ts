@@ -130,4 +130,41 @@ export class ReviewsService {
       stars: average,
     };
   }
+
+  /** Retract the visitor's review and pull its rating back out of the totals. */
+  async remove(userId: number, placeId: number) {
+    const existing = await this.prisma.review.findUnique({
+      where: { userId_placeId: { userId, placeId } },
+      select: { id: true, rating: true },
+    });
+    if (!existing) {
+      throw new NotFoundException('You have no review for this place');
+    }
+
+    const place = await this.prisma.place.findUniqueOrThrow({
+      where: { id: placeId },
+      select: { ratingCount: true, ratingBreakdown: true },
+    });
+
+    const breakdown = [...(place.ratingBreakdown as unknown as number[])];
+    breakdown[existing.rating - 1] = Math.max(
+      0,
+      breakdown[existing.rating - 1] - 1,
+    );
+    const ratingCount = Math.max(0, place.ratingCount - 1);
+    const average = averageFromBreakdown(breakdown);
+
+    await this.prisma.$transaction([
+      this.prisma.review.delete({ where: { id: existing.id } }),
+      this.prisma.place.update({
+        where: { id: placeId },
+        data: { stars: average, ratingCount, ratingBreakdown: breakdown },
+      }),
+    ]);
+
+    return {
+      ratingSummary: { average, total: ratingCount, breakdown },
+      stars: average,
+    };
+  }
 }

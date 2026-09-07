@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Param,
   ParseIntPipe,
   Post,
@@ -29,5 +30,11 @@ export class ReviewsController {
   ) {
     const { id: userId } = req.user as JwtUser;
     return this.reviewsService.create(userId, placeId, dto, parseLocale(lang));
+  }
+
+  @Delete('mine')
+  remove(@Param('placeId', ParseIntPipe) placeId: number, @Req() req: Request) {
+    const { id: userId } = req.user as JwtUser;
+    return this.reviewsService.remove(userId, placeId);
   }
 }

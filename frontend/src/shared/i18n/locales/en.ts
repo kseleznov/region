@@ -203,6 +203,7 @@ export const en = {
     tipUpdated: "Recommendation updated",
     tipRemoved: "Recommendation removed",
     reviewAdded: "Your review is live",
+    reviewRemoved: "Review deleted",
     profileUpdated: "Profile updated",
   },
 
@@ -216,6 +217,7 @@ export const en = {
     seeAllReviews: "See all reviews",
     showFewerReviews: "Show fewer reviews",
     writeReview: "Write a review",
+    deleteReview: "Delete review",
     similarTitle: "You might also like",
     aria: {
       close: "Close",
@@ -249,6 +251,12 @@ export const en = {
       starsAria: "Rate {count} out of 5",
       placeholder: "Share what stood out — the good and the not-so-good.",
       confirm: "Post review",
+    },
+    deleteReviewConfirm: {
+      title: "Delete your review?",
+      description: "This removes your rating and comment for this place.",
+      confirm: "Delete",
+      cancel: "Keep",
     },
   },
 

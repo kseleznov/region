@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Star } from "lucide-react";
+import { Star, Trash2 } from "lucide-react";
 import { formatRelativeTime } from "../model/formatRelativeTime";
 import { ROUTES } from "@/shared/config/routes";
+import { ConfirmDialog } from "@/shared/ui";
 import { useTranslation } from "@/shared/i18n";
 import type { MyReview, RatingSummary, Review } from "@/shared/types/card";
 
@@ -13,10 +14,13 @@ const VISIBLE_BY_DEFAULT = 2;
 interface CardReviewsProps {
   summary: RatingSummary;
   reviews: Review[];
-  /** The signed-in visitor's own review, if any — switches the CTA to "edit". */
+  /** The signed-in visitor's own review, if any — hides the "write" CTA and
+   *  adds a delete button to that review. */
   myReview?: MyReview | null;
   /** Open the review sheet. Omitted for guests, which hides the CTA. */
   onWriteReview?: () => void;
+  /** Retract the visitor's own review. Omitted → no delete button. */
+  onDeleteReview?: () => void;
 }
 
 /** Author's initial on a purple tile — same treatment as the profile pages. */
@@ -37,7 +41,9 @@ function ReviewStars({ rating }: { rating: number }) {
         <Star
           key={index}
           className={`w-3.5 h-3.5 ${
-            index < rating ? "fill-dark text-dark" : "fill-dark/15 text-dark/15"
+            index < rating
+              ? "fill-brand-yellow text-brand-yellow"
+              : "fill-dark/15 text-dark/15"
           }`}
         />
       ))}
@@ -50,14 +56,21 @@ export function CardReviews({
   reviews,
   myReview,
   onWriteReview,
+  onDeleteReview,
 }: CardReviewsProps) {
   const { t, locale } = useTranslation();
   const [showAll, setShowAll] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   const visibleReviews = showAll
     ? reviews
     : reviews.slice(0, VISIBLE_BY_DEFAULT);
   const hasMore = reviews.length > VISIBLE_BY_DEFAULT;
+
+  function handleConfirmDelete() {
+    setConfirmDeleteOpen(false);
+    onDeleteReview?.();
+  }
 
   return (
     <section className="mb-8">
@@ -84,33 +97,51 @@ export function CardReviews({
       )}
 
       <div className="flex flex-col gap-3">
-        {visibleReviews.map((review) => (
-          <Link
-            key={review.id}
-            href={
-              review.id === myReview?.id
-                ? ROUTES.profile
-                : ROUTES.publicProfile(review.authorUsername)
-            }
-            className="block bg-dark/[0.03] rounded-2xl p-4 transition-colors hover:bg-dark/[0.06]"
-          >
-            <div className="flex items-center gap-3 mb-2">
-              <ReviewAvatar name={review.author} />
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-bold text-dark leading-tight truncate">
-                  {review.author}
-                </p>
-                <p className="text-xs text-dark/50">
-                  {formatRelativeTime(review.createdAt, locale)}
-                </p>
+        {visibleReviews.map((review) => {
+          const isMine = review.id === myReview?.id;
+
+          return (
+            <Link
+              key={review.id}
+              href={
+                isMine
+                  ? ROUTES.profile
+                  : ROUTES.publicProfile(review.authorUsername)
+              }
+              className="block bg-dark/[0.03] rounded-2xl p-4 transition-colors hover:bg-dark/[0.06]"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <ReviewAvatar name={review.author} />
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-bold text-dark leading-tight truncate">
+                    {review.author}
+                  </p>
+                  <p className="text-xs text-dark/50">
+                    {formatRelativeTime(review.createdAt, locale)}
+                  </p>
+                </div>
+                <ReviewStars rating={review.rating} />
+                {isMine && onDeleteReview && (
+                  <button
+                    type="button"
+                    aria-label={t("card.deleteReview")}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      setConfirmDeleteOpen(true);
+                    }}
+                    className="flex-shrink-0 -mr-1 p-1 text-dark/30 transition-colors hover:text-brand-pink"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                )}
               </div>
-              <ReviewStars rating={review.rating} />
-            </div>
-            <p className="text-sm text-dark/80 leading-relaxed">
-              {review.text}
-            </p>
-          </Link>
-        ))}
+              <p className="text-sm text-dark/80 leading-relaxed">
+                {review.text}
+              </p>
+            </Link>
+          );
+        })}
       </div>
 
       {hasMore && (
@@ -121,6 +152,17 @@ export function CardReviews({
           {showAll ? t("card.showFewerReviews") : t("card.seeAllReviews")}
         </button>
       )}
+
+      <ConfirmDialog
+        isOpen={confirmDeleteOpen}
+        title={t("card.deleteReviewConfirm.title")}
+        description={t("card.deleteReviewConfirm.description")}
+        confirmLabel={t("card.deleteReviewConfirm.confirm")}
+        cancelLabel={t("card.deleteReviewConfirm.cancel")}
+        variant="danger"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setConfirmDeleteOpen(false)}
+      />
     </section>
   );
 }

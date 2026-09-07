@@ -85,4 +85,12 @@ export const placeApi = {
     >(`/places/${placeId}/reviews`, input, buildConfig({}, { lang }));
     return data;
   },
+
+  /** Retract the visitor's own review for a place. */
+  deleteMyReview: async (placeId: number): Promise<ReviewMutationResult> => {
+    const { data } = await apiClient.delete<ReviewMutationResult>(
+      `/places/${placeId}/reviews/mine`,
+    );
+    return data;
+  },
 };

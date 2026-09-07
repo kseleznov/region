@@ -7,6 +7,7 @@ import { useToggleSave } from "@/features/save-card";
 import { useToggleVisit } from "@/features/visit-card";
 import { useAddTip } from "@/features/tips";
 import { applyReviewResult, useAddReview } from "@/features/add-review";
+import { applyReviewRemoval, useDeleteReview } from "@/features/delete-review";
 import { useAuthStore } from "@/features/auth";
 import { ROUTES } from "@/shared/config/routes";
 import { useLocale } from "@/shared/i18n";
@@ -18,6 +19,7 @@ export function usePlaceDetail() {
   const { mutate: toggleVisit } = useToggleVisit();
   const { mutate: addTip } = useAddTip();
   const { mutate: addReview } = useAddReview();
+  const { mutate: deleteReview } = useDeleteReview();
   const user = useAuthStore((state) => state.user);
   const router = useRouter();
   const locale = useLocale();
@@ -113,6 +115,20 @@ export function usePlaceDetail() {
     );
   }
 
+  function deleteReviewForSelected() {
+    if (!requireAuth() || !selected?.card.id) {
+      return;
+    }
+
+    deleteReview(selected.card.id, {
+      onSuccess: (result) =>
+        setSelected(
+          (prev) =>
+            prev && { ...prev, card: applyReviewRemoval(prev.card, result) },
+        ),
+    });
+  }
+
   return {
     selected,
     isSelectedSaved: selected?.card.isSaved ?? false,
@@ -124,5 +140,6 @@ export function usePlaceDetail() {
     toggleVisitSelected,
     addTipForSelected,
     submitReviewForSelected,
+    deleteReviewForSelected,
   };
 }

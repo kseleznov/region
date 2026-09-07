@@ -6,6 +6,7 @@ import { useToggleVisit } from "@/features/visit-card";
 import { useAuthStore } from "@/features/auth";
 import { useAddTip } from "@/features/tips";
 import { applyReviewResult, useAddReview } from "@/features/add-review";
+import { applyReviewRemoval, useDeleteReview } from "@/features/delete-review";
 import { ROUTES } from "@/shared/config/routes";
 import { useLocale } from "@/shared/i18n";
 import type { ICard, SelectedCard } from "@/shared/types/card";
@@ -16,6 +17,7 @@ export function useCardsSlider() {
   const { mutate: toggleVisit } = useToggleVisit();
   const { mutate: addTip } = useAddTip();
   const { mutate: addReview } = useAddReview();
+  const { mutate: deleteReview } = useDeleteReview();
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const locale = useLocale();
@@ -118,6 +120,19 @@ export function useCardsSlider() {
             ),
         },
       );
+    },
+    deleteReviewForSelected: () => {
+      if (!requireAuth() || !selected?.card.id) {
+        return;
+      }
+
+      deleteReview(selected.card.id, {
+        onSuccess: (result) =>
+          setSelected(
+            (prev) =>
+              prev && { ...prev, card: applyReviewRemoval(prev.card, result) },
+          ),
+      });
     },
   };
 }

@@ -36,6 +36,7 @@ export function CardDetail({
   onSelectSimilar,
   onAddTip,
   onSubmitReview,
+  onDeleteReview,
 }: CardDetailProps) {
   const {
     hoursOpen,
@@ -265,6 +266,7 @@ export function CardDetail({
                   onWriteReview={
                     onSubmitReview ? () => setReviewSheetOpen(true) : undefined
                   }
+                  onDeleteReview={onDeleteReview}
                 />
               ) : null}
               {!!card.similar?.length && (
