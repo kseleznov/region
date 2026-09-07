@@ -14,6 +14,9 @@ export type PriceBucket = (typeof PRICE_BUCKETS)[number];
 export const MIN_RATING_OPTIONS = ['3', '4', '4.5'] as const;
 export type MinRatingOption = (typeof MIN_RATING_OPTIONS)[number];
 
+export const PLACE_KINDS = ['attraction', 'food'] as const;
+export type PlaceKind = (typeof PLACE_KINDS)[number];
+
 /**
  * Query params for `GET /places`. Everything is optional — an empty query
  * returns every place ordered by rating. Values arrive as strings, so the
@@ -21,6 +24,10 @@ export type MinRatingOption = (typeof MIN_RATING_OPTIONS)[number];
  * service (the global ValidationPipe doesn't transform).
  */
 export class FindPlacesQueryDto {
+  @IsOptional()
+  @IsIn(PLACE_KINDS)
+  kind?: PlaceKind;
+
   @IsOptional()
   @IsIn(PLACE_SORT_OPTIONS)
   sort?: PlaceSortOption;

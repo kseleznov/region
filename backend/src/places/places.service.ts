@@ -32,7 +32,9 @@ const PRICE_BUCKET_FILTERS: Record<PriceBucket, Prisma.IntFilter | number> = {
 };
 
 function buildPlaceWhere(query: FindPlacesQueryDto): Prisma.PlaceWhereInput {
-  const where: Prisma.PlaceWhereInput = {};
+  // Attractions and food live in the same table but feed different overview
+  // sections — default to attractions so existing callers are unaffected.
+  const where: Prisma.PlaceWhereInput = { kind: query.kind ?? 'attraction' };
 
   if (query.price) {
     where.price = PRICE_BUCKET_FILTERS[query.price];
