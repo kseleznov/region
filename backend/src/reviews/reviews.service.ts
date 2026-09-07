@@ -9,12 +9,6 @@ import {
 } from '../common/i18n';
 import type { UpsertReviewDto } from './dto/upsert-review.dto';
 
-/** i.pravatar returns a stable image for a stable `u` value, so a visitor's
- *  avatar stays the same across their reviews without us storing files. */
-function avatarForUser(userId: number): string {
-  return `https://i.pravatar.cc/120?u=region-user-${userId}`;
-}
-
 /** Weighted mean of a 1★…5★ histogram, rounded to one decimal (`0` when empty). */
 function averageFromBreakdown(breakdown: number[]): number {
   const total = breakdown.reduce((sum, count) => sum + count, 0);
@@ -30,10 +24,9 @@ function averageFromBreakdown(breakdown: number[]): number {
 
 const reviewSelect = (locale: Locale) => ({
   id: true,
-  author: true,
-  avatar: true,
   rating: true,
   createdAt: true,
+  user: { select: { username: true, name: true } },
   translations: {
     where: { locale: { in: localeCandidates(locale) } },
     select: { locale: true, text: true },
@@ -42,16 +35,25 @@ const reviewSelect = (locale: Locale) => ({
 
 type ReviewRow = {
   id: number;
-  author: string;
-  avatar: string;
   rating: number;
   createdAt: Date;
+  user: { username: string; name: string };
   translations: { locale: string; text: string }[];
 };
 
+/**
+ * Flatten a review row for the API: author identity comes live from the `user`
+ * relation, so the client can render an initial-or-photo avatar and link to
+ * the author's public profile.
+ */
 function toReview(row: ReviewRow, locale: Locale) {
-  const { translations, ...rest } = row;
-  return { ...rest, text: pickTranslation(translations, locale).text };
+  const { translations, user, ...rest } = row;
+  return {
+    ...rest,
+    author: user.name,
+    authorUsername: user.username,
+    text: pickTranslation(translations, locale).text,
+  };
 }
 
 @Injectable()
@@ -69,14 +71,10 @@ export class ReviewsService {
     dto: UpsertReviewDto,
     locale: Locale = DEFAULT_LOCALE,
   ) {
-    const [place, user, existing] = await Promise.all([
+    const [place, existing] = await Promise.all([
       this.prisma.place.findUnique({
         where: { id: placeId },
         select: { id: true, ratingCount: true, ratingBreakdown: true },
-      }),
-      this.prisma.user.findUnique({
-        where: { id: userId },
-        select: { name: true },
       }),
       this.prisma.review.findUnique({
         where: { userId_placeId: { userId, placeId } },
@@ -86,9 +84,6 @@ export class ReviewsService {
 
     if (!place) {
       throw new NotFoundException(`Place with id ${placeId} not found`);
-    }
-    if (!user) {
-      throw new NotFoundException(`User with id ${userId} not found`);
     }
 
     const breakdown = [...(place.ratingBreakdown as unknown as number[])];
@@ -106,7 +101,7 @@ export class ReviewsService {
 
     const average = averageFromBreakdown(breakdown);
     // The visitor writes in one language; store the same text under every
-    // locale so `pickTranslation` always resolves it, matching the seed shape.
+    // locale so `pickTranslation` always resolves it regardless of `?lang`.
     const translations = LOCALES.map((loc) => ({
       locale: loc,
       text: dto.text,
@@ -118,8 +113,6 @@ export class ReviewsService {
             where: { id: existing.id },
             data: {
               rating: dto.rating,
-              author: user.name,
-              avatar: avatarForUser(userId),
               createdAt: new Date(),
               translations: { deleteMany: {}, create: translations },
             },
@@ -130,8 +123,6 @@ export class ReviewsService {
               placeId,
               userId,
               rating: dto.rating,
-              author: user.name,
-              avatar: avatarForUser(userId),
               translations: { create: translations },
             },
             select: reviewSelect(locale),

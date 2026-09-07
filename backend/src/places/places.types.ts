@@ -15,8 +15,10 @@ export type Expectation = {
 
 export type Review = {
   id: number;
+  /** Display name, read live from the author's user record. */
   author: string;
-  avatar: string;
+  /** Author's handle — used to link the review to their public profile. */
+  authorUsername: string;
   rating: number;
   text: string;
   createdAt: Date;

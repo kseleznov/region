@@ -16,8 +16,10 @@ export interface Expectation {
 
 export interface Review {
   id: number;
+  /** Author's display name. */
   author: string;
-  avatar: string;
+  /** Author's handle — links the review to their public profile. */
+  authorUsername: string;
   rating: number;
   text: string;
   createdAt: string;

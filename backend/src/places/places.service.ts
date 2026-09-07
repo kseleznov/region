@@ -163,10 +163,9 @@ export class PlacesService {
         orderBy: { createdAt: 'desc' },
         select: {
           id: true,
-          author: true,
-          avatar: true,
           rating: true,
           createdAt: true,
+          user: { select: { username: true, name: true } },
           translations: {
             where: { locale: { in: localeCandidates(locale) } },
             select: { locale: true, text: true },
@@ -189,8 +188,10 @@ export class PlacesService {
       expectations: t.expectations,
       image: toAssetUrl(image),
       photos: (photos as string[]).map(toAssetUrl),
-      reviews: reviews.map(({ translations: reviewTr, ...review }) => ({
+      reviews: reviews.map(({ translations: reviewTr, user, ...review }) => ({
         ...review,
+        author: user.name,
+        authorUsername: user.username,
         text: pickTranslation(reviewTr, locale).text,
       })),
       similar: similar.map((item) =>

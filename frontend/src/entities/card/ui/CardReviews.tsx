@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import Link from "next/link";
 import { Star } from "lucide-react";
 import { formatRelativeTime } from "../model/formatRelativeTime";
+import { ROUTES } from "@/shared/config/routes";
 import { useTranslation } from "@/shared/i18n";
 import type { MyReview, RatingSummary, Review } from "@/shared/types/card";
 
@@ -16,6 +17,17 @@ interface CardReviewsProps {
   myReview?: MyReview | null;
   /** Open the review sheet. Omitted for guests, which hides the CTA. */
   onWriteReview?: () => void;
+}
+
+/** Author's initial on a purple tile — same treatment as the profile pages. */
+function ReviewAvatar({ name }: { name: string }) {
+  return (
+    <div className="w-10 h-10 rounded-full bg-brand-purple flex items-center justify-center flex-shrink-0">
+      <span className="text-sm font-bold text-white">
+        {name[0]?.toUpperCase() ?? "?"}
+      </span>
+    </div>
+  );
 }
 
 function ReviewStars({ rating }: { rating: number }) {
@@ -73,15 +85,17 @@ export function CardReviews({
 
       <div className="flex flex-col gap-3">
         {visibleReviews.map((review) => (
-          <article key={review.id} className="bg-dark/[0.03] rounded-2xl p-4">
+          <Link
+            key={review.id}
+            href={
+              review.id === myReview?.id
+                ? ROUTES.profile
+                : ROUTES.publicProfile(review.authorUsername)
+            }
+            className="block bg-dark/[0.03] rounded-2xl p-4 transition-colors hover:bg-dark/[0.06]"
+          >
             <div className="flex items-center gap-3 mb-2">
-              <Image
-                src={review.avatar}
-                alt={review.author}
-                width={40}
-                height={40}
-                className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-              />
+              <ReviewAvatar name={review.author} />
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-bold text-dark leading-tight truncate">
                   {review.author}
@@ -95,7 +109,7 @@ export function CardReviews({
             <p className="text-sm text-dark/80 leading-relaxed">
               {review.text}
             </p>
-          </article>
+          </Link>
         ))}
       </div>
 
