@@ -142,6 +142,7 @@ export const en = {
 
   overview: {
     whereToGo: "Where to go",
+    whereToEat: "Where to eat",
   },
 
   explore: {

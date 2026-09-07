@@ -57,6 +57,8 @@ model SavedPlace {
 
 model Place {
   id              Int                @id @default(autoincrement())
+  /// Which overview section the place belongs to: "attraction" (default) or "food".
+  kind            String             @default("attraction")
   category        String
   image           String
   photos          Json               @default("[]")

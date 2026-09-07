@@ -135,6 +135,7 @@ export const ru: Dictionary = {
 
   overview: {
     whereToGo: "Куда сходить",
+    whereToEat: "Где поесть",
   },
 
   explore: {

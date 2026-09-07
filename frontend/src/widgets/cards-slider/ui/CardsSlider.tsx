@@ -9,8 +9,12 @@ import { useTranslation } from "@/shared/i18n";
 import { useCardsSlider } from "../model/useCardsSlider";
 import type { CardSliderProps } from "../model/types";
 
-export function CardsSlider({ title, initialCards }: CardSliderProps) {
-  const { data: cards = [] } = usePlaces(initialCards);
+export function CardsSlider({
+  titleKey = "overview.whereToGo",
+  query,
+  initialCards,
+}: CardSliderProps) {
+  const { data: cards = [] } = usePlaces(initialCards, query);
   const { t } = useTranslation();
   const {
     selected,
@@ -24,6 +28,12 @@ export function CardsSlider({ title, initialCards }: CardSliderProps) {
     addTipForSelected,
   } = useCardsSlider();
 
+  // Nothing to show (e.g. a city with no places for this section) — skip it
+  // rather than render an empty titled block.
+  if (cards.length === 0) {
+    return null;
+  }
+
   return (
     <div className="mb-[70px]">
       <div
@@ -31,7 +41,7 @@ export function CardsSlider({ title, initialCards }: CardSliderProps) {
         onClick={viewMore}
       >
         <h1 className="text-[32px] leading-[1.05] font-extrabold">
-          {title ?? t("overview.whereToGo")}
+          {t(titleKey)}
         </h1>
         <div className="flex items-center gap-[12px]">
           <span className="text-brand-purple font-semibold text-[16px]">

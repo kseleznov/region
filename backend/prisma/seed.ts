@@ -210,6 +210,8 @@ function everyDay(value: string): WorkingHours {
 type PlaceSeed = {
   slug: string;
   category: string;
+  /** Overview section the place feeds. Defaults to 'attraction'. */
+  kind?: 'attraction' | 'food';
   stars: number;
   price: number;
   isOpen: boolean;
@@ -500,6 +502,187 @@ const PLACE_SEEDS: PlaceSeed[] = [
   },
 ];
 
+// Places for the "Where to eat" section of the overview page. Same shape as
+// PLACE_SEEDS, tagged with kind: 'food' so the API can serve them separately.
+const FOOD_PLACE_SEEDS: PlaceSeed[] = [
+  {
+    slug: 'pasteis-de-belem',
+    category: 'Пекарня',
+    kind: 'food',
+    stars: 4.6,
+    price: 2,
+    isOpen: true,
+    i18n: {
+      en: {
+        name: 'Pastéis de Belém',
+        description:
+          "The birthplace of the pastel de nata. Since 1837 this vast tiled café next to the Jerónimos Monastery has baked its custard tarts to a secret recipe passed down from the monastery's monks. The warm tarts arrive dusted with cinnamon and icing sugar; expect a queue for takeaway, but the maze of back rooms usually has a free table.",
+        address: 'R. de Belém 84-92, 1300-085 Lisboa',
+        workingHours: everyDay('08:00–23:00'),
+      },
+      ru: {
+        name: 'Паштейш-де-Белен',
+        description:
+          'Родина пирожного «паштел-де-ната». С 1837 года в этой огромной кафельной кондитерской рядом с монастырём Жеронимуш пекут заварные тарталетки по секретному рецепту, доставшемуся от монастырских монахов. Тёплые пирожные подают с корицей и сахарной пудрой; за едой навынос стоит очередь, но в лабиринте задних залов почти всегда найдётся свободный столик.',
+        address: 'R. de Belém 84-92, 1300-085 Lisboa',
+        workingHours: everyDay('08:00–23:00'),
+      },
+    },
+  },
+  {
+    slug: 'time-out-market',
+    category: 'Фудкорт',
+    kind: 'food',
+    stars: 4.4,
+    price: 20,
+    isOpen: true,
+    i18n: {
+      en: {
+        name: 'Time Out Market Lisboa',
+        description:
+          "A grand 19th-century market hall by the river, half of it turned into a curated food court. Around 40 kiosks bring together some of Lisbon's best chefs, bakeries and wine bars under one roof, with long shared tables down the middle. Busiest at lunch and in the early evening.",
+        address: 'Av. 24 de Julho 49, 1200-479 Lisboa',
+        workingHours: everyDay('10:00–24:00'),
+      },
+      ru: {
+        name: 'Тайм-Аут Маркет Лиссабон',
+        description:
+          'Величественный рыночный павильон XIX века у реки, половина которого превращена в тщательно подобранный фудкорт. Около 40 киосков собирают под одной крышей лучших шеф-поваров, пекарни и винные бары Лиссабона, а по центру стоят длинные общие столы. Больше всего народу в обед и ранним вечером.',
+        address: 'Av. 24 de Julho 49, 1200-479 Lisboa',
+        workingHours: everyDay('10:00–24:00'),
+      },
+    },
+  },
+  {
+    slug: 'cervejaria-ramiro',
+    category: 'Ресторан',
+    kind: 'food',
+    stars: 4.6,
+    price: 45,
+    isOpen: true,
+    i18n: {
+      en: {
+        name: 'Cervejaria Ramiro',
+        description:
+          'A Lisbon institution for seafood since 1956. Loud, bright and always packed, it serves tiger prawns, goose barnacles, clams and crab by weight, washed down with cold draught beer. Finish, as the locals do, with a prego — a garlicky steak sandwich — for dessert.',
+        address: 'Av. Almirante Reis 1, 1150-007 Lisboa',
+        workingHours: {
+          mon: CLOSED.en,
+          tue: '12:00–24:00',
+          wed: '12:00–24:00',
+          thu: '12:00–24:00',
+          fri: '12:00–24:00',
+          sat: '12:00–24:00',
+          sun: '12:00–24:00',
+        },
+      },
+      ru: {
+        name: 'Сервежария Рамиру',
+        description:
+          'Легендарная лиссабонская марискерия, работающая с 1956 года. Шумно, ярко и всегда полно людей: тигровые креветки, морские уточки, моллюски и крабов подают на вес и запивают холодным разливным пивом. На десерт, как это делают местные, — «прего», сэндвич с говядиной и чесноком.',
+        address: 'Av. Almirante Reis 1, 1150-007 Lisboa',
+        workingHours: {
+          mon: CLOSED.ru,
+          tue: '12:00–24:00',
+          wed: '12:00–24:00',
+          thu: '12:00–24:00',
+          fri: '12:00–24:00',
+          sat: '12:00–24:00',
+          sun: '12:00–24:00',
+        },
+      },
+    },
+  },
+  {
+    slug: 'a-cevicheria',
+    category: 'Ресторан',
+    kind: 'food',
+    stars: 4.5,
+    price: 30,
+    isOpen: true,
+    i18n: {
+      en: {
+        name: 'A Cevicheria',
+        description:
+          "Chef Kiko Martins's small Príncipe Real restaurant, instantly recognisable by the giant octopus hanging from the ceiling. The kitchen turns out inventive Peruvian-Portuguese ceviches and pisco sours. No reservations — put your name down and wait at the bar.",
+        address: 'R. Dom Pedro V 129, 1250-096 Lisboa',
+        workingHours: everyDay('12:00–24:00'),
+      },
+      ru: {
+        name: 'А Севишария',
+        description:
+          'Небольшой ресторан шефа Кико Мартинша в районе Принсипи-Реал, который сразу узнаёшь по гигантскому осьминогу под потолком. На кухне готовят изобретательные перуанско-португальские севиче и писко-сауэр. Столики не бронируют — оставьте имя и подождите у барной стойки.',
+        address: 'R. Dom Pedro V 129, 1250-096 Lisboa',
+        workingHours: everyDay('12:00–24:00'),
+      },
+    },
+  },
+  {
+    slug: 'manteigaria',
+    category: 'Кондитерская',
+    kind: 'food',
+    stars: 4.7,
+    price: 2,
+    isOpen: true,
+    i18n: {
+      en: {
+        name: 'Manteigaria',
+        description:
+          'A tiny counter in Chiado devoted to a single thing: the pastel de nata, baked in full view every few minutes. The tarts come out with a blistered, caramelised top and a still-warm centre. Order at the marble bar, and ring the bell if it lives up to the hype.',
+        address: 'R. do Loreto 2, 1200-108 Lisboa',
+        workingHours: everyDay('08:00–24:00'),
+      },
+      ru: {
+        name: 'Мантейгария',
+        description:
+          'Крошечная кондитерская в Шиаду, посвящённая одному-единственному делу — пирожному «паштел-де-ната», которое выпекают на глазах у посетителей каждые несколько минут. Тарталетки выходят с карамельной корочкой и ещё тёплой серединкой. Заказывайте у мраморной стойки и звоните в колокольчик, если оправдало ожидания.',
+        address: 'R. do Loreto 2, 1200-108 Lisboa',
+        workingHours: everyDay('08:00–24:00'),
+      },
+    },
+  },
+  {
+    slug: 'taberna-rua-das-flores',
+    category: 'Ресторан',
+    kind: 'food',
+    stars: 4.6,
+    price: 25,
+    isOpen: false,
+    i18n: {
+      en: {
+        name: 'Taberna da Rua das Flores',
+        description:
+          "A cramped, candle-lit tavern on a pretty Chiado street, with the day's dishes chalked on a board and no bookings taken. The cooking is petiscos — Portuguese small plates — reworked from old regional recipes and changing daily. Come early or late to skip the wait.",
+        address: 'R. das Flores 103, 1200-194 Lisboa',
+        workingHours: {
+          mon: '12:00–23:00',
+          tue: '12:00–23:00',
+          wed: '12:00–23:00',
+          thu: '12:00–23:00',
+          fri: '12:00–23:00',
+          sat: '12:00–23:00',
+          sun: CLOSED.en,
+        },
+      },
+      ru: {
+        name: 'Таберна да Руа даш Флореш',
+        description:
+          'Тесная таверна при свечах на живописной улице в Шиаду: блюда дня пишут мелом на доске, брони нет. Кухня — петишкуш, португальские закуски, переосмысленные по старым региональным рецептам и меняющиеся каждый день. Приходите пораньше или попозже, чтобы не стоять в очереди.',
+        address: 'R. das Flores 103, 1200-194 Lisboa',
+        workingHours: {
+          mon: '12:00–23:00',
+          tue: '12:00–23:00',
+          wed: '12:00–23:00',
+          thu: '12:00–23:00',
+          fri: '12:00–23:00',
+          sat: '12:00–23:00',
+          sun: CLOSED.ru,
+        },
+      },
+    },
+  },
+];
+
 function placeTranslationRows(seed: PlaceSeed) {
   return LOCALES.map((locale) => {
     const text = seed.i18n[locale];
@@ -563,9 +746,12 @@ async function main() {
     },
   });
 
-  for (const [index, seed] of PLACE_SEEDS.entries()) {
+  const allPlaceSeeds = [...PLACE_SEEDS, ...FOOD_PLACE_SEEDS];
+
+  for (const [index, seed] of allPlaceSeeds.entries()) {
     await prisma.place.create({
       data: {
+        kind: seed.kind ?? 'attraction',
         category: seed.category,
         stars: seed.stars,
         price: seed.price,
@@ -580,7 +766,7 @@ async function main() {
   }
 
   console.log(
-    `Seeded ${PLACE_SEEDS.length} places and 1 city in ${LOCALES.join('/')}`,
+    `Seeded ${allPlaceSeeds.length} places (${FOOD_PLACE_SEEDS.length} food) and 1 city in ${LOCALES.join('/')}`,
   );
 }
 

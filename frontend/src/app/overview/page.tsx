@@ -10,10 +10,14 @@ import { getServerLocale } from "@/shared/i18n/getServerLocale";
 export default async function Overview() {
   const cookieStore = await cookies();
   const locale = await getServerLocale();
-  const whereToGo = await placeApi.getAll(undefined, {
+  const requestOptions = {
     lang: locale,
     cookieHeader: cookieStore.toString(),
-  });
+  };
+  const [whereToGo, whereToEat] = await Promise.all([
+    placeApi.getAll(undefined, requestOptions),
+    placeApi.getAll({ kind: "food" }, requestOptions),
+  ]);
 
   return (
     <>
@@ -23,6 +27,11 @@ export default async function Overview() {
       </div>
       <CityInfo />
       <CardsSlider initialCards={whereToGo} />
+      <CardsSlider
+        titleKey="overview.whereToEat"
+        query={{ kind: "food" }}
+        initialCards={whereToEat}
+      />
       <CityFacts />
     </>
   );
