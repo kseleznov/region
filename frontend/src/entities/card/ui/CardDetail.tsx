@@ -40,8 +40,6 @@ export function CardDetail({
     setHoursOpen,
     descExpanded,
     setDescExpanded,
-    expanded,
-    setExpanded,
     shareMenuOpen,
     setShareMenuOpen,
     tipSheetOpen,
@@ -243,37 +241,32 @@ export function CardDetail({
               </div>
             )}
 
-            <div className={expanded ? "mb-8" : ""}>
+            <div className="mb-8">
               <div className="text-xs font-bold text-dark/50 uppercase tracking-wider mb-2 px-1">
                 {t("card.location")}
               </div>
               <MiniMap address={card.address} />
             </div>
 
-            {expanded && (
-              <div className="[&>section:last-child]:mb-0">
-                {!!card.expectations?.length && (
-                  <CardExpectations items={card.expectations} />
-                )}
-                {card.ratingSummary && card.reviews?.length ? (
-                  <CardReviews
-                    summary={card.ratingSummary}
-                    reviews={card.reviews}
-                  />
-                ) : null}
-                {!!card.similar?.length && (
-                  <CardSimilar
-                    places={card.similar}
-                    onSelect={onSelectSimilar}
-                  />
-                )}
-              </div>
-            )}
+            <div className="[&>section:last-child]:mb-0">
+              {!!card.expectations?.length && (
+                <CardExpectations items={card.expectations} />
+              )}
+              {card.ratingSummary && card.reviews?.length ? (
+                <CardReviews
+                  summary={card.ratingSummary}
+                  reviews={card.reviews}
+                />
+              ) : null}
+              {!!card.similar?.length && (
+                <CardSimilar places={card.similar} onSelect={onSelectSimilar} />
+              )}
+            </div>
           </div>
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 px-6 pb-6 pt-3 bg-gradient-to-t from-white via-white to-white/0">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center gap-3">
             <button
               onClick={onToggleSave}
               aria-label={t(isSaved ? "card.aria.unsave" : "card.aria.save")}
@@ -329,15 +322,6 @@ export function CardDetail({
                 }}
               />
             </div>
-
-            <button
-              onClick={() => setExpanded((v) => !v)}
-              className="flex-1 h-14 rounded-full bg-dark text-white font-bold flex items-center justify-center gap-2 hover:bg-black active:scale-[0.98] transition-all"
-            >
-              <span>
-                {expanded ? t("common.showLess") : t("common.readMore")}
-              </span>
-            </button>
           </div>
         </div>
       </motion.div>

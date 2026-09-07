@@ -6,7 +6,6 @@ import type { UseCardProps } from "./types";
 export function useCard({ card }: UseCardProps) {
   const [hoursOpen, setHoursOpen] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
-  const [expanded, setExpanded] = useState(false);
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
   const [tipSheetOpen, setTipSheetOpen] = useState(false);
 
@@ -41,8 +40,6 @@ export function useCard({ card }: UseCardProps) {
     setHoursOpen,
     descExpanded,
     setDescExpanded,
-    expanded,
-    setExpanded,
     shareMenuOpen,
     setShareMenuOpen,
     tipSheetOpen,

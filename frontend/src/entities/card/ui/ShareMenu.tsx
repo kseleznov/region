@@ -27,10 +27,10 @@ export function ShareMenu({
           onClose();
         }}
       />
-      <div className="absolute bottom-full left-0 mb-3 z-50 w-max rounded-2xl bg-white shadow-[0_8px_32px_rgba(0,0,0,0.16)] overflow-hidden">
+      <div className="absolute bottom-full right-0 mb-3 z-50 w-max rounded-2xl bg-white shadow-[0_8px_32px_rgba(0,0,0,0.16)] overflow-hidden">
         <button
           onClick={onShare}
-          className="flex w-full items-center gap-2 px-3.5 py-2.5 whitespace-nowrap hover:bg-dark/[0.03] transition-colors"
+          className="flex w-full items-center justify-start gap-2 px-3.5 py-2.5 whitespace-nowrap hover:bg-dark/[0.03] transition-colors"
         >
           <Share2
             className="w-3.5 h-3.5 text-dark flex-shrink-0"
@@ -42,7 +42,7 @@ export function ShareMenu({
         </button>
         <button
           onClick={onAddTip}
-          className="flex w-full items-center gap-2 px-3.5 py-2.5 whitespace-nowrap border-t border-dark/[0.06] hover:bg-dark/[0.03] transition-colors"
+          className="flex w-full items-center justify-start gap-2 px-3.5 py-2.5 whitespace-nowrap border-t border-dark/[0.06] hover:bg-dark/[0.03] transition-colors"
         >
           <Lightbulb
             className="w-3.5 h-3.5 text-dark flex-shrink-0"
