@@ -16,6 +16,7 @@ export function usePublicProfile(username: string) {
     string | null
   >(null);
   const [selectedTab, setSelectedTab] = useState<ProfileTab>("tips");
+  const [unfollowConfirmOpen, setUnfollowConfirmOpen] = useState(false);
 
   const cities = useMemo(() => profile?.cities ?? [], [profile]);
   const selectedCitySlug = selectedCitySlugOverride ?? cities[0]?.citySlug;
@@ -30,8 +31,21 @@ export function usePublicProfile(username: string) {
     0,
   );
 
-  function toggleFollow() {
+  function requestToggleFollow() {
+    if (profile?.isFollowing) {
+      setUnfollowConfirmOpen(true);
+      return;
+    }
     toggleFollowMutation(username);
+  }
+
+  function confirmUnfollow() {
+    toggleFollowMutation(username);
+    setUnfollowConfirmOpen(false);
+  }
+
+  function cancelUnfollow() {
+    setUnfollowConfirmOpen(false);
   }
 
   return {
@@ -46,6 +60,9 @@ export function usePublicProfile(username: string) {
     setSelectedCitySlug: setSelectedCitySlugOverride,
     selectedTab,
     setSelectedTab,
-    toggleFollow,
+    toggleFollow: requestToggleFollow,
+    unfollowConfirmOpen,
+    confirmUnfollow,
+    cancelUnfollow,
   };
 }

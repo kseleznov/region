@@ -2,6 +2,7 @@
 
 import { AnimatePresence } from "framer-motion";
 import { useTranslation } from "@/shared/i18n";
+import { ConfirmDialog } from "@/shared/ui";
 import { usePublicProfile } from "../model/usePublicProfile";
 import { usePlaceDetail } from "../model/usePlaceDetail";
 import { ProfileTopBar } from "./ProfileTopBar";
@@ -31,6 +32,9 @@ export function PublicProfile({ username }: PublicProfileProps) {
     selectedTab,
     setSelectedTab,
     toggleFollow,
+    unfollowConfirmOpen,
+    confirmUnfollow,
+    cancelUnfollow,
   } = usePublicProfile(username);
 
   const {
@@ -117,6 +121,17 @@ export function PublicProfile({ username }: PublicProfileProps) {
           />
         )}
       </AnimatePresence>
+
+      <ConfirmDialog
+        isOpen={unfollowConfirmOpen}
+        title={t("publicProfile.unfollowConfirm.title", { name: profile.name })}
+        description={t("publicProfile.unfollowConfirm.description")}
+        confirmLabel={t("publicProfile.unfollowConfirm.confirm")}
+        cancelLabel={t("common.cancel")}
+        onConfirm={confirmUnfollow}
+        onCancel={cancelUnfollow}
+        variant="danger"
+      />
     </div>
   );
 }

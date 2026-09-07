@@ -13,6 +13,7 @@ export const ru: Dictionary = {
     retry: "Повторить",
     close: "Закрыть",
     loading: "Загрузка...",
+    cancel: "Отмена",
   },
 
   metadata: {
@@ -69,6 +70,11 @@ export const ru: Dictionary = {
       },
       unfollow: "Отписаться",
       empty: "Пока никого нет",
+      unfollowConfirm: {
+        title: "Отписаться от {name}?",
+        description: "Вы всегда сможете подписаться снова.",
+        confirm: "Отписаться",
+      },
     },
     myTips: {
       title: "Мои рекомендации",
@@ -305,6 +311,11 @@ export const ru: Dictionary = {
     noTipsYet: "Рекомендаций пока нет",
     noVisitedYet: "Посещённых мест пока нет",
     notFound: "Такого профиля не существует",
+    unfollowConfirm: {
+      title: "Отписаться от {name}?",
+      description: "Вы всегда сможете подписаться снова.",
+      confirm: "Отписаться",
+    },
     aria: {
       back: "Назад",
       menu: "Ещё",

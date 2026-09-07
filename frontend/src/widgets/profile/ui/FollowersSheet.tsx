@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/shared/lib/cn";
 import { ROUTES } from "@/shared/config/routes";
 import { useTranslation } from "@/shared/i18n";
+import { ConfirmDialog } from "@/shared/ui";
 import { useResetOnOpen } from "../model/useResetOnOpen";
 import type { FollowedUser } from "@/entities/user";
 import type { FollowersTab } from "../model/types";
@@ -57,10 +58,20 @@ export function FollowersSheet({
 }: FollowersSheetProps) {
   const { t } = useTranslation();
   const [tab, setTab] = useState<FollowersTab>(initialTab);
+  const [personToUnfollow, setPersonToUnfollow] = useState<FollowedUser | null>(
+    null,
+  );
 
   useResetOnOpen(isOpen, () => setTab(initialTab));
 
   const list = tab === "followers" ? followers : following;
+
+  function confirmUnfollow() {
+    if (personToUnfollow) {
+      onUnfollow(personToUnfollow.username);
+    }
+    setPersonToUnfollow(null);
+  }
 
   return (
     <AnimatePresence>
@@ -113,7 +124,7 @@ export function FollowersSheet({
                     action={
                       tab === "following" ? (
                         <button
-                          onClick={() => onUnfollow(person.username)}
+                          onClick={() => setPersonToUnfollow(person)}
                           className="flex-shrink-0 rounded-full border border-dark/10 px-3.5 py-2 text-xs font-bold text-dark"
                         >
                           {t("profile.followersSheet.unfollow")}
@@ -124,6 +135,21 @@ export function FollowersSheet({
                 ))
               )}
             </div>
+
+            <ConfirmDialog
+              isOpen={personToUnfollow !== null}
+              title={t("profile.followersSheet.unfollowConfirm.title", {
+                name: personToUnfollow?.name ?? "",
+              })}
+              description={t(
+                "profile.followersSheet.unfollowConfirm.description",
+              )}
+              confirmLabel={t("profile.followersSheet.unfollowConfirm.confirm")}
+              cancelLabel={t("common.cancel")}
+              onConfirm={confirmUnfollow}
+              onCancel={() => setPersonToUnfollow(null)}
+              variant="danger"
+            />
           </motion.div>
         </motion.div>
       )}

@@ -19,6 +19,7 @@ export const en = {
     retry: "Try again",
     close: "Close",
     loading: "Loading...",
+    cancel: "Cancel",
   },
 
   metadata: {
@@ -75,6 +76,11 @@ export const en = {
       },
       unfollow: "Unfollow",
       empty: "Nobody here yet",
+      unfollowConfirm: {
+        title: "Unfollow {name}?",
+        description: "You can follow them again anytime.",
+        confirm: "Unfollow",
+      },
     },
     myTips: {
       title: "My recommendations",
@@ -312,6 +318,11 @@ export const en = {
     noTipsYet: "No recommendations yet",
     noVisitedYet: "No visited places yet",
     notFound: "This profile doesn't exist",
+    unfollowConfirm: {
+      title: "Unfollow {name}?",
+      description: "You can follow them again anytime.",
+      confirm: "Unfollow",
+    },
     aria: {
       back: "Back",
       menu: "More options",
