@@ -72,16 +72,6 @@ export function CityCard({
         </div>
       )}
 
-      <div className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1.5 backdrop-blur-sm">
-        <WeatherIcon
-          condition={weather.condition}
-          className="h-4 w-4 text-white"
-        />
-        <span className="text-sm font-medium text-white">
-          {weather.temperature}°
-        </span>
-      </div>
-
       <div className="absolute bottom-4 left-4">
         <p className="text-2xl font-bold text-white leading-tight">
           {cityName(name)}
