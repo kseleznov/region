@@ -22,6 +22,13 @@ export type Review = {
   createdAt: Date;
 };
 
+/** The requesting visitor's own review for a place, if they've left one. */
+export type MyReview = {
+  id: number;
+  rating: number;
+  text: string;
+};
+
 export type RatingSummary = {
   average: number;
   total: number;

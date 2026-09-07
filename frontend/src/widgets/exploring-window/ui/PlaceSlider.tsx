@@ -91,6 +91,7 @@ export function PlaceSlider({
     toggleSaveSelected,
     toggleVisitSelected,
     addTipForSelected,
+    submitReviewForSelected,
   } = usePlaceSliderUI({
     categoryIndex,
     totalCategories,
@@ -166,6 +167,7 @@ export function PlaceSlider({
             onToggleVisit={toggleVisitSelected}
             onSelectSimilar={handleCardSelect}
             onAddTip={addTipForSelected}
+            onSubmitReview={submitReviewForSelected}
           />
         )}
       </AnimatePresence>

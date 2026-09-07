@@ -22,6 +22,7 @@ export function CardsSlider({ title, initialCards }: CardSliderProps) {
     toggleSaveSelected,
     toggleVisitSelected,
     addTipForSelected,
+    submitReviewForSelected,
   } = useCardsSlider();
 
   return (
@@ -71,6 +72,7 @@ export function CardsSlider({ title, initialCards }: CardSliderProps) {
             onToggleVisit={toggleVisitSelected}
             onSelectSimilar={handleCardClick}
             onAddTip={addTipForSelected}
+            onSubmitReview={submitReviewForSelected}
           />
         )}
       </AnimatePresence>

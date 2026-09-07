@@ -1,8 +1,12 @@
-import type { ICard } from "@/shared/types/card";
+import type { ICard, Review } from "@/shared/types/card";
 import { Category } from "@/shared/types/category";
 import { apiClient } from "@/shared/api/axios";
 import type { Locale } from "@/shared/i18n";
-import type { PlacesQuery } from "../model/types";
+import type {
+  PlacesQuery,
+  ReviewInput,
+  ReviewMutationResult,
+} from "../model/types";
 
 interface RequestOptions {
   /** Content language for translated fields (name, description, …). */
@@ -66,6 +70,25 @@ export const placeApi = {
   toggleVisit: async (id: number): Promise<{ isVisited: boolean }> => {
     const { data } = await apiClient.patch<{ isVisited: boolean }>(
       `/places/${id}/visit`,
+    );
+    return data;
+  },
+
+  /** Create or replace the visitor's single review for a place. */
+  upsertReview: async (
+    placeId: number,
+    input: ReviewInput,
+    lang?: Locale,
+  ): Promise<ReviewMutationResult & { review: Review }> => {
+    const { data } = await apiClient.post<
+      ReviewMutationResult & { review: Review }
+    >(`/places/${placeId}/reviews`, input, buildConfig({}, { lang }));
+    return data;
+  },
+
+  deleteMyReview: async (placeId: number): Promise<ReviewMutationResult> => {
+    const { data } = await apiClient.delete<ReviewMutationResult>(
+      `/places/${placeId}/reviews/mine`,
     );
     return data;
   },

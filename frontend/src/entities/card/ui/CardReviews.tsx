@@ -5,13 +5,17 @@ import Image from "next/image";
 import { Star } from "lucide-react";
 import { formatRelativeTime } from "../model/formatRelativeTime";
 import { useTranslation } from "@/shared/i18n";
-import type { RatingSummary, Review } from "@/shared/types/card";
+import type { MyReview, RatingSummary, Review } from "@/shared/types/card";
 
 const VISIBLE_BY_DEFAULT = 2;
 
 interface CardReviewsProps {
   summary: RatingSummary;
   reviews: Review[];
+  /** The signed-in visitor's own review, if any — switches the CTA to "edit". */
+  myReview?: MyReview | null;
+  /** Open the review sheet. Omitted for guests, which hides the CTA. */
+  onWriteReview?: () => void;
 }
 
 function ReviewStars({ rating }: { rating: number }) {
@@ -29,11 +33,15 @@ function ReviewStars({ rating }: { rating: number }) {
   );
 }
 
-export function CardReviews({ summary, reviews }: CardReviewsProps) {
+export function CardReviews({
+  summary,
+  reviews,
+  myReview,
+  onWriteReview,
+}: CardReviewsProps) {
   const { t, locale } = useTranslation();
   const [showAll, setShowAll] = useState(false);
 
-  const maxCount = Math.max(...summary.breakdown, 1);
   const visibleReviews = showAll
     ? reviews
     : reviews.slice(0, VISIBLE_BY_DEFAULT);
@@ -52,6 +60,16 @@ export function CardReviews({ summary, reviews }: CardReviewsProps) {
           ({summary.total.toLocaleString(locale)})
         </p>
       </div>
+
+      {onWriteReview && (
+        <button
+          onClick={onWriteReview}
+          className="mb-3 flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dark/10 py-3 text-sm font-bold text-dark transition-colors hover:border-dark/30"
+        >
+          <Star className="h-4 w-4 fill-brand-yellow text-brand-yellow" />
+          {myReview ? t("card.editYourReview") : t("card.writeReview")}
+        </button>
+      )}
 
       <div className="flex flex-col gap-3">
         {visibleReviews.map((review) => (

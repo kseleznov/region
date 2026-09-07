@@ -8,6 +8,7 @@ export function useCard({ card }: UseCardProps) {
   const [descExpanded, setDescExpanded] = useState(false);
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
   const [tipSheetOpen, setTipSheetOpen] = useState(false);
+  const [reviewSheetOpen, setReviewSheetOpen] = useState(false);
 
   useEffect(() => {
     const original = document.body.style.overflow;
@@ -44,6 +45,8 @@ export function useCard({ card }: UseCardProps) {
     setShareMenuOpen,
     tipSheetOpen,
     setTipSheetOpen,
+    reviewSheetOpen,
+    setReviewSheetOpen,
     photos,
     isLongDesc,
     closingTime,

@@ -30,6 +30,13 @@ export interface RatingSummary {
   breakdown: number[];
 }
 
+/** The signed-in visitor's own review for a place, if they've left one. */
+export interface MyReview {
+  id: number;
+  rating: number;
+  text: string;
+}
+
 export interface ICard {
   id?: number;
   image: string;
@@ -48,6 +55,8 @@ export interface ICard {
   expectations?: Expectation[];
   reviews?: Review[];
   ratingSummary?: RatingSummary;
+  /** The signed-in visitor's own review, `null` if they haven't left one. */
+  myReview?: MyReview | null;
   similar?: ICard[];
 }
 

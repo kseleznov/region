@@ -204,19 +204,41 @@ export class PlacesService {
     };
 
     if (!userId) {
-      return { ...detail, isSaved: false, isVisited: false };
+      return { ...detail, isSaved: false, isVisited: false, myReview: null };
     }
 
-    const [saved, visited] = await Promise.all([
+    const [saved, visited, myReview] = await Promise.all([
       this.prisma.savedPlace.findUnique({
         where: { userId_placeId: { userId, placeId: id } },
       }),
       this.prisma.visitedPlace.findUnique({
         where: { userId_placeId: { userId, placeId: id } },
       }),
+      this.prisma.review.findUnique({
+        where: { userId_placeId: { userId, placeId: id } },
+        select: {
+          id: true,
+          rating: true,
+          translations: {
+            where: { locale: { in: localeCandidates(locale) } },
+            select: { locale: true, text: true },
+          },
+        },
+      }),
     ]);
 
-    return { ...detail, isSaved: saved !== null, isVisited: visited !== null };
+    return {
+      ...detail,
+      isSaved: saved !== null,
+      isVisited: visited !== null,
+      myReview: myReview
+        ? {
+            id: myReview.id,
+            rating: myReview.rating,
+            text: pickTranslation(myReview.translations, locale).text,
+          }
+        : null,
+    };
   }
 
   async getCategories() {

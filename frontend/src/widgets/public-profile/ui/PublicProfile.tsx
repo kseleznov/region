@@ -48,6 +48,7 @@ export function PublicProfile({ username }: PublicProfileProps) {
     toggleSaveSelected,
     toggleVisitSelected,
     addTipForSelected,
+    submitReviewForSelected,
   } = usePlaceDetail();
 
   if (isLoading) {
@@ -120,6 +121,7 @@ export function PublicProfile({ username }: PublicProfileProps) {
             onToggleVisit={toggleVisitSelected}
             onSelectSimilar={selectSimilar}
             onAddTip={addTipForSelected}
+            onSubmitReview={submitReviewForSelected}
           />
         )}
       </AnimatePresence>

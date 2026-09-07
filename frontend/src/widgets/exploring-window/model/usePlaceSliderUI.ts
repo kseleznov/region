@@ -6,6 +6,7 @@ import { useToggleSave } from "@/features/save-card";
 import { useToggleVisit } from "@/features/visit-card";
 import { useAuthStore } from "@/features/auth";
 import { useAddTip } from "@/features/tips";
+import { applyReviewResult, useUpsertReview } from "@/features/add-review";
 import { placeApi } from "@/entities/place";
 import { ROUTES } from "@/shared/config/routes";
 import { useLocale } from "@/shared/i18n";
@@ -30,6 +31,7 @@ export function usePlaceSliderUI({
   const { mutate: toggleSave } = useToggleSave();
   const { mutate: toggleVisit } = useToggleVisit();
   const { mutate: addTip } = useAddTip();
+  const { mutate: upsertReview } = useUpsertReview();
   const user = useAuthStore((state) => state.user);
   const router = useRouter();
   const locale = useLocale();
@@ -187,6 +189,28 @@ export function usePlaceSliderUI({
     addTip({ placeId: selected.card.id, note });
   }
 
+  function submitReviewForSelected(input: { rating: number; text: string }) {
+    if (!requireAuth() || !selected?.card.id) {
+      return;
+    }
+
+    upsertReview(
+      {
+        placeId: selected.card.id,
+        rating: input.rating,
+        text: input.text,
+        isUpdate: Boolean(selected.card.myReview),
+      },
+      {
+        onSuccess: (result) =>
+          setSelected(
+            (prev) =>
+              prev && { ...prev, card: applyReviewResult(prev.card, result) },
+          ),
+      },
+    );
+  }
+
   return {
     selected,
     setSelected,
@@ -202,5 +226,6 @@ export function usePlaceSliderUI({
     toggleSaveSelected,
     toggleVisitSelected,
     addTipForSelected,
+    submitReviewForSelected,
   };
 }

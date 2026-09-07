@@ -5,4 +5,8 @@ export {
   filteredPlacesKey,
 } from "./model/useFilteredPlaces";
 export { useCategories, categoriesKey } from "./model/useCategories";
-export type { PlacesQuery } from "./model/types";
+export type {
+  PlacesQuery,
+  ReviewInput,
+  ReviewMutationResult,
+} from "./model/types";

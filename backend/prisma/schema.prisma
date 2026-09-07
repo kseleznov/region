@@ -17,6 +17,7 @@ model User {
   savedPlaces   SavedPlace[]
   visitedPlaces VisitedPlace[]
   tips          Tip[]
+  reviews       Review[]
   following     Follow[]       @relation("Following")
   followers     Follow[]       @relation("Followers")
 }
@@ -92,11 +93,17 @@ model Review {
   id           Int                 @id @default(autoincrement())
   place        Place               @relation(fields: [placeId], references: [id])
   placeId      Int
+  /// Author of a visitor-submitted review. Null for the language-neutral
+  /// reviews created by the seed script.
+  user         User?               @relation(fields: [userId], references: [id])
+  userId       Int?
   author       String
   avatar       String
   rating       Int
   createdAt    DateTime            @default(now())
   translations ReviewTranslation[]
+
+  @@unique([userId, placeId])
 }
 
 /// Per-locale body text for a Review. The author name stays language-neutral.
