@@ -30,7 +30,11 @@ export function Header() {
         priority
       />
       <div className="flex items-center gap-4">
-        <RankBadge userProgress={userProgress} />
+        {/* -mr offsets RankBadge's larger (w-16) box so its visual gap to the
+            bell matches the bell↔city gap under the uniform gap-4 */}
+        <div className="-mr-2.5">
+          <RankBadge userProgress={userProgress} />
+        </div>
         {isAuthenticated && (
           <button
             type="button"
