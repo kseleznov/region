@@ -21,7 +21,7 @@ export function Header() {
   const cityName = useCityName();
 
   return (
-    <header className="flex justify-between px-[16px] py-[24px]">
+    <header className="flex justify-between px-[16px] py-[16px]">
       <Image
         src="/logo.svg"
         alt="circle text"
