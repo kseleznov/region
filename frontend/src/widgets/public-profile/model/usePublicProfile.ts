@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { usePublicProfile as usePublicProfileQuery } from "@/entities/user";
 import { useToggleFollow } from "@/features/follow-user";
 import { useAuthStore } from "@/features/auth";
+import { shareContent } from "@/shared/lib/share";
 
 export type ProfileTab = "tips" | "visited";
 
@@ -48,6 +49,16 @@ export function usePublicProfile(username: string) {
     setUnfollowConfirmOpen(false);
   }
 
+  function handleShare() {
+    if (!profile) return;
+
+    return shareContent({
+      title: profile.name,
+      text: profile.bio || `@${profile.username}`,
+      url: window.location.href,
+    });
+  }
+
   return {
     profile,
     isLoading,
@@ -64,5 +75,6 @@ export function usePublicProfile(username: string) {
     unfollowConfirmOpen,
     confirmUnfollow,
     cancelUnfollow,
+    handleShare,
   };
 }

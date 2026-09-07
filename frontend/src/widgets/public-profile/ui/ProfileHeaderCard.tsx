@@ -10,6 +10,7 @@ interface ProfileHeaderCardProps {
   citiesCount: number;
   isOwnProfile: boolean;
   onToggleFollow: () => void;
+  onShare: () => void;
 }
 
 export function ProfileHeaderCard({
@@ -17,12 +18,14 @@ export function ProfileHeaderCard({
   citiesCount,
   isOwnProfile,
   onToggleFollow,
+  onShare,
 }: ProfileHeaderCardProps) {
   const { t } = useTranslation();
 
   return (
     <div className="relative bg-brand-purple rounded-3xl p-5 flex flex-col gap-4">
       <button
+        onClick={onShare}
         aria-label={t("card.aria.share")}
         className="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/20 flex items-center justify-center"
       >

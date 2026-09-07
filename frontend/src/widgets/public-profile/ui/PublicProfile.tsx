@@ -35,6 +35,7 @@ export function PublicProfile({ username }: PublicProfileProps) {
     unfollowConfirmOpen,
     confirmUnfollow,
     cancelUnfollow,
+    handleShare,
   } = usePublicProfile(username);
 
   const {
@@ -79,6 +80,7 @@ export function PublicProfile({ username }: PublicProfileProps) {
         citiesCount={cities.length}
         isOwnProfile={isOwnProfile}
         onToggleFollow={toggleFollow}
+        onShare={handleShare}
       />
 
       <CitySelector
