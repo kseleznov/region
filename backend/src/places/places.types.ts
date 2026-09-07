@@ -15,11 +15,20 @@ export type Expectation = {
 
 export type Review = {
   id: number;
+  /** Display name, read live from the author's user record. */
   author: string;
-  avatar: string;
+  /** Author's handle — used to link the review to their public profile. */
+  authorUsername: string;
   rating: number;
   text: string;
   createdAt: Date;
+};
+
+/** The requesting visitor's own review for a place, if they've left one. */
+export type MyReview = {
+  id: number;
+  rating: number;
+  text: string;
 };
 
 export type RatingSummary = {

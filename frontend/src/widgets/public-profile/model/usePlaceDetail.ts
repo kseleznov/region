@@ -6,6 +6,8 @@ import { placeApi } from "@/entities/place";
 import { useToggleSave } from "@/features/save-card";
 import { useToggleVisit } from "@/features/visit-card";
 import { useAddTip } from "@/features/tips";
+import { applyReviewResult, useAddReview } from "@/features/add-review";
+import { applyReviewRemoval, useDeleteReview } from "@/features/delete-review";
 import { useAuthStore } from "@/features/auth";
 import { ROUTES } from "@/shared/config/routes";
 import { useLocale } from "@/shared/i18n";
@@ -16,6 +18,8 @@ export function usePlaceDetail() {
   const { mutate: toggleSave } = useToggleSave();
   const { mutate: toggleVisit } = useToggleVisit();
   const { mutate: addTip } = useAddTip();
+  const { mutate: addReview } = useAddReview();
+  const { mutate: deleteReview } = useDeleteReview();
   const user = useAuthStore((state) => state.user);
   const router = useRouter();
   const locale = useLocale();
@@ -90,6 +94,41 @@ export function usePlaceDetail() {
     addTip({ placeId: selected.card.id, note });
   }
 
+  function submitReviewForSelected(input: { rating: number; text: string }) {
+    if (!requireAuth() || !selected?.card.id) {
+      return;
+    }
+
+    addReview(
+      {
+        placeId: selected.card.id,
+        rating: input.rating,
+        text: input.text,
+      },
+      {
+        onSuccess: (result) =>
+          setSelected(
+            (prev) =>
+              prev && { ...prev, card: applyReviewResult(prev.card, result) },
+          ),
+      },
+    );
+  }
+
+  function deleteReviewForSelected() {
+    if (!requireAuth() || !selected?.card.id) {
+      return;
+    }
+
+    deleteReview(selected.card.id, {
+      onSuccess: (result) =>
+        setSelected(
+          (prev) =>
+            prev && { ...prev, card: applyReviewRemoval(prev.card, result) },
+        ),
+    });
+  }
+
   return {
     selected,
     isSelectedSaved: selected?.card.isSaved ?? false,
@@ -100,5 +139,7 @@ export function usePlaceDetail() {
     toggleSaveSelected,
     toggleVisitSelected,
     addTipForSelected,
+    submitReviewForSelected,
+    deleteReviewForSelected,
   };
 }

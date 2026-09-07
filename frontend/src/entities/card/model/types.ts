@@ -18,6 +18,13 @@ export interface CardDetailProps {
   onSelectSimilar: (card: ICard, rect: DOMRect) => void;
   /** Save a personal note about this place to the visitor's public tips list. */
   onAddTip: (note: string) => void;
+  /**
+   * Post the visitor's rating + comment for this place. Omitted where the host
+   * doesn't wire reviewing, which hides the "write a review" CTA.
+   */
+  onSubmitReview?: (input: { rating: number; text: string }) => void;
+  /** Retract the visitor's own review. Omitted → no delete button shown. */
+  onDeleteReview?: () => void;
 }
 
 export interface UseCardProps {

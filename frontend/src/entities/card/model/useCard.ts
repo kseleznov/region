@@ -8,12 +8,17 @@ export function useCard({ card }: UseCardProps) {
   const [descExpanded, setDescExpanded] = useState(false);
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
   const [tipSheetOpen, setTipSheetOpen] = useState(false);
+  const [reviewSheetOpen, setReviewSheetOpen] = useState(false);
 
+  // Lock page scroll while the detail sheet is up. Restore to "" (not a
+  // captured previous value) on cleanup: the sheet can be opened over a
+  // surface that already locked the body (exploring / saved), and restoring
+  // their stale "hidden" here would leave the next page — e.g. an author's
+  // profile opened from a review link — unscrollable.
   useEffect(() => {
-    const original = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = original;
+      document.body.style.overflow = "";
     };
   }, []);
 
@@ -44,6 +49,8 @@ export function useCard({ card }: UseCardProps) {
     setShareMenuOpen,
     tipSheetOpen,
     setTipSheetOpen,
+    reviewSheetOpen,
+    setReviewSheetOpen,
     photos,
     isLongDesc,
     closingTime,

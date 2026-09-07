@@ -16,8 +16,10 @@ export interface Expectation {
 
 export interface Review {
   id: number;
+  /** Author's display name. */
   author: string;
-  avatar: string;
+  /** Author's handle — links the review to their public profile. */
+  authorUsername: string;
   rating: number;
   text: string;
   createdAt: string;
@@ -28,6 +30,13 @@ export interface RatingSummary {
   total: number;
   /** Counts for 1★ … 5★ — `breakdown[0]` is 1★, `breakdown[4]` is 5★. */
   breakdown: number[];
+}
+
+/** The signed-in visitor's own review for a place, if they've left one. */
+export interface MyReview {
+  id: number;
+  rating: number;
+  text: string;
 }
 
 export interface ICard {
@@ -48,6 +57,8 @@ export interface ICard {
   expectations?: Expectation[];
   reviews?: Review[];
   ratingSummary?: RatingSummary;
+  /** The signed-in visitor's own review, `null` if they haven't left one. */
+  myReview?: MyReview | null;
   similar?: ICard[];
 }
 

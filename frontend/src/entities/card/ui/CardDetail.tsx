@@ -19,6 +19,7 @@ import { CardExpectations } from "./CardExpectations";
 import { CardReviews } from "./CardReviews";
 import { CardSimilar } from "./CardSimilar";
 import { ShareMenu } from "./ShareMenu";
+import { WriteReviewSheet } from "./WriteReviewSheet";
 import { ImagesSlider } from "@/shared/ui/images-slider";
 import { MiniMap } from "@/shared/ui/mini-map";
 import { useCategoryLabel, useTranslation } from "@/shared/i18n";
@@ -34,6 +35,8 @@ export function CardDetail({
   onToggleVisit,
   onSelectSimilar,
   onAddTip,
+  onSubmitReview,
+  onDeleteReview,
 }: CardDetailProps) {
   const {
     hoursOpen,
@@ -44,6 +47,8 @@ export function CardDetail({
     setShareMenuOpen,
     tipSheetOpen,
     setTipSheetOpen,
+    reviewSheetOpen,
+    setReviewSheetOpen,
     photos,
     isLongDesc,
     closingTime,
@@ -252,10 +257,16 @@ export function CardDetail({
               {!!card.expectations?.length && (
                 <CardExpectations items={card.expectations} />
               )}
-              {card.ratingSummary && card.reviews?.length ? (
+              {card.ratingSummary &&
+              (card.reviews?.length || onSubmitReview) ? (
                 <CardReviews
                   summary={card.ratingSummary}
-                  reviews={card.reviews}
+                  reviews={card.reviews ?? []}
+                  myReview={card.myReview}
+                  onWriteReview={
+                    onSubmitReview ? () => setReviewSheetOpen(true) : undefined
+                  }
+                  onDeleteReview={onDeleteReview}
                 />
               ) : null}
               {!!card.similar?.length && (
@@ -332,6 +343,15 @@ export function CardDetail({
         placeName={card.name}
         onConfirm={onAddTip}
       />
+
+      {onSubmitReview && !card.myReview && (
+        <WriteReviewSheet
+          isOpen={reviewSheetOpen}
+          onClose={() => setReviewSheetOpen(false)}
+          placeName={card.name}
+          onSubmit={onSubmitReview}
+        />
+      )}
     </motion.div>
   );
 }

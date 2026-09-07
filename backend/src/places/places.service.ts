@@ -163,10 +163,9 @@ export class PlacesService {
         orderBy: { createdAt: 'desc' },
         select: {
           id: true,
-          author: true,
-          avatar: true,
           rating: true,
           createdAt: true,
+          user: { select: { username: true, name: true } },
           translations: {
             where: { locale: { in: localeCandidates(locale) } },
             select: { locale: true, text: true },
@@ -189,8 +188,10 @@ export class PlacesService {
       expectations: t.expectations,
       image: toAssetUrl(image),
       photos: (photos as string[]).map(toAssetUrl),
-      reviews: reviews.map(({ translations: reviewTr, ...review }) => ({
+      reviews: reviews.map(({ translations: reviewTr, user, ...review }) => ({
         ...review,
+        author: user.name,
+        authorUsername: user.username,
         text: pickTranslation(reviewTr, locale).text,
       })),
       similar: similar.map((item) =>
@@ -204,19 +205,41 @@ export class PlacesService {
     };
 
     if (!userId) {
-      return { ...detail, isSaved: false, isVisited: false };
+      return { ...detail, isSaved: false, isVisited: false, myReview: null };
     }
 
-    const [saved, visited] = await Promise.all([
+    const [saved, visited, myReview] = await Promise.all([
       this.prisma.savedPlace.findUnique({
         where: { userId_placeId: { userId, placeId: id } },
       }),
       this.prisma.visitedPlace.findUnique({
         where: { userId_placeId: { userId, placeId: id } },
       }),
+      this.prisma.review.findUnique({
+        where: { userId_placeId: { userId, placeId: id } },
+        select: {
+          id: true,
+          rating: true,
+          translations: {
+            where: { locale: { in: localeCandidates(locale) } },
+            select: { locale: true, text: true },
+          },
+        },
+      }),
     ]);
 
-    return { ...detail, isSaved: saved !== null, isVisited: visited !== null };
+    return {
+      ...detail,
+      isSaved: saved !== null,
+      isVisited: visited !== null,
+      myReview: myReview
+        ? {
+            id: myReview.id,
+            rating: myReview.rating,
+            text: pickTranslation(myReview.translations, locale).text,
+          }
+        : null,
+    };
   }
 
   async getCategories() {

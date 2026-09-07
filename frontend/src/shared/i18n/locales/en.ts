@@ -202,6 +202,8 @@ export const en = {
     tipAdded: "Added to your recommendations",
     tipUpdated: "Recommendation updated",
     tipRemoved: "Recommendation removed",
+    reviewAdded: "Your review is live",
+    reviewRemoved: "Review deleted",
     profileUpdated: "Profile updated",
   },
 
@@ -214,6 +216,8 @@ export const en = {
     reviewsTitle: "Reviews",
     seeAllReviews: "See all reviews",
     showFewerReviews: "Show fewer reviews",
+    writeReview: "Write a review",
+    deleteReview: "Delete review",
     similarTitle: "You might also like",
     aria: {
       close: "Close",
@@ -240,6 +244,19 @@ export const en = {
       title: "Add a recommendation",
       placeholder: "What should people know before visiting?",
       confirm: "Add recommendation",
+    },
+    writeReviewSheet: {
+      title: "Write a review",
+      ratingLabel: "Your rating",
+      starsAria: "Rate {count} out of 5",
+      placeholder: "Share what stood out — the good and the not-so-good.",
+      confirm: "Post review",
+    },
+    deleteReviewConfirm: {
+      title: "Delete your review?",
+      description: "This removes your rating and comment for this place.",
+      confirm: "Delete",
+      cancel: "Keep",
     },
   },
 

@@ -17,6 +17,7 @@ model User {
   savedPlaces   SavedPlace[]
   visitedPlaces VisitedPlace[]
   tips          Tip[]
+  reviews       Review[]
   following     Follow[]       @relation("Following")
   followers     Follow[]       @relation("Followers")
 }
@@ -92,14 +93,18 @@ model Review {
   id           Int                 @id @default(autoincrement())
   place        Place               @relation(fields: [placeId], references: [id])
   placeId      Int
-  author       String
-  avatar       String
+  /// Every review is written by a registered user; author name and avatar are
+  /// read live from this relation, not stored on the row.
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int
   rating       Int
   createdAt    DateTime            @default(now())
   translations ReviewTranslation[]
+
+  @@unique([userId, placeId])
 }
 
-/// Per-locale body text for a Review. The author name stays language-neutral.
+/// Per-locale body text for a Review.
 model ReviewTranslation {
   review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
   reviewId Int

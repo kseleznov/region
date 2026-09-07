@@ -102,98 +102,6 @@ function buildExpectations(
   ];
 }
 
-// Denormalised rating totals — the design shows counts in the thousands,
-// far more than the handful of seeded Review rows.
-function buildRatingStats(stars: number): {
-  ratingCount: number;
-  ratingBreakdown: number[];
-} {
-  const ratingCount = Math.round(240 + stars * 210);
-  const weights = [2, 3, 6, 24, 65]; // rough % for 1★ … 5★
-  const weightSum = weights.reduce((sum, w) => sum + w, 0);
-  const ratingBreakdown = weights.map((w) =>
-    Math.round((w / weightSum) * ratingCount),
-  );
-  // push any rounding drift into the 5★ bucket so the parts sum to the whole
-  ratingBreakdown[4] +=
-    ratingCount - ratingBreakdown.reduce((sum, n) => sum + n, 0);
-
-  return { ratingCount, ratingBreakdown };
-}
-
-const REVIEW_POOL: {
-  author: string;
-  rating: number;
-  text: Localized<string>;
-}[] = [
-  {
-    author: 'Sarah Jenkins',
-    rating: 5,
-    text: {
-      en: 'An absolutely stunning place. The atmosphere, the details, the view — everything is top notch. I will definitely be back.',
-      ru: 'Совершенно потрясающее место. Атмосфера, детали, вид — всё на высоте. Обязательно вернусь.',
-    },
-  },
-  {
-    author: 'David O’Connor',
-    rating: 5,
-    text: {
-      en: 'Flawless. We arrived at opening time and had the place almost to ourselves for nearly an hour. Highly recommend going early.',
-      ru: 'Безупречно. Пришли к открытию и почти час были почти одни. Очень рекомендую ранний визит.',
-    },
-  },
-  {
-    author: 'Марина Соколова',
-    rating: 4,
-    text: {
-      en: 'Beautiful and interesting, but quite crowded in the middle of the day. Buy tickets online in advance.',
-      ru: 'Красиво и интересно, но народу многовато в середине дня. Берите билеты заранее онлайн.',
-    },
-  },
-  {
-    author: 'Tomáš Novák',
-    rating: 5,
-    text: {
-      en: 'One of the best experiences of the whole trip. Worth every minute.',
-      ru: 'Одно из лучших впечатлений за всю поездку. Стоит каждой потраченной минуты.',
-    },
-  },
-  {
-    author: 'Aisha Rahman',
-    rating: 4,
-    text: {
-      en: 'Really solid. A few more signs in English would have helped, but otherwise excellent.',
-      ru: 'Очень достойно. Немного не хватило указателей на английском, в остальном отлично.',
-    },
-  },
-  {
-    author: 'Lucas Almeida',
-    rating: 5,
-    text: {
-      en: 'The locals come here for a reason. Calm, picturesque and none of the tourist crush.',
-      ru: 'Местные не зря сюда ходят. Спокойно, живописно и совсем не туристическая толкотня.',
-    },
-  },
-  {
-    author: 'Hannah Weber',
-    rating: 3,
-    text: {
-      en: 'I expected more for the price. The place itself is nice, but you see it quickly.',
-      ru: 'Ожидала большего за эту цену. Само место симпатичное, но быстро осматривается.',
-    },
-  },
-  {
-    author: 'Ігор Коваленко',
-    rating: 5,
-    text: {
-      en: "We came at sunset — the view is simply incredible. One of the city's must-see spots.",
-      ru: 'Приехали на закате — вид просто невероятный. Одна из главных точек города.',
-    },
-  },
-];
-
-const DAY_MS = 24 * 60 * 60 * 1000;
-
 /** Same seven cells for every day. */
 function everyDay(value: string): WorkingHours {
   return {
@@ -210,7 +118,6 @@ function everyDay(value: string): WorkingHours {
 type PlaceSeed = {
   slug: string;
   category: string;
-  stars: number;
   price: number;
   isOpen: boolean;
   i18n: Localized<{
@@ -244,7 +151,6 @@ const PLACE_SEEDS: PlaceSeed[] = [
   {
     slug: 'couvent',
     category: 'Музей',
-    stars: 4.5,
     price: 7,
     isOpen: false,
     i18n: {
@@ -283,7 +189,6 @@ const PLACE_SEEDS: PlaceSeed[] = [
   {
     slug: 'oceanarium',
     category: 'Океанариум',
-    stars: 4.7,
     price: 25,
     isOpen: false,
     i18n: {
@@ -306,7 +211,6 @@ const PLACE_SEEDS: PlaceSeed[] = [
   {
     slug: 'jorge-castle',
     category: 'Замок',
-    stars: 4.3,
     price: 17,
     isOpen: false,
     i18n: {
@@ -331,7 +235,6 @@ const PLACE_SEEDS: PlaceSeed[] = [
   {
     slug: 'jeronimos',
     category: 'Монастырь',
-    stars: 4.5,
     price: 18,
     isOpen: false,
     i18n: {
@@ -370,7 +273,6 @@ const PLACE_SEEDS: PlaceSeed[] = [
   {
     slug: 'belem-tower',
     category: 'Памятник',
-    stars: 4.4,
     price: 6,
     isOpen: false,
     i18n: {
@@ -409,7 +311,6 @@ const PLACE_SEEDS: PlaceSeed[] = [
   {
     slug: 'alfama',
     category: 'Район',
-    stars: 4.7,
     price: 0,
     isOpen: true,
     i18n: {
@@ -432,7 +333,6 @@ const PLACE_SEEDS: PlaceSeed[] = [
   {
     slug: 'elevator-santa-justa',
     category: 'Достопримечательность',
-    stars: 4.1,
     price: 6,
     isOpen: true,
     i18n: {
@@ -455,7 +355,6 @@ const PLACE_SEEDS: PlaceSeed[] = [
   {
     slug: 'comercio-terreiro',
     category: 'Площадь',
-    stars: 4.5,
     price: 0,
     isOpen: true,
     i18n: {
@@ -478,7 +377,6 @@ const PLACE_SEEDS: PlaceSeed[] = [
   {
     slug: 'miradouro-da-graca',
     category: 'Смотровая площадка',
-    stars: 4.6,
     price: 0,
     isOpen: true,
     i18n: {
@@ -517,26 +415,6 @@ function placeTranslationRows(seed: PlaceSeed) {
   });
 }
 
-function reviewRowsFor(offset: number) {
-  return Array.from({ length: 4 }, (_, i) => {
-    const pick = REVIEW_POOL[(offset + i) % REVIEW_POOL.length];
-    const avatarId = ((offset * 4 + i) % 70) + 1;
-
-    return {
-      author: pick.author,
-      avatar: `https://i.pravatar.cc/120?img=${avatarId}`,
-      rating: pick.rating,
-      createdAt: new Date(Date.now() - (i * 9 + offset * 3 + 3) * DAY_MS),
-      translations: {
-        create: LOCALES.map((locale) => ({
-          locale,
-          text: pick.text[locale],
-        })),
-      },
-    };
-  });
-}
-
 async function main() {
   // Clear child rows before parents to satisfy foreign keys. Translation
   // rows cascade with their parent, so they don't need explicit deletes.
@@ -563,18 +441,18 @@ async function main() {
     },
   });
 
-  for (const [index, seed] of PLACE_SEEDS.entries()) {
+  for (const seed of PLACE_SEEDS) {
     await prisma.place.create({
       data: {
         category: seed.category,
-        stars: seed.stars,
+        // No ratings until real visitors leave them. ratingCount and
+        // ratingBreakdown fall back to their schema defaults (0 / all-zero).
+        stars: 0,
         price: seed.price,
         isOpen: seed.isOpen,
         cityId: city.id,
         ...placeImages(seed.slug),
-        ...buildRatingStats(seed.stars),
         translations: { create: placeTranslationRows(seed) },
-        reviews: { create: reviewRowsFor(index) },
       },
     });
   }
