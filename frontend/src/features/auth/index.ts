@@ -4,3 +4,5 @@ export { authApi } from "./api/authApi";
 export { useAuth } from "./model/useAuth";
 export { useAuthBootstrap } from "./model/useAuthBootstrap";
 export { useLogout } from "./model/useLogout";
+export { useUpdateProfile } from "./model/useUpdateProfile";
+export type { User } from "./model/types";

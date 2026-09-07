@@ -14,9 +14,11 @@ import {
 } from "lucide-react";
 import { DAYS } from "../model/constants";
 import { useCard } from "../model/useCard";
+import { AddTipSheet } from "./AddTipSheet";
 import { CardExpectations } from "./CardExpectations";
 import { CardReviews } from "./CardReviews";
 import { CardSimilar } from "./CardSimilar";
+import { ShareMenu } from "./ShareMenu";
 import { ImagesSlider } from "@/shared/ui/images-slider";
 import { MiniMap } from "@/shared/ui/mini-map";
 import { useCategoryLabel, useTranslation } from "@/shared/i18n";
@@ -31,6 +33,7 @@ export function CardDetail({
   onToggleSave,
   onToggleVisit,
   onSelectSimilar,
+  onAddTip,
 }: CardDetailProps) {
   const {
     hoursOpen,
@@ -39,6 +42,10 @@ export function CardDetail({
     setDescExpanded,
     expanded,
     setExpanded,
+    shareMenuOpen,
+    setShareMenuOpen,
+    tipSheetOpen,
+    setTipSheetOpen,
     photos,
     isLongDesc,
     closingTime,
@@ -300,13 +307,28 @@ export function CardDetail({
               )}
             </button>
 
-            <button
-              onClick={handleShare}
-              aria-label={t("card.aria.share")}
-              className="flex-shrink-0 w-14 h-14 rounded-full border-2 border-brand-purple bg-brand-purple flex items-center justify-center transition-all hover:brightness-95 active:scale-95"
-            >
-              <Share2 className="w-5 h-5 text-white" strokeWidth={2.5} />
-            </button>
+            <div className="relative flex-shrink-0">
+              <button
+                onClick={() => setShareMenuOpen((v) => !v)}
+                aria-label={t("card.aria.share")}
+                className="w-14 h-14 rounded-full border-2 border-brand-purple bg-brand-purple flex items-center justify-center transition-all hover:brightness-95 active:scale-95"
+              >
+                <Share2 className="w-5 h-5 text-white" strokeWidth={2.5} />
+              </button>
+
+              <ShareMenu
+                isOpen={shareMenuOpen}
+                onClose={() => setShareMenuOpen(false)}
+                onShare={() => {
+                  setShareMenuOpen(false);
+                  handleShare();
+                }}
+                onAddTip={() => {
+                  setShareMenuOpen(false);
+                  setTipSheetOpen(true);
+                }}
+              />
+            </div>
 
             <button
               onClick={() => setExpanded((v) => !v)}
@@ -319,6 +341,13 @@ export function CardDetail({
           </div>
         </div>
       </motion.div>
+
+      <AddTipSheet
+        isOpen={tipSheetOpen}
+        onClose={() => setTipSheetOpen(false)}
+        placeName={card.name}
+        onConfirm={onAddTip}
+      />
     </motion.div>
   );
 }

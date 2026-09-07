@@ -6,3 +6,4 @@ export { Banner } from "./banner/Banner";
 export { BackButton } from "./back-button/BackButton";
 export { ToastProvider, useToast } from "./toast/ToastProvider";
 export type { ToastVariant } from "./toast/types";
+export { ConfirmDialog } from "./confirm-dialog/ConfirmDialog";

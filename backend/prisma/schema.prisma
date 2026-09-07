@@ -11,9 +11,38 @@ model User {
   email         String         @unique
   password      String
   name          String
+  username      String         @unique
+  bio           String?
   refreshToken  String?
   savedPlaces   SavedPlace[]
   visitedPlaces VisitedPlace[]
+  tips          Tip[]
+  following     Follow[]       @relation("Following")
+  followers     Follow[]       @relation("Followers")
+}
+
+model Follow {
+  id          Int      @id @default(autoincrement())
+  follower    User     @relation("Following", fields: [followerId], references: [id])
+  followerId  Int
+  following   User     @relation("Followers", fields: [followingId], references: [id])
+  followingId Int
+  createdAt   DateTime @default(now())
+
+  @@unique([followerId, followingId])
+}
+
+model Tip {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  place     Place    @relation(fields: [placeId], references: [id])
+  placeId   Int
+  note      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, placeId])
 }
 
 model SavedPlace {
@@ -36,10 +65,13 @@ model Place {
   isOpen          Boolean
   ratingCount     Int                @default(0)
   ratingBreakdown Json               @default("[0, 0, 0, 0, 0]")
+  city            City               @relation(fields: [cityId], references: [id])
+  cityId          Int
   translations    PlaceTranslation[]
   savedBy         SavedPlace[]
   visitedBy       VisitedPlace[]
   reviews         Review[]
+  tips            Tip[]
 }
 
 /// Per-locale text for a Place. `locale` is a lowercase code ("en", "ru").
@@ -83,6 +115,7 @@ model City {
   images       Json              @default("[]")
   location     Json
   translations CityTranslation[]
+  places       Place[]
 }
 
 /// Per-locale text for a City, including the localised weather label.

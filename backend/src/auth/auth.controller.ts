@@ -71,7 +71,8 @@ export class AuthController {
   @UseGuards(JwtGuard)
   @Get('me')
   getMe(@Req() req: Request) {
-    return req.user;
+    const { id } = req.user as JwtUser;
+    return this.authService.getMe(id);
   }
 
   private setTokenCookies(res: Response, tokens: AuthTokens) {

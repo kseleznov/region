@@ -37,10 +37,15 @@ export class AuthService {
       throw new ConflictException('Email already in use');
     }
     const hash = await bcrypt.hash(password, BCRYPT_ROUNDS);
-    const user = await this.usersService.create(email, hash, name);
+    const username = await this.usersService.generateUsername(email);
+    const user = await this.usersService.create(email, hash, name, username);
     const tokens = await this.getTokens(user.id, user.email, user.name);
     await this.storeRefreshToken(user.id, tokens.refreshToken);
     return tokens;
+  }
+
+  getMe(userId: number) {
+    return this.usersService.getPublicSelf(userId);
   }
 
   async login(userId: number, email: string, name: string) {

@@ -4,6 +4,7 @@ import { placeApi } from "@/entities/place";
 import { useToggleSave } from "@/features/save-card";
 import { useToggleVisit } from "@/features/visit-card";
 import { useAuthStore } from "@/features/auth";
+import { useAddTip } from "@/features/tips";
 import { ROUTES } from "@/shared/config/routes";
 import { useLocale } from "@/shared/i18n";
 import type { ICard, SelectedCard } from "@/shared/types/card";
@@ -12,6 +13,7 @@ export function useCardsSlider() {
   const [selected, setSelected] = useState<SelectedCard | null>(null);
   const { mutate: toggleSave } = useToggleSave();
   const { mutate: toggleVisit } = useToggleVisit();
+  const { mutate: addTip } = useAddTip();
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const locale = useLocale();
@@ -87,6 +89,13 @@ export function useCardsSlider() {
               },
           ),
       });
+    },
+    addTipForSelected: (note: string) => {
+      if (!requireAuth() || !selected?.card.id) {
+        return;
+      }
+
+      addTip({ placeId: selected.card.id, note });
     },
   };
 }

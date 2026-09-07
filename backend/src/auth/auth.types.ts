@@ -1,6 +1,10 @@
 export type JwtUser = { id: number; email: string; name: string };
 
-export type JwtRefreshUser = { id: number; email: string; refreshToken: string };
+export type JwtRefreshUser = {
+  id: number;
+  email: string;
+  refreshToken: string;
+};
 
 export type AuthTokens = { accessToken: string; refreshToken: string };
 

@@ -12,6 +12,8 @@ export const ru: Dictionary = {
     viewAll: "Все",
     retry: "Повторить",
     close: "Закрыть",
+    loading: "Загрузка...",
+    cancel: "Отмена",
   },
 
   metadata: {
@@ -39,7 +41,7 @@ export const ru: Dictionary = {
   profile: {
     accountLabel: "Ваш аккаунт",
     title: "Профиль",
-    settings: "Настройки",
+    editProfile: "Редактировать профиль",
     logOut: "Выйти",
     signIn: "Войти",
     menu: {
@@ -51,6 +53,39 @@ export const ru: Dictionary = {
     languageSheet: {
       title: "Язык",
       subtitle: "Выберите язык для всего приложения",
+    },
+    editSheet: {
+      title: "Редактировать профиль",
+      nameLabel: "Имя",
+      usernameLabel: "Никнейм",
+      usernameHint: "Никнейм уникальный и его нельзя изменить.",
+      bioLabel: "О себе",
+      bioPlaceholder: "Расскажите о себе",
+      save: "Сохранить",
+    },
+    followersSheet: {
+      tabs: {
+        followers: "Подписчики",
+        following: "Подписки",
+      },
+      unfollow: "Отписаться",
+      empty: "Пока никого нет",
+      unfollowConfirm: {
+        title: "Отписаться от {name}?",
+        description: "Вы всегда сможете подписаться снова.",
+        confirm: "Отписаться",
+      },
+    },
+    myTips: {
+      title: "Мои рекомендации",
+      empty: "Вы ещё не добавили ни одной рекомендации",
+      edit: "Редактировать",
+      editAria: "Редактировать рекомендацию про {name}",
+      removeAria: "Удалить рекомендацию про {name}",
+    },
+    editTipSheet: {
+      title: "Редактировать рекомендацию",
+      save: "Сохранить",
     },
   },
 
@@ -157,6 +192,10 @@ export const ru: Dictionary = {
     unsaved: "Удалено из сохранённого",
     visited: "Отмечено как посещённое",
     unvisited: "Отметка о посещении снята",
+    tipAdded: "Добавлено в рекомендации",
+    tipUpdated: "Рекомендация обновлена",
+    tipRemoved: "Рекомендация удалена",
+    profileUpdated: "Профиль обновлён",
   },
 
   card: {
@@ -185,6 +224,15 @@ export const ru: Dictionary = {
       fri: "Пт",
       sat: "Сб",
       sun: "Вс",
+    },
+    shareMenu: {
+      share: "Поделиться",
+      addTip: "Добавить в рекомендации",
+    },
+    addTipSheet: {
+      title: "Добавить рекомендацию",
+      placeholder: "Что стоит знать перед посещением?",
+      confirm: "Добавить рекомендацию",
     },
   },
 
@@ -245,6 +293,37 @@ export const ru: Dictionary = {
     },
   },
 
+  publicProfile: {
+    followers: "Подписчики",
+    following: "Подписки",
+    cities: "Города",
+    citiesCount: "{count} города",
+    places: "мест",
+    tipsLabel: "рекомендаций",
+    livesIn: "Живёт в {city}",
+    follow: "Подписаться",
+    followingAction: "Вы подписаны",
+    rankInCity: "Ранг в городе {city}",
+    tabs: {
+      tips: "Рекомендации",
+      visited: "Посещено",
+    },
+    noTipsYet: "Рекомендаций пока нет",
+    noVisitedYet: "Посещённых мест пока нет",
+    notFound: "Такого профиля не существует",
+    unfollowConfirm: {
+      title: "Отписаться от {name}?",
+      description: "Вы всегда сможете подписаться снова.",
+      confirm: "Отписаться",
+    },
+    aria: {
+      back: "Назад",
+      menu: "Ещё",
+      follow: "Подписаться на {name}",
+      unfollow: "Отписаться от {name}",
+    },
+  },
+
   explanation: {
     createEvents: "СОЗДАВАЙ СОБСТВЕННЫЕ СОБЫТИЯ",
     findActivity: "НАХОДИ ИДЕАЛЬНОЕ ЗАНЯТИЕ",
@@ -283,6 +362,7 @@ export const ru: Dictionary = {
       Район: "Район",
       Океанариум: "Океанариум",
       "Смотровая площадка": "Смотровая площадка",
+      Парк: "Парк",
     },
   },
 };

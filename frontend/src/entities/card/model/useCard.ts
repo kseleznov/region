@@ -1,11 +1,14 @@
 import { TODAY_KEY } from "./constants";
 import { useEffect, useState } from "react";
+import { shareContent } from "@/shared/lib/share";
 import type { UseCardProps } from "./types";
 
 export function useCard({ card }: UseCardProps) {
   const [hoursOpen, setHoursOpen] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [shareMenuOpen, setShareMenuOpen] = useState(false);
+  const [tipSheetOpen, setTipSheetOpen] = useState(false);
 
   useEffect(() => {
     const original = document.body.style.overflow;
@@ -24,21 +27,13 @@ export function useCard({ card }: UseCardProps) {
     ? todayHours.split("–")[1]?.split(",")[0]
     : null;
 
-  const handleShare = async () => {
-    if (typeof window === "undefined") return;
-
-    const url = window.location.href;
+  const handleShare = () => {
     const text = card.address ? `${card.name} — ${card.address}` : card.name;
-
-    try {
-      if (navigator.share) {
-        await navigator.share({ title: card.name, text, url });
-      } else if (navigator.clipboard) {
-        await navigator.clipboard.writeText(`${text}\n${url}`);
-      }
-    } catch {
-      // Share sheet dismissed or unavailable — nothing to do.
-    }
+    return shareContent({
+      title: card.name,
+      text,
+      url: window.location.href,
+    });
   };
 
   return {
@@ -48,6 +43,10 @@ export function useCard({ card }: UseCardProps) {
     setDescExpanded,
     expanded,
     setExpanded,
+    shareMenuOpen,
+    setShareMenuOpen,
+    tipSheetOpen,
+    setTipSheetOpen,
     photos,
     isLongDesc,
     closingTime,
