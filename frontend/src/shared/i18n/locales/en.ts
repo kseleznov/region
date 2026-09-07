@@ -18,6 +18,7 @@ export const en = {
     viewAll: "View All",
     retry: "Try again",
     close: "Close",
+    back: "Back",
     loading: "Loading...",
     cancel: "Cancel",
   },
@@ -42,6 +43,19 @@ export const en = {
 
   header: {
     selectCity: "Select city",
+  },
+
+  notifications: {
+    label: "Your activity",
+    title: "Notifications",
+    markAllRead: "Mark all read",
+    empty: {
+      title: "No notifications yet",
+      hint: "When people interact with you, it shows up here",
+    },
+    follow: {
+      action: "started following you",
+    },
   },
 
   profile: {

@@ -12,6 +12,7 @@ export const ru: Dictionary = {
     viewAll: "Все",
     retry: "Повторить",
     close: "Закрыть",
+    back: "Назад",
     loading: "Загрузка...",
     cancel: "Отмена",
   },
@@ -36,6 +37,19 @@ export const ru: Dictionary = {
 
   header: {
     selectCity: "Выбрать город",
+  },
+
+  notifications: {
+    label: "Ваша активность",
+    title: "Уведомления",
+    markAllRead: "Прочитать все",
+    empty: {
+      title: "Уведомлений пока нет",
+      hint: "Здесь появятся действия других пользователей",
+    },
+    follow: {
+      action: "подписался на вас",
+    },
   },
 
   profile: {

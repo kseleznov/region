@@ -6,6 +6,7 @@ export const ROUTES = {
   saved: "/saved",
   profile: "/profile",
   publicProfile: (username: string) => `/profile/${username}`,
+  notifications: "/notifications",
   overview: "/overview",
   signIn: "/auth/sign-in",
   signUp: "/auth/sign-up",

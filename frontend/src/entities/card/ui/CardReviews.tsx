@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Star, Trash2 } from "lucide-react";
-import { formatRelativeTime } from "../model/formatRelativeTime";
+import { formatRelativeTime } from "@/shared/lib/formatRelativeTime";
 import { ROUTES } from "@/shared/config/routes";
 import { ConfirmDialog } from "@/shared/ui";
 import { useTranslation } from "@/shared/i18n";
