@@ -6,7 +6,7 @@ import { placeApi } from "@/entities/place";
 import { useToggleSave } from "@/features/save-card";
 import { useToggleVisit } from "@/features/visit-card";
 import { useAddTip } from "@/features/tips";
-import { applyReviewResult, useUpsertReview } from "@/features/add-review";
+import { applyReviewResult, useAddReview } from "@/features/add-review";
 import { useAuthStore } from "@/features/auth";
 import { ROUTES } from "@/shared/config/routes";
 import { useLocale } from "@/shared/i18n";
@@ -17,7 +17,7 @@ export function usePlaceDetail() {
   const { mutate: toggleSave } = useToggleSave();
   const { mutate: toggleVisit } = useToggleVisit();
   const { mutate: addTip } = useAddTip();
-  const { mutate: upsertReview } = useUpsertReview();
+  const { mutate: addReview } = useAddReview();
   const user = useAuthStore((state) => state.user);
   const router = useRouter();
   const locale = useLocale();
@@ -97,12 +97,11 @@ export function usePlaceDetail() {
       return;
     }
 
-    upsertReview(
+    addReview(
       {
         placeId: selected.card.id,
         rating: input.rating,
         text: input.text,
-        isUpdate: Boolean(selected.card.myReview),
       },
       {
         onSuccess: (result) =>

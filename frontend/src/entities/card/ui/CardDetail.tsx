@@ -342,13 +342,11 @@ export function CardDetail({
         onConfirm={onAddTip}
       />
 
-      {onSubmitReview && (
+      {onSubmitReview && !card.myReview && (
         <WriteReviewSheet
           isOpen={reviewSheetOpen}
           onClose={() => setReviewSheetOpen(false)}
           placeName={card.name}
-          initialRating={card.myReview?.rating}
-          initialText={card.myReview?.text}
           onSubmit={onSubmitReview}
         />
       )}

@@ -13,9 +13,6 @@ interface WriteReviewSheetProps {
   isOpen: boolean;
   onClose: () => void;
   placeName: string;
-  /** Prefill when the visitor is editing a review they already left. */
-  initialRating?: number;
-  initialText?: string;
   onSubmit: (input: { rating: number; text: string }) => void;
 }
 
@@ -23,25 +20,22 @@ export function WriteReviewSheet({
   isOpen,
   onClose,
   placeName,
-  initialRating = 0,
-  initialText = "",
   onSubmit,
 }: WriteReviewSheetProps) {
   const { t } = useTranslation();
-  const [rating, setRating] = useState(initialRating);
-  const [text, setText] = useState(initialText);
+  const [rating, setRating] = useState(0);
+  const [text, setText] = useState("");
   const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
 
   if (isOpen !== prevIsOpen) {
     setPrevIsOpen(isOpen);
     if (isOpen) {
-      setRating(initialRating);
-      setText(initialText);
+      setRating(0);
+      setText("");
     }
   }
 
   const canSubmit = rating > 0 && text.trim().length > 0;
-  const isEditing = initialRating > 0;
 
   function handleSubmit() {
     if (!canSubmit) return;
@@ -72,9 +66,7 @@ export function WriteReviewSheet({
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
             <h2 className="text-xl font-bold text-dark mb-1">
-              {isEditing
-                ? t("card.writeReviewSheet.editTitle")
-                : t("card.writeReviewSheet.title")}
+              {t("card.writeReviewSheet.title")}
             </h2>
             <p className="text-sm text-brand-gray mb-4 truncate">{placeName}</p>
 
@@ -125,9 +117,7 @@ export function WriteReviewSheet({
               disabled={!canSubmit}
               className="mt-4 w-full rounded-full bg-dark py-3.5 text-sm font-bold text-white disabled:opacity-40"
             >
-              {isEditing
-                ? t("card.writeReviewSheet.update")
-                : t("card.writeReviewSheet.confirm")}
+              {t("card.writeReviewSheet.confirm")}
             </button>
           </motion.div>
         </motion.div>

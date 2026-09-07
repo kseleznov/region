@@ -74,8 +74,8 @@ export const placeApi = {
     return data;
   },
 
-  /** Create or replace the visitor's single review for a place. */
-  upsertReview: async (
+  /** Add the visitor's review for a place (one per place, not editable). */
+  addReview: async (
     placeId: number,
     input: ReviewInput,
     lang?: Locale,
@@ -83,13 +83,6 @@ export const placeApi = {
     const { data } = await apiClient.post<
       ReviewMutationResult & { review: Review }
     >(`/places/${placeId}/reviews`, input, buildConfig({}, { lang }));
-    return data;
-  },
-
-  deleteMyReview: async (placeId: number): Promise<ReviewMutationResult> => {
-    const { data } = await apiClient.delete<ReviewMutationResult>(
-      `/places/${placeId}/reviews/mine`,
-    );
     return data;
   },
 };

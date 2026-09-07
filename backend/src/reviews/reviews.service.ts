@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
   DEFAULT_LOCALE,
@@ -7,7 +11,7 @@ import {
   pickTranslation,
   type Locale,
 } from '../common/i18n';
-import type { UpsertReviewDto } from './dto/upsert-review.dto';
+import type { CreateReviewDto } from './dto/create-review.dto';
 
 /** Weighted mean of a 1★…5★ histogram, rounded to one decimal (`0` when empty). */
 function averageFromBreakdown(breakdown: number[]): number {
@@ -61,14 +65,14 @@ export class ReviewsService {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * Create or replace the visitor's single review for a place, then fold the
-   * new rating into the place's denormalised `stars` / `ratingCount` /
+   * Add the visitor's review for a place (one per place, no later edits), then
+   * fold the new rating into the place's denormalised `stars` / `ratingCount` /
    * `ratingBreakdown` so the detail view stays consistent.
    */
-  async upsert(
+  async create(
     userId: number,
     placeId: number,
-    dto: UpsertReviewDto,
+    dto: CreateReviewDto,
     locale: Locale = DEFAULT_LOCALE,
   ) {
     const [place, existing] = await Promise.all([
@@ -78,25 +82,19 @@ export class ReviewsService {
       }),
       this.prisma.review.findUnique({
         where: { userId_placeId: { userId, placeId } },
-        select: { id: true, rating: true },
+        select: { id: true },
       }),
     ]);
 
     if (!place) {
       throw new NotFoundException(`Place with id ${placeId} not found`);
     }
+    if (existing) {
+      throw new ConflictException('You have already reviewed this place');
+    }
 
     const breakdown = [...(place.ratingBreakdown as unknown as number[])];
-    let ratingCount = place.ratingCount;
-
-    if (existing) {
-      breakdown[existing.rating - 1] = Math.max(
-        0,
-        breakdown[existing.rating - 1] - 1,
-      );
-    } else {
-      ratingCount += 1;
-    }
+    const ratingCount = place.ratingCount + 1;
     breakdown[dto.rating - 1] += 1;
 
     const average = averageFromBreakdown(breakdown);
@@ -108,25 +106,15 @@ export class ReviewsService {
     }));
 
     const review = await this.prisma.$transaction(async (tx) => {
-      const saved = existing
-        ? await tx.review.update({
-            where: { id: existing.id },
-            data: {
-              rating: dto.rating,
-              createdAt: new Date(),
-              translations: { deleteMany: {}, create: translations },
-            },
-            select: reviewSelect(locale),
-          })
-        : await tx.review.create({
-            data: {
-              placeId,
-              userId,
-              rating: dto.rating,
-              translations: { create: translations },
-            },
-            select: reviewSelect(locale),
-          });
+      const saved = await tx.review.create({
+        data: {
+          placeId,
+          userId,
+          rating: dto.rating,
+          translations: { create: translations },
+        },
+        select: reviewSelect(locale),
+      });
 
       await tx.place.update({
         where: { id: placeId },
@@ -138,43 +126,6 @@ export class ReviewsService {
 
     return {
       review: toReview(review, locale),
-      ratingSummary: { average, total: ratingCount, breakdown },
-      stars: average,
-    };
-  }
-
-  /** Delete the visitor's review and pull its rating back out of the totals. */
-  async removeMine(userId: number, placeId: number) {
-    const existing = await this.prisma.review.findUnique({
-      where: { userId_placeId: { userId, placeId } },
-      select: { id: true, rating: true },
-    });
-    if (!existing) {
-      throw new NotFoundException('You have no review for this place');
-    }
-
-    const place = await this.prisma.place.findUniqueOrThrow({
-      where: { id: placeId },
-      select: { ratingCount: true, ratingBreakdown: true },
-    });
-
-    const breakdown = [...(place.ratingBreakdown as unknown as number[])];
-    breakdown[existing.rating - 1] = Math.max(
-      0,
-      breakdown[existing.rating - 1] - 1,
-    );
-    const ratingCount = Math.max(0, place.ratingCount - 1);
-    const average = averageFromBreakdown(breakdown);
-
-    await this.prisma.$transaction([
-      this.prisma.review.delete({ where: { id: existing.id } }),
-      this.prisma.place.update({
-        where: { id: placeId },
-        data: { stars: average, ratingCount, ratingBreakdown: breakdown },
-      }),
-    ]);
-
-    return {
       ratingSummary: { average, total: ratingCount, breakdown },
       stars: average,
     };

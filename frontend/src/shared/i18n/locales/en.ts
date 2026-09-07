@@ -203,7 +203,6 @@ export const en = {
     tipUpdated: "Recommendation updated",
     tipRemoved: "Recommendation removed",
     reviewAdded: "Your review is live",
-    reviewUpdated: "Review updated",
     profileUpdated: "Profile updated",
   },
 
@@ -217,7 +216,6 @@ export const en = {
     seeAllReviews: "See all reviews",
     showFewerReviews: "Show fewer reviews",
     writeReview: "Write a review",
-    editYourReview: "Edit your review",
     similarTitle: "You might also like",
     aria: {
       close: "Close",
@@ -247,12 +245,10 @@ export const en = {
     },
     writeReviewSheet: {
       title: "Write a review",
-      editTitle: "Edit your review",
       ratingLabel: "Your rating",
       starsAria: "Rate {count} out of 5",
       placeholder: "Share what stood out — the good and the not-so-good.",
       confirm: "Post review",
-      update: "Save changes",
     },
   },
 

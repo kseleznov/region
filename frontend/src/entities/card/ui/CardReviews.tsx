@@ -73,13 +73,13 @@ export function CardReviews({
         </p>
       </div>
 
-      {onWriteReview && (
+      {onWriteReview && !myReview && (
         <button
           onClick={onWriteReview}
           className="mb-3 flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dark/10 py-3 text-sm font-bold text-dark transition-colors hover:border-dark/30"
         >
           <Star className="h-4 w-4 fill-brand-yellow text-brand-yellow" />
-          {myReview ? t("card.editYourReview") : t("card.writeReview")}
+          {t("card.writeReview")}
         </button>
       )}
 
