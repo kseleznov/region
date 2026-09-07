@@ -36,13 +36,11 @@ export function Header() {
             type="button"
             onClick={openNotifications}
             aria-label={t("notifications.title")}
-            className="relative flex h-9 w-9 items-center justify-center rounded-full border border-dark/10 text-dark"
+            className="relative flex h-11 w-11 items-center justify-center text-white transition-transform active:scale-95"
           >
-            <Bell size={18} strokeWidth={1.75} />
+            <Bell size={24} strokeWidth={1.75} />
             {unreadCount > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-pink px-1 text-[10px] font-bold text-light">
-                {unreadCount > 9 ? "9+" : unreadCount}
-              </span>
+              <span className="absolute right-1.5 top-2 h-2.5 w-2.5 rounded-full bg-brand-pink ring-2 ring-brand-purple" />
             )}
           </button>
         )}
