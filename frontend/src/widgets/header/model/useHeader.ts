@@ -3,6 +3,7 @@ import { useSelectCityStore } from "@/features/select-city";
 import { ROUTES } from "@/shared/config/routes";
 import { useAuthStore } from "@/features/auth";
 import { useUserProgress, type UserProgress } from "@/entities/rank";
+import { useUnreadNotificationsCount } from "@/entities/notification";
 
 const DEFAULT_PROGRESS: UserProgress = {
   placesVisited: 0,
@@ -20,9 +21,22 @@ export function useHeader() {
     enabled: !!user,
   });
 
+  const { data: unread } = useUnreadNotificationsCount({ enabled: !!user });
+
   function redirect() {
     router.push(ROUTES.region);
   }
 
-  return { selectedCity, userProgress, redirect };
+  function openNotifications() {
+    router.push(ROUTES.notifications);
+  }
+
+  return {
+    isAuthenticated: !!user,
+    selectedCity,
+    userProgress,
+    unreadCount: unread?.count ?? 0,
+    redirect,
+    openNotifications,
+  };
 }

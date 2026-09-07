@@ -20,6 +20,27 @@ model User {
   reviews       Review[]
   following     Follow[]       @relation("Following")
   followers     Follow[]       @relation("Followers")
+  notifications        Notification[] @relation("NotificationRecipient")
+  notificationsCreated Notification[] @relation("NotificationActor")
+}
+
+/// One row per social event delivered to a user's activity feed. `type` is a
+/// plain string ("follow") rather than a Prisma enum so adding an event kind
+/// is a data change, not a migration — mirrors the `Locale` decision in i18n.
+model Notification {
+  id          Int      @id @default(autoincrement())
+  recipient   User     @relation("NotificationRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  recipientId Int
+  /// The user who caused the event. Identity (name/username) is read live from
+  /// this relation, never copied onto the row. Nullable so a future
+  /// system-generated notification can omit it.
+  actor       User?    @relation("NotificationActor", fields: [actorId], references: [id], onDelete: Cascade)
+  actorId     Int?
+  type        String
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([recipientId, createdAt])
 }
 
 model Follow {

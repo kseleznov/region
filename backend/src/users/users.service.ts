@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { toAssetUrl } from '../common/assets.util';
 import {
   DEFAULT_LOCALE,
@@ -56,7 +57,10 @@ const publicSelfSelect = {
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notifications: NotificationsService,
+  ) {}
 
   findByEmail(email: string) {
     return this.prisma.user.findUnique({ where: { email } });
@@ -145,6 +149,11 @@ export class UsersService {
     } else {
       await this.prisma.follow.create({
         data: { followerId, followingId: target.id },
+      });
+      await this.notifications.create({
+        recipientId: target.id,
+        actorId: followerId,
+        type: 'follow',
       });
     }
 
